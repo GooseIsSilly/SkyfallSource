@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace>Fusion</RootNamespace>
-    <ProjectGuid>{7DC3E2D2-F28A-66C1-A66A-63C49A004836}</ProjectGuid>
+    <ProjectGuid>{29DCCCF8-D6D3-3140-1BB9-D0153F85ED3C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Fusion.Unity.Editor</AssemblyName>
@@ -1152,7 +1152,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Fusion.Unity.csproj">
-      <Project>{F1EDFCB8-5D23-0345-F6E4-8AFA581D6672}</Project>
+      <Project>{32A07E47-CD26-7E76-AE59-ECCA75F8BC9D}</Project>
       <Name>Fusion.Unity</Name>
     </ProjectReference>
   </ItemGroup>

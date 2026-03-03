@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{2E16D1F7-AA91-5B31-4FAA-571C8ECEF4F9}</ProjectGuid>
+    <ProjectGuid>{4F0E7818-7D5D-EE69-D799-EDDF86EC2A5F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Fusion.Menu</AssemblyName>
@@ -1219,7 +1219,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Fusion.Unity.csproj">
-      <Project>{F1EDFCB8-5D23-0345-F6E4-8AFA581D6672}</Project>
+      <Project>{32A07E47-CD26-7E76-AE59-ECCA75F8BC9D}</Project>
       <Name>Fusion.Unity</Name>
     </ProjectReference>
   </ItemGroup>

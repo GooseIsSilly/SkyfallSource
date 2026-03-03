@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace>Fusion.Addons.Physics.Editor</RootNamespace>
-    <ProjectGuid>{71B48D76-F1BB-09AD-B88C-B8C8B847747A}</ProjectGuid>
+    <ProjectGuid>{2FBC784A-6E1C-669B-4780-23F127A0C6F7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Fusion.Addons.Physics.Editor</AssemblyName>
@@ -1225,7 +1225,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Fusion.Addons.Physics.csproj">
-      <Project>{59C336D1-3D71-F68F-C82C-2182FF40C1BD}</Project>
+      <Project>{DC666766-B962-9A27-7D14-4B3755A41265}</Project>
       <Name>Fusion.Addons.Physics</Name>
     </ProjectReference>
   </ItemGroup>

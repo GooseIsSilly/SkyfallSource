@@ -1157,6 +1157,14 @@ PrefabInstance:
       propertyPath: RootMotionTarget
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6942872777585290701, guid: c17b47fcacdfc8d4b80809005a2b2555, type: 3}
+      propertyPath: _fullThrustConsumption
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6942872777585290701, guid: c17b47fcacdfc8d4b80809005a2b2555, type: 3}
+      propertyPath: _idleThrustConsumption
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6948698316688109637, guid: c17b47fcacdfc8d4b80809005a2b2555, type: 3}
       propertyPath: Flags
       value: 3073

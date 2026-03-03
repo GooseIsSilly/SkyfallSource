@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace>Fusion.Plugin</RootNamespace>
-    <ProjectGuid>{3809D18C-94C1-27D9-81FB-E7FC1641AB64}</ProjectGuid>
+    <ProjectGuid>{F58A8DE2-F4DF-3F07-2CF8-4A501FD2E712}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Fusion.Plugin</AssemblyName>

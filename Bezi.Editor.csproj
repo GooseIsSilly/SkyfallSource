@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{89BF2B77-29F0-E55D-4FA9-FF05B99B2D6D}</ProjectGuid>
+    <ProjectGuid>{7D2A4D2D-A5B4-D30E-7C44-A8D35EC71C0D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Bezi.Editor</AssemblyName>
