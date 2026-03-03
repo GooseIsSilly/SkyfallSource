@@ -1,0 +1,13 @@
+/Library
+/Logs
+/Logs
+<<<<<<< HEAD
+Logs/shadercompiler-UnityShaderCompiler.exe1.log
+Logs/shadercompiler-UnityShaderCompiler.exe1.log
+Logs/shadercompiler-UnityShaderCompiler.exe3.log
+UserSettings/Layouts/default-2022.dwlt
+Logs/shadercompiler-UnityShaderCompiler.exe2.log
+=======
+*.log
+>>>>>>> 4f85f9ef81a92750ec15f926b02eb903ec03ced0
+/Temp
