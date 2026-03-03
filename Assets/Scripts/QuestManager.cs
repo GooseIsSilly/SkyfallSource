@@ -240,16 +240,47 @@ namespace TPSBR
             if (questDef == null)
                 return;
 
-            if (_coinSystem != null)
-            {
-                _coinSystem.AddCoins(questDef.CoinReward);
-                Debug.Log($"Claimed {questDef.CoinReward} CloudCoins from quest: {questDef.QuestName}");
-            }
-
             questProgress.RewardClaimed = true;
             _playerData.CompletedQuestIDs.Add(questID);
-
             SaveQuestData();
+
+            // XP reward scales with coin reward:
+            // Easy (≤50 CC) → 100 BP XP | Medium (≤150 CC) → 250 BP XP | Hard (>150 CC) → 500 BP XP
+            int bpXP = questDef.CoinReward <= 50  ? 100
+                     : questDef.CoinReward <= 150 ? 250
+                                                  : 500;
+
+            TPSBR.Backend.PlayerDataManager pdm = TPSBR.Backend.PlayerDataManager.Instance;
+
+            if (pdm != null)
+            {
+                // Award CloudCoins through the backend so balance stays in sync.
+                pdm.AddCoins(questDef.CoinReward, (coinSuccess, newTotal) =>
+                {
+                    if (coinSuccess)
+                        Debug.Log($"[QuestManager] Claimed {questDef.CoinReward} CC from '{questDef.QuestName}'. New total: {newTotal}");
+                    else
+                        Debug.LogWarning($"[QuestManager] Failed to award {questDef.CoinReward} CC for quest '{questDef.QuestName}'");
+                });
+
+                // Award Battle Pass XP through the backend.
+                pdm.AddBattlePassXP(bpXP, (xpSuccess, newTier, newXP) =>
+                {
+                    if (xpSuccess)
+                        Debug.Log($"[QuestManager] Awarded {bpXP} BP XP from '{questDef.QuestName}'. Tier: {newTier}, XP: {newXP}");
+                    else
+                        Debug.LogWarning($"[QuestManager] Failed to award BP XP for quest '{questDef.QuestName}'");
+                });
+            }
+            else
+            {
+                // Fallback: award locally via the legacy CloudCoinSystem if backend isn't ready.
+                if (_coinSystem != null)
+                    _coinSystem.AddCoins(questDef.CoinReward);
+
+                Debug.LogWarning($"[QuestManager] PlayerDataManager unavailable — awarded {questDef.CoinReward} CC locally only.");
+            }
+
             OnQuestsUpdated?.Invoke();
         }
 

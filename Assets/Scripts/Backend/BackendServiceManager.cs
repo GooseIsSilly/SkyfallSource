@@ -142,7 +142,8 @@ namespace TPSBR.Backend
                             XP = response.XP,
                             CloudCoins = response.CloudCoins,
                             OwnedSkins = response.OwnedSkins ?? new string[0],
-                            EquippedSkin = response.EquippedSkin
+                            EquippedSkin = response.EquippedSkin,
+                            HasBattlePass = response.HasBattlePass
                         };
                         callback?.Invoke(true, data);
                     }
@@ -176,7 +177,8 @@ namespace TPSBR.Backend
                 XP = data.XP,
                 CloudCoins = data.CloudCoins,
                 OwnedSkins = data.OwnedSkins,
-                EquippedSkin = data.EquippedSkin
+                EquippedSkin = data.EquippedSkin,
+                HasBattlePass = data.HasBattlePass
             };
 
             string jsonData = JsonUtility.ToJson(updateData);
@@ -278,6 +280,197 @@ namespace TPSBR.Backend
                 else
                 {
                     callback?.Invoke(false, "Network error");
+                }
+            }
+        }
+
+        /// <summary>Fetches the player's current battle pass status from the server.</summary>
+        public void GetBattlePassStatus(Action<bool, BattlePassStatusData> callback)
+        {
+            StartCoroutine(GetBattlePassStatusCoroutine(callback));
+        }
+
+        /// <summary>Awards battle pass XP and returns the new tier and XP values.</summary>
+        public void AddBattlePassXP(int amount, Action<bool, int, int> callback)
+        {
+            StartCoroutine(AddBattlePassXPCoroutine(amount, callback));
+        }
+
+        /// <summary>Purchases the battle pass for the logged-in player.</summary>
+        public void PurchaseBattlePassFromServer(Action<bool, string> callback)
+        {
+            StartCoroutine(PurchaseBattlePassCoroutine(callback));
+        }
+
+        /// <summary>Admin: sets a specific player's battle pass tier.</summary>
+        public void AdminSetBattlePassTier(string adminKey, string playerID, int tier, Action<bool> callback)
+        {
+            StartCoroutine(AdminSetBattlePassTierCoroutine(adminKey, playerID, tier, callback));
+        }
+
+        /// <summary>Admin: grants or revokes the battle pass for a specific player.</summary>
+        public void AdminSetBattlePassOwnership(string adminKey, string playerID, bool hasPass, Action<bool> callback)
+        {
+            StartCoroutine(AdminSetBattlePassOwnershipCoroutine(adminKey, playerID, hasPass, callback));
+        }
+
+        private IEnumerator GetBattlePassStatusCoroutine(Action<bool, BattlePassStatusData> callback)
+        {
+            string token = GetStoredToken();
+            if (string.IsNullOrEmpty(token))
+            {
+                callback?.Invoke(false, null);
+                yield break;
+            }
+
+            string url = $"{backendURL}/battlepass/getstatus?Token={UnityWebRequest.EscapeURL(token)}";
+            using (UnityWebRequest request = UnityWebRequest.Get(url))
+            {
+                request.timeout = (int)apiTimeout;
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    var response = JsonUtility.FromJson<BattlePassStatusResponse>(request.downloadHandler.text);
+                    if (response.log == "ok")
+                    {
+                        callback?.Invoke(true, new BattlePassStatusData
+                        {
+                            HasBattlePass = response.HasBattlePass,
+                            CurrentTier = response.CurrentTier,
+                            BattlePassXP = response.BattlePassXP,
+                            Season = response.Season
+                        });
+                    }
+                    else
+                    {
+                        callback?.Invoke(false, null);
+                    }
+                }
+                else
+                {
+                    callback?.Invoke(false, null);
+                }
+            }
+        }
+
+        private IEnumerator AddBattlePassXPCoroutine(int amount, Action<bool, int, int> callback)
+        {
+            string token = GetStoredToken();
+            if (string.IsNullOrEmpty(token))
+            {
+                callback?.Invoke(false, 0, 0);
+                yield break;
+            }
+
+            string url = $"{backendURL}/battlepass/addxp";
+            var payload = new BattlePassXPRequest { Token = token, Amount = amount };
+            byte[] body = Encoding.UTF8.GetBytes(JsonUtility.ToJson(payload));
+
+            using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
+            {
+                request.uploadHandler = new UploadHandlerRaw(body);
+                request.downloadHandler = new DownloadHandlerBuffer();
+                request.SetRequestHeader("Content-Type", "application/json");
+                request.timeout = (int)apiTimeout;
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    var response = JsonUtility.FromJson<BattlePassXPResponse>(request.downloadHandler.text);
+                    if (response.log == "ok")
+                    {
+                        callback?.Invoke(true, response.CurrentTier, response.BattlePassXP);
+                    }
+                    else
+                    {
+                        callback?.Invoke(false, 0, 0);
+                    }
+                }
+                else
+                {
+                    callback?.Invoke(false, 0, 0);
+                }
+            }
+        }
+
+        private IEnumerator PurchaseBattlePassCoroutine(Action<bool, string> callback)
+        {
+            string token = GetStoredToken();
+            if (string.IsNullOrEmpty(token))
+            {
+                callback?.Invoke(false, "Not logged in");
+                yield break;
+            }
+
+            string url = $"{backendURL}/battlepass/purchase?Token={UnityWebRequest.EscapeURL(token)}";
+            using (UnityWebRequest request = UnityWebRequest.Get(url))
+            {
+                request.timeout = (int)apiTimeout;
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    var response = JsonUtility.FromJson<BattlePassPurchaseResponse>(request.downloadHandler.text);
+                    switch (response.log)
+                    {
+                        case "ok":
+                            callback?.Invoke(true, "Battle Pass purchased!");
+                            break;
+                        case "AlreadyOwned":
+                            callback?.Invoke(false, "Battle Pass already owned");
+                            break;
+                        case "NotEnoughCoins":
+                            callback?.Invoke(false, $"Not enough CloudCoins (need {response.Required})");
+                            break;
+                        default:
+                            callback?.Invoke(false, "Purchase failed");
+                            break;
+                    }
+                }
+                else
+                {
+                    callback?.Invoke(false, $"Network error: {request.error}");
+                }
+            }
+        }
+
+        private IEnumerator AdminSetBattlePassTierCoroutine(string adminKey, string playerID, int tier, Action<bool> callback)
+        {
+            string url = $"{backendURL}/admin/battlepass/settier?AdminKey={UnityWebRequest.EscapeURL(adminKey)}&PlayerID={UnityWebRequest.EscapeURL(playerID)}&Tier={tier}";
+            using (UnityWebRequest request = UnityWebRequest.Get(url))
+            {
+                request.timeout = (int)apiTimeout;
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    var response = JsonUtility.FromJson<SimpleLogResponse>(request.downloadHandler.text);
+                    callback?.Invoke(response.log == "ok");
+                }
+                else
+                {
+                    callback?.Invoke(false);
+                }
+            }
+        }
+
+        private IEnumerator AdminSetBattlePassOwnershipCoroutine(string adminKey, string playerID, bool hasPass, Action<bool> callback)
+        {
+            string url = $"{backendURL}/admin/battlepass/setpass?AdminKey={UnityWebRequest.EscapeURL(adminKey)}&PlayerID={UnityWebRequest.EscapeURL(playerID)}&HasPass={hasPass}";
+            using (UnityWebRequest request = UnityWebRequest.Get(url))
+            {
+                request.timeout = (int)apiTimeout;
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    var response = JsonUtility.FromJson<SimpleLogResponse>(request.downloadHandler.text);
+                    callback?.Invoke(response.log == "ok");
+                }
+                else
+                {
+                    callback?.Invoke(false);
                 }
             }
         }
@@ -615,6 +808,7 @@ namespace TPSBR.Backend
             public int CloudCoins;
             public string[] OwnedSkins;
             public string EquippedSkin;
+            public bool HasBattlePass;
         }
 
         [Serializable]
@@ -626,6 +820,7 @@ namespace TPSBR.Backend
             public int CloudCoins;
             public string[] OwnedSkins;
             public string EquippedSkin;
+            public bool HasBattlePass;
         }
 
         [Serializable]
@@ -649,5 +844,55 @@ namespace TPSBR.Backend
             public string log;
             public string message;
         }
+
+        [Serializable]
+        private class BattlePassStatusResponse
+        {
+            public string log;
+            public bool HasBattlePass;
+            public int CurrentTier;
+            public int BattlePassXP;
+            public int Season;
+        }
+
+        [Serializable]
+        private class BattlePassXPRequest
+        {
+            public string Token;
+            public int Amount;
+        }
+
+        [Serializable]
+        private class BattlePassXPResponse
+        {
+            public string log;
+            public int CurrentTier;
+            public int BattlePassXP;
+        }
+
+        [Serializable]
+        private class BattlePassPurchaseResponse
+        {
+            public string log;
+            public int NewCoinTotal;
+            public int Required;
+            public int Current;
+        }
+
+        [Serializable]
+        private class SimpleLogResponse
+        {
+            public string log;
+        }
+    }
+
+    /// <summary>Runtime snapshot of a player's battle pass progress.</summary>
+    [Serializable]
+    public class BattlePassStatusData
+    {
+        public bool HasBattlePass;
+        public int CurrentTier;
+        public int BattlePassXP;
+        public int Season;
     }
 }

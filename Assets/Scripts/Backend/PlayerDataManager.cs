@@ -13,6 +13,9 @@ namespace TPSBR.Backend
         public int CloudCoins;
         public string[] OwnedSkins;
         public string EquippedSkin;
+        public bool HasBattlePass;
+        public int BattlePassTier;
+        public int BattlePassXP;
     }
 
     public class PlayerDataManager : MonoBehaviour
@@ -32,6 +35,7 @@ namespace TPSBR.Backend
         public event Action<int> OnLevelChanged;
         public event Action<int> OnCoinsChanged;
         public event Action<CharacterData> OnSkinUnlocked;
+        public event Action OnBattlePassPurchased;
 
         private void Awake()
         {
@@ -375,6 +379,95 @@ namespace TPSBR.Backend
                 {
                     callback?.Invoke(false, "Failed to deduct coins");
                 }
+            });
+        }
+
+        /// <summary>Purchases the battle pass for 950 CloudCoins, marks it in the backend, and fires OnBattlePassPurchased.</summary>
+        public void PurchaseBattlePass(Action<bool, string> callback = null)
+        {
+            const int battlePassPrice = 950;
+
+            if (currentData == null)
+            {
+                callback?.Invoke(false, "Player data not loaded");
+                return;
+            }
+
+            if (currentData.HasBattlePass)
+            {
+                callback?.Invoke(false, "Battle Pass already owned");
+                return;
+            }
+
+            if (currentData.CloudCoins < battlePassPrice)
+            {
+                callback?.Invoke(false, $"Not enough CloudCoins (need {battlePassPrice})");
+                return;
+            }
+
+            // Delegate the purchase entirely to the server so coins and pass status stay in sync.
+            BackendServiceManager.Instance.PurchaseBattlePassFromServer((success, message) =>
+            {
+                if (success)
+                {
+                    currentData.HasBattlePass = true;
+                    currentData.CloudCoins -= battlePassPrice;
+                    OnBattlePassPurchased?.Invoke();
+                    Debug.Log("[PlayerDataManager] Battle Pass purchased.");
+                }
+                else
+                {
+                    Debug.LogWarning($"[PlayerDataManager] Battle Pass purchase failed: {message}");
+                }
+                callback?.Invoke(success, message);
+            });
+        }
+
+        /// <summary>Awards battle pass XP and tiers up via the server. Fires OnBattlePassTierUp when the tier increases.</summary>
+        public void AddBattlePassXP(int amount, Action<bool, int, int> callback = null)
+        {
+            if (BackendServiceManager.Instance == null)
+            {
+                callback?.Invoke(false, 0, 0);
+                return;
+            }
+
+            BackendServiceManager.Instance.AddBattlePassXP(amount, (success, newTier, newXP) =>
+            {
+                if (success && currentData != null)
+                {
+                    int oldTier = currentData.BattlePassTier;
+                    currentData.BattlePassTier = newTier;
+                    currentData.BattlePassXP = newXP;
+
+                    if (newTier > oldTier)
+                    {
+                        Debug.Log($"[PlayerDataManager] Battle Pass tier up! Now tier {newTier}.");
+                    }
+                }
+                callback?.Invoke(success, newTier, newXP);
+            });
+        }
+
+        /// <summary>Fetches fresh battle pass status from the server and updates local data.</summary>
+        public void LoadBattlePassStatus(Action<bool, bool, int, int> callback = null)
+        {
+            if (BackendServiceManager.Instance == null)
+            {
+                callback?.Invoke(false, false, 0, 0);
+                return;
+            }
+
+            BackendServiceManager.Instance.GetBattlePassStatus((success, data) =>
+            {
+                if (success && data != null && currentData != null)
+                {
+                    currentData.HasBattlePass = data.HasBattlePass;
+                    currentData.BattlePassTier = data.CurrentTier;
+                    currentData.BattlePassXP = data.BattlePassXP;
+                    Debug.Log($"[PlayerDataManager] BP status: hasPass={data.HasBattlePass}, tier={data.CurrentTier}, xp={data.BattlePassXP}");
+                }
+                callback?.Invoke(success, data?.HasBattlePass ?? false, data?.CurrentTier ?? 0, data?.BattlePassXP ?? 0);
             });
         }
     }
