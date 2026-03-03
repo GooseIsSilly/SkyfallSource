@@ -1,0 +1,13 @@
+🔴 SHOP BUTTON ERROR FIX 🔴
+
+QUICK FIX (30 seconds):
+
+1. Open /Assets/Scripts/UIMainMenuView_FIXED.cs
+2. Copy ALL the code (Ctrl+A, Ctrl+C)
+3. Open /Assets/TPSBR/Scripts/UI/MenuViews/UIMainMenuView.cs
+4. Select ALL (Ctrl+A) and Paste (Ctrl+V)
+5. Save (Ctrl+S)
+
+DONE! Shop button will no longer crash!
+
+See /Assets/Scripts/URGENT_SHOP_BUTTON_FIX.md for full details.

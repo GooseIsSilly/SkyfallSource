@@ -1,0 +1,217 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    QUICK START EXAMPLE SETUP
+═══════════════════════════════════════════════════════════════════════════════
+
+This is a minimal example to get the cinematic working ASAP for testing.
+
+───────────────────────────────────────────────────────────────────────────────
+MINIMAL SCENE SETUP (5 MINUTES)
+───────────────────────────────────────────────────────────────────────────────
+
+1. CREATE MANAGER
+   Hierarchy > Create Empty > Name: "SeasonCinematicManager"
+   Add Component > Season Cinematic Controller
+
+2. CREATE SPAWN POINT
+   Hierarchy > Create Empty > Name: "PlayerSpawnPoint"
+   Position: (0, 1, 0)  [or wherever you want player to start]
+   Drag into "Player Spawn Point" field
+
+3. ASSIGN PLAYER PREFAB
+   Drag your character prefab into "Player Prefab" field
+   (Must have Animator with humanoid avatar)
+
+4. CREATE CAMERAS
+   
+   A. Intro Camera:
+      Hierarchy > Cinemachine > Virtual Camera
+      Name: "IntroCam"
+      Position: (0, 2, -3)
+      Look at spawn point
+      Drag into "Intro Cam" field
+   
+   B. Player Follow Camera:
+      Hierarchy > Cinemachine > Virtual Camera
+      Name: "PlayerFollowCam"
+      Add: Cinemachine Transposer (Body)
+      Add: Cinemachine Composer (Aim)
+      Drag into "Player Follow Cam" field
+   
+   C. Dialogue Camera:
+      Hierarchy > Cinemachine > Virtual Camera
+      Name: "DialogueCam"
+      Position: (3, 1.5, 3)
+      Look at where NPC will be
+      Drag into "Dialogue Cam" field
+   
+   D. Flyby Camera:
+      Hierarchy > Cinemachine > Virtual Camera
+      Name: "FlybyCam"
+      Drag into "Flyby Camera" field
+
+5. CREATE NPC
+   Hierarchy > 3D Object > Capsule (temporary stand-in)
+   Name: "NPC"
+   Position: (5, 0, 0)  [a few meters from spawn]
+   Add Component > Animator
+   Create Animator Controller with "Talking" state (can be empty for now)
+   Assign to NPC Animator
+   
+   In SeasonCinematicController:
+   - Drag NPC into "NPC Character"
+   - Drag NPC into "NPC Transform"
+   - Drag NPC Animator into "NPC Animator"
+
+6. CREATE WAYPOINTS (for camera flyby)
+   Create 3-5 empty GameObjects:
+   
+   Waypoint1: Position (10, 5, 10) - Look at interesting area
+   Waypoint2: Position (20, 8, 5) - Different angle
+   Waypoint3: Position (15, 10, -10) - Final position
+   
+   Rotate each to face interesting parts of your map
+   Drag all into "Flyby Waypoints" array
+
+7. ASSIGN ANIMATIONS
+   You need animations for humanoid character:
+   - Laying Down Idle (lying on ground loop)
+   - Wake Up (getting up from ground)
+   - Idle (standing)
+   - Walk (walking loop)
+   
+   If you don't have these yet, you can:
+   - Download from Mixamo.com (free)
+   - Or temporarily use any animation to test the flow
+
+8. ASSIGN AUDIO (Optional for testing)
+   - Wake Up Music: Background music track 1
+   - Plane Music: Background music track 2
+   - First Dialog Clip: NPC voiceover 1
+   - Second Dialog Clip: NPC voiceover 2
+   
+   You can skip these for initial testing
+
+───────────────────────────────────────────────────────────────────────────────
+TEST WITHOUT ANIMATIONS (EVEN FASTER)
+───────────────────────────────────────────────────────────────────────────────
+
+If you want to test the FLOW without animations:
+
+1. Set up everything above EXCEPT animations
+2. Leave animation fields empty
+3. The system will still work but skip animation playback
+4. You can test:
+   - Press P to wake up (instant)
+   - Walk to NPC with WASD
+   - Hold P to talk
+   - Camera flyby through waypoints
+   - Transition to battle royale
+
+This lets you verify the sequence flow before adding animations.
+
+───────────────────────────────────────────────────────────────────────────────
+RECOMMENDED MIXAMO ANIMATIONS
+───────────────────────────────────────────────────────────────────────────────
+
+If using Mixamo for animations:
+
+1. Go to mixamo.com
+2. Search for these (or similar):
+   - "Laying Idle" or "Dying" (for laying down)
+   - "Getting Up" or "Stand Up" (for wake up)
+   - "Idle" (for idle)
+   - "Walking" (for walk)
+
+3. Download as FBX for Unity
+4. Import into Unity
+5. Set Animation Type to "Humanoid"
+6. Apply
+
+───────────────────────────────────────────────────────────────────────────────
+COMPONENT CHECKLIST
+───────────────────────────────────────────────────────────────────────────────
+
+SeasonCinematicController Fields:
+
+Required:
+✓ Player Spawn Point
+✓ Player Prefab
+✓ Intro Cam
+✓ Player Follow Cam
+✓ Dialogue Cam
+✓ Flyby Camera
+✓ NPC Character
+✓ NPC Transform
+✓ NPC Animator
+✓ Flyby Waypoints (at least 2)
+
+Optional (for full experience):
+○ Laying Down Idle Clip
+○ Wake Up Clip
+○ Idle Clip
+○ Walk Clip
+○ Wake Up Music
+○ Plane Music
+○ First Dialog Clip
+○ Second Dialog Clip
+
+Auto-Created:
+• UI Canvas
+• Prompt Text
+• Fade Image
+• Audio Sources
+
+───────────────────────────────────────────────────────────────────────────────
+TESTING CONTROLS
+───────────────────────────────────────────────────────────────────────────────
+
+During Cinematic:
+- P = Wake up (when laying down)
+- WASD = Walk to NPC (after waking up)
+- Hold P = Talk to NPC (when near)
+
+After Cinematic:
+- Normal game controls take over
+- Battle Royale mode starts
+- You'll be in the plane
+
+Replay Cinematic:
+- Right-click SeasonCinematicController component
+- Click "Reset Intro (Testing)"
+- Or: PlayerPrefs > Delete Key "Season_HasSeenIntro"
+
+───────────────────────────────────────────────────────────────────────────────
+COMMON FIRST-TIME ISSUES
+───────────────────────────────────────────────────────────────────────────────
+
+Issue: Nothing happens when I press Play
+Fix: Check that cinematic hasn't been seen already. Reset using context menu.
+
+Issue: Player is T-posing
+Fix: Make sure player prefab Animator has humanoid Avatar assigned
+
+Issue: Can't move after wake up
+Fix: Check console for errors. Make sure ground has colliders.
+
+Issue: Camera doesn't switch
+Fix: Make sure Main Camera has CinemachineBrain component
+
+Issue: Battle Royale doesn't start
+Fix: Make sure BattleRoyaleGameplayMode exists in scene
+
+───────────────────────────────────────────────────────────────────────────────
+NEXT STEPS
+───────────────────────────────────────────────────────────────────────────────
+
+Once basic setup works:
+
+1. Replace capsule NPC with your actual NPC character
+2. Add proper animations
+3. Add music tracks
+4. Add dialog voiceovers
+5. Position cameras for cinematic angles
+6. Add more waypoints for better flyby
+7. Polish timing values
+8. Test with actual game flow
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,10 @@
+﻿newmtl MI_MainMaterial
+	map_Kd MI_MainMaterial_D.bmp
+	map_Ks MI_MainMaterial_S.bmp
+	bump MI_MainMaterial_N.bmp
+
+newmtl MI_Glass
+	map_Kd MI_Glass_D.bmp
+	map_Ks MI_Glass_S.bmp
+	bump MI_Glass_N.bmp
+

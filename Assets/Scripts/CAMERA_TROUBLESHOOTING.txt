@@ -1,0 +1,281 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    CAMERA TROUBLESHOOTING GUIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+If your cameras aren't switching during the cinematic, follow these steps:
+
+───────────────────────────────────────────────────────────────────────────────
+STEP 1: ADD THE DEBUG TOOL
+───────────────────────────────────────────────────────────────────────────────
+
+1. In your Game scene Hierarchy, create an empty GameObject
+2. Name it "CameraDebugger"
+3. Add the "CinematicCameraDebugger" component to it
+4. Enter Play mode
+5. You'll see a green debug panel in the top-left showing:
+   - If Main Camera is found
+   - If CinemachineBrain exists
+   - Which virtual camera is active
+   - All virtual cameras and their priorities
+
+This will tell you exactly what's wrong!
+
+───────────────────────────────────────────────────────────────────────────────
+STEP 2: CHECK THE CONSOLE
+───────────────────────────────────────────────────────────────────────────────
+
+The SeasonCinematicController now logs detailed information:
+
+When the scene starts, look for these logs:
+✓ "SeasonCinematicController: Start() called"
+✓ "  - _introCam assigned: true/false"
+✓ "  - _playerFollowCam assigned: true/false"
+✓ "  - _dialogueCam assigned: true/false"
+✓ "  - _flybyCamera assigned: true/false"
+✓ "  - _cinemachineBrain found: true/false"
+✓ "SeasonCinematicController: Starting cinematic sequence..."
+✓ "SeasonCinematicController: Setting intro camera active"
+✓ "SeasonCinematicController: SetActiveCamera called with [camera name]"
+✓ "SeasonCinematicController: Set [camera name] priority to 100"
+
+If you DON'T see these logs, the script isn't running!
+
+───────────────────────────────────────────────────────────────────────────────
+COMMON ISSUE #1: CAMERAS NOT ASSIGNED
+───────────────────────────────────────────────────────────────────────────────
+
+SYMPTOM:
+Console shows: "_introCam assigned: false" (or similar for other cameras)
+
+FIX:
+1. Select the "SeasonCinematicController" GameObject in Hierarchy
+2. In Inspector, find the "Cameras" section
+3. Make sure ALL 4 camera slots are filled:
+   - Intro Cam
+   - Player Follow Cam
+   - Dialogue Cam
+   - Flyby Camera
+4. If empty, drag your Virtual Camera GameObjects into these slots
+
+───────────────────────────────────────────────────────────────────────────────
+COMMON ISSUE #2: VIRTUAL CAMERAS DON'T EXIST
+───────────────────────────────────────────────────────────────────────────────
+
+SYMPTOM:
+- Debug panel shows "NO VIRTUAL CAMERAS FOUND!"
+- Or you can't assign cameras in Inspector because they don't exist
+
+FIX:
+You need to create the virtual cameras!
+
+For EACH camera (4 total):
+
+1. Hierarchy > Right-click > Cinemachine > Virtual Camera
+2. Name them:
+   - "IntroCam" (for intro)
+   - "PlayerFollowCam" (for following player)
+   - "DialogueCam" (for dialogue)
+   - "FlybyCam" (for flyby)
+
+3. Position and rotate each camera to frame what you want to see
+
+4. For PlayerFollowCam specifically:
+   - Add "CinemachineTransposer" in Body section
+   - Add "CinemachineComposer" in Aim section
+   - The Follow target will be set automatically by the script
+
+5. Drag each virtual camera into the corresponding slot on SeasonCinematicController
+
+───────────────────────────────────────────────────────────────────────────────
+COMMON ISSUE #3: CINEMACHINE BRAIN MISSING
+───────────────────────────────────────────────────────────────────────────────
+
+SYMPTOM:
+- Console shows: "_cinemachineBrain found: false"
+- Debug panel shows "CinemachineBrain: NO"
+- Cameras exist but nothing switches
+
+FIX:
+The script should auto-add CinemachineBrain, but if it doesn't:
+
+1. Find your Main Camera (usually at /Gameplay/SceneCamera/Camera)
+2. Select it in Hierarchy
+3. In Inspector, click "Add Component"
+4. Search for "Cinemachine Brain"
+5. Add it
+
+The CinemachineBrain is what makes virtual cameras control the main camera!
+
+───────────────────────────────────────────────────────────────────────────────
+COMMON ISSUE #4: MAIN CAMERA NOT FOUND
+───────────────────────────────────────────────────────────────────────────────
+
+SYMPTOM:
+- Console shows: "No Camera found in scene!"
+- Debug panel shows "Main Camera: NOT FOUND!"
+
+FIX:
+1. Find your camera GameObject (look for Camera component)
+2. Select it in Hierarchy
+3. In Inspector, find the "Tag" dropdown at the top
+4. Change from "Untagged" to "MainCamera"
+
+OR: The script will find it anyway using FindFirstObjectByType, but tagging
+    it as MainCamera is best practice.
+
+───────────────────────────────────────────────────────────────────────────────
+COMMON ISSUE #5: OTHER CAMERAS HAVE HIGHER PRIORITY
+───────────────────────────────────────────────────────────────────────────────
+
+SYMPTOM:
+- Virtual cameras exist
+- CinemachineBrain exists
+- But the wrong camera is active
+- Debug panel shows a different camera as ACTIVE
+
+FIX:
+Some other system might be setting camera priorities!
+
+Check ALL virtual cameras in your scene:
+1. Window > Hierarchy > Search for "Virtual Camera" or "CM vcam"
+2. Check each one's Priority value
+3. The cinematic cameras should have Priority 100 when active, 0 when inactive
+4. If another camera has Priority > 100, it will override
+
+Temporary fix: Manually set other cameras' Priority to 0 in Inspector
+
+───────────────────────────────────────────────────────────────────────────────
+COMMON ISSUE #6: CINEMATIC CONTROLLER NOT RUNNING
+───────────────────────────────────────────────────────────────────────────────
+
+SYMPTOM:
+- You see "Press P To Start New Decade" (so SOMETHING is working)
+- But NO console logs from SeasonCinematicController
+- Camera doesn't switch
+
+POSSIBLE CAUSES:
+
+A) The SeasonCinematicController GameObject is disabled
+   FIX: Enable it in Hierarchy
+
+B) The SeasonCinematicController component is disabled
+   FIX: Enable the checkmark in Inspector
+
+C) You're looking at OLD console logs
+   FIX: Clear console and play again
+
+D) The intro was already seen
+   FIX: Right-click SeasonCinematicController > "Reset Intro (Testing)"
+
+───────────────────────────────────────────────────────────────────────────────
+COMMON ISSUE #7: CAMERA SWITCHES BUT YOU CAN'T TELL
+───────────────────────────────────────────────────────────────────────────────
+
+SYMPTOM:
+- Cameras might be switching
+- But they're all pointed at the same thing or nothing
+
+FIX:
+Position your cameras to point at different things:
+
+1. IntroCam: Point at the spawn point where player will lay down
+2. PlayerFollowCam: Will auto-follow player (no manual positioning needed)
+3. DialogueCam: Point at where your NPC is standing
+4. FlybyCam: Will move through waypoints (start position doesn't matter much)
+
+Test each camera individually:
+1. Select a virtual camera in Hierarchy
+2. Click "Solo" button in Inspector (looks like an eye icon)
+3. This shows you what that camera sees in Scene view
+4. Adjust position/rotation
+5. Unclick "Solo" when done
+
+───────────────────────────────────────────────────────────────────────────────
+DIAGNOSTIC CHECKLIST
+───────────────────────────────────────────────────────────────────────────────
+
+Run through this checklist:
+
+□ CinematicCameraDebugger is in the scene and showing info
+□ Main Camera exists and is found (debug panel confirms)
+□ CinemachineBrain exists on Main Camera (debug panel confirms)
+□ 4 virtual cameras exist in scene (debug panel lists them)
+□ All 4 virtual cameras are assigned in SeasonCinematicController Inspector
+□ SeasonCinematicController is enabled and active
+□ Console shows "SeasonCinematicController: Start() called"
+□ Console shows "SeasonCinematicController: Setting intro camera active"
+□ Console shows "SeasonCinematicController: Set [camera] priority to 100"
+□ Debug panel shows the correct camera as "ACTIVE"
+□ Virtual cameras are positioned to show what you want
+
+If ALL of these are checked and it STILL doesn't work, there's likely a
+conflict with another system in your game.
+
+───────────────────────────────────────────────────────────────────────────────
+ADVANCED: CHECKING FOR CONFLICTS
+───────────────────────────────────────────────────────────────────────────────
+
+If everything looks right but cameras don't switch:
+
+1. Search for other scripts that might control cameras:
+   - Search project for "CinemachineVirtualCamera"
+   - Search for ".Priority"
+   - Look for other camera controllers
+
+2. Check if BattleRoyaleGameplayMode has cameras:
+   - It might be spawning its own cameras
+   - Those might have higher priority
+
+3. Disable other camera systems temporarily:
+   - Disable other camera control scripts
+   - Test if cinematic cameras work
+   - This will tell you if there's a conflict
+
+───────────────────────────────────────────────────────────────────────────────
+QUICK FIX: MANUAL CAMERA SETUP
+───────────────────────────────────────────────────────────────────────────────
+
+If you just want to TEST the system quickly:
+
+1. Create ONE virtual camera: "TestCam"
+2. Position it to see your spawn point
+3. Assign it to ALL 4 slots in SeasonCinematicController:
+   - Intro Cam = TestCam
+   - Player Follow Cam = TestCam
+   - Dialogue Cam = TestCam
+   - Flyby Camera = TestCam
+
+This won't give you a proper cinematic, but it will let you test if the
+camera switching system works at all. If this works, the issue is with
+your individual camera setup, not the controller.
+
+───────────────────────────────────────────────────────────────────────────────
+STILL NOT WORKING?
+───────────────────────────────────────────────────────────────────────────────
+
+If you've tried everything:
+
+1. Take a screenshot of:
+   - The Console with logs showing
+   - The CameraDebugger panel
+   - The SeasonCinematicController Inspector
+   - Your Scene Hierarchy (showing all cameras)
+
+2. Check these specific things:
+   - Is the game already past the intro when you test?
+   - Are you in the correct scene?
+   - Did you save your changes?
+   - Did you restart Unity?
+
+3. Try these nuclear options:
+   - Delete the SeasonCinematicController GameObject
+   - Create a NEW GameObject
+   - Add SeasonCinematicController component
+   - Set up everything fresh
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Remember: The CinematicCameraDebugger is your friend! It shows you exactly
+what's happening with your cameras in real-time.
+
+═══════════════════════════════════════════════════════════════════════════════

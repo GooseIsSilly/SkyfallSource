@@ -1,0 +1,568 @@
+"""
+================================================================================
+FIXED WSGI FILE FOR PYTHONANYWHERE (ASGI WRAPPER INCLUDED)
+================================================================================
+
+INSTRUCTIONS:
+1. Install a2wsgi first! (see Step 1 below)
+2. Go to PythonAnywhere → Web tab
+3. Click "WSGI configuration file" link
+4. DELETE EVERYTHING in that file
+5. COPY/PASTE ALL OF THIS CODE
+6. Change YOURUSERNAME on line 30
+7. Save the file (Ctrl+S)
+8. Click "Reload" button
+9. Test: https://novafy.pythonanywhere.com/
+
+IMPORTANT: Must install a2wsgi package first!
+Run in Bash: pip3 install --user a2wsgi
+
+================================================================================
+"""
+
+import json
+import os
+import random
+import string
+import sys
+from datetime import datetime
+
+# ============================================================================
+# PYTHONANYWHERE PATH SETUP
+# ============================================================================
+
+# CHANGE THIS TO YOUR USERNAME!
+path = '/home/YOURUSERNAME/mysite'  # ← CHANGE YOURUSERNAME!
+if path not in sys.path:
+    sys.path.append(path)
+os.chdir(path)
+
+# ============================================================================
+# INSTALL CHECK
+# ============================================================================
+
+try:
+    import bcrypt
+    from fastapi import FastAPI
+    from fastapi.middleware.cors import CORSMiddleware
+    from pydantic import BaseModel
+    from a2wsgi import ASGIMiddleware
+except ImportError as e:
+    print(f"ERROR: Missing dependency - {e}")
+    print("Run in Bash console:")
+    print("pip3 install --user fastapi uvicorn bcrypt pydantic a2wsgi")
+    raise
+
+# ============================================================================
+# FASTAPI APP SETUP
+# ============================================================================
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Change to specific domain in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ============================================================================
+# FILE SYSTEM SETUP
+# ============================================================================
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+def get_path(*paths):
+    """Get absolute path for file operations"""
+    return os.path.join(BASE_DIR, *paths)
+
+# Create required folders
+os.makedirs(get_path("Accounts"), exist_ok=True)
+os.makedirs(get_path("Bans"), exist_ok=True)
+os.makedirs(get_path("Reports"), exist_ok=True)
+
+print("Folders created/verified: Accounts, Bans, Reports")
+
+# ============================================================================
+# GLOBAL VARIABLES
+# ============================================================================
+
+TokenDict = {}
+ADMIN_KEY = "your_secret_admin_key_12345_CHANGE_THIS"
+
+# ============================================================================
+# PYDANTIC MODELS
+# ============================================================================
+
+class GameDataUpdate(BaseModel):
+    Token: str
+    Level: int = None
+    XP: int = None
+    CloudCoins: int = None
+    OwnedSkins: list = None
+    EquippedSkin: str = None
+
+class ReportRequest(BaseModel):
+    Token: str
+    ReportedPlayer: str
+    Reason: str
+    Description: str
+
+# ============================================================================
+# BASIC ENDPOINTS
+# ============================================================================
+
+@app.get("/")
+def index():
+    return {"log": "MeteorBackend"}
+
+@app.get("/login/createaccount")
+def appcreateacc(ID: str, Pass: str):
+    return createaccount(ID, Pass)
+
+@app.get("/login/connect")
+def appconnect(ID: str, Pass: str):
+    return auth(ID, Pass)
+
+@app.get("/login/logout")
+def applogout(Token: str):
+    JFile = getuserfilebytoken(Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    removetoken(JFile["AccountName"])
+    return {"log": "ok"}
+
+@app.get("/login/connectbytoken")
+def appconnectbytoken(Token: str):
+    JFile = getuserfilebytoken(Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    
+    ban_status = isbanned(JFile["AccountName"])
+    if ban_status["banned"]:
+        removetoken(JFile["AccountName"])
+        return {
+            "log": "AccountBanned",
+            "reason": ban_status["reason"],
+            "expiresAt": ban_status.get("expiresAt")
+        }
+    
+    return {"log": "ok", "username": JFile["AccountName"]}
+
+# ============================================================================
+# BAN MANAGEMENT
+# ============================================================================
+
+@app.get("/admin/ban")
+def appbanplayer(AdminKey: str, PlayerID: str, Reason: str, ExpiresAt: str = None):
+    if AdminKey != ADMIN_KEY:
+        return {"log": "InvalidAdminKey"}
+    return banplayer(PlayerID, Reason, "Admin", ExpiresAt)
+
+@app.get("/admin/unban")
+def appunbanplayer(AdminKey: str, PlayerID: str):
+    if AdminKey != ADMIN_KEY:
+        return {"log": "InvalidAdminKey"}
+    return unbanplayer(PlayerID)
+
+@app.get("/admin/listbans")
+def applistbans(AdminKey: str):
+    if AdminKey != ADMIN_KEY:
+        return {"log": "InvalidAdminKey"}
+    return {"log": "ok", "bans": getactivebans()}
+
+@app.get("/player/checkban")
+def appcheckban(Token: str):
+    JFile = getuserfilebytoken(Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    
+    ban_status = isbanned(JFile["AccountName"])
+    if ban_status["banned"]:
+        removetoken(JFile["AccountName"])
+        return {"log": "Banned", "banStatus": ban_status}
+    
+    return {"log": "NotBanned"}
+
+# ============================================================================
+# GAME DATA ENDPOINTS
+# ============================================================================
+
+@app.get("/account/getgamedata")
+def appgetgamedata(Token: str):
+    JFile = getuserfilebytoken(Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    
+    return {
+        "log": "ok",
+        "Level": JFile.get("Level", 1),
+        "XP": JFile.get("XP", 0),
+        "CloudCoins": JFile.get("CloudCoins", 0),
+        "OwnedSkins": JFile.get("OwnedSkins", []),
+        "EquippedSkin": JFile.get("EquippedSkin", "DefaultSkin")
+    }
+
+@app.post("/account/updategamedata")
+def appupdategamedata(request: GameDataUpdate):
+    JFile = getuserfilebytoken(request.Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    
+    player_id = JFile["AccountName"]
+    
+    if request.Level is not None:
+        JFile["Level"] = request.Level
+    if request.XP is not None:
+        JFile["XP"] = request.XP
+    if request.CloudCoins is not None:
+        JFile["CloudCoins"] = request.CloudCoins
+    if request.OwnedSkins is not None:
+        JFile["OwnedSkins"] = request.OwnedSkins
+    if request.EquippedSkin is not None:
+        JFile["EquippedSkin"] = request.EquippedSkin
+    
+    with open(get_path("Accounts", player_id + ".json"), "w") as savefile:
+        json.dump(JFile, savefile, indent=4)
+    
+    return {"log": "ok"}
+
+@app.get("/account/addcoins")
+def appaddcoins(Token: str, Amount: int):
+    JFile = getuserfilebytoken(Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    
+    player_id = JFile["AccountName"]
+    current_coins = JFile.get("CloudCoins", 0)
+    JFile["CloudCoins"] = max(0, current_coins + Amount)
+    
+    with open(get_path("Accounts", player_id + ".json"), "w") as savefile:
+        json.dump(JFile, savefile, indent=4)
+    
+    return {"log": "ok", "NewTotal": JFile["CloudCoins"]}
+
+@app.get("/account/addxp")
+def appaddxp(Token: str, Amount: int):
+    JFile = getuserfilebytoken(Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    
+    player_id = JFile["AccountName"]
+    current_xp = JFile.get("XP", 0)
+    current_level = JFile.get("Level", 1)
+    
+    new_xp = current_xp + Amount
+    xp_per_level = 1000
+    
+    while new_xp >= xp_per_level and current_level < 100:
+        new_xp -= xp_per_level
+        current_level += 1
+    
+    JFile["XP"] = new_xp
+    JFile["Level"] = current_level
+    
+    with open(get_path("Accounts", player_id + ".json"), "w") as savefile:
+        json.dump(JFile, savefile, indent=4)
+    
+    return {"log": "ok", "Level": current_level, "XP": new_xp}
+
+@app.get("/account/unlockskin")
+def appunlockskin(Token: str, SkinID: str):
+    JFile = getuserfilebytoken(Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    
+    player_id = JFile["AccountName"]
+    owned_skins = JFile.get("OwnedSkins", [])
+    
+    if SkinID not in owned_skins:
+        owned_skins.append(SkinID)
+        JFile["OwnedSkins"] = owned_skins
+        
+        with open(get_path("Accounts", player_id + ".json"), "w") as savefile:
+            json.dump(JFile, savefile, indent=4)
+        
+        return {"log": "ok", "message": "Skin unlocked"}
+    else:
+        return {"log": "AlreadyOwned"}
+
+# ============================================================================
+# REPORTING SYSTEM
+# ============================================================================
+
+@app.post("/reports/submit")
+def appsubmitreport(request: ReportRequest):
+    JFile = getuserfilebytoken(request.Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    
+    reporter = JFile["AccountName"]
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    report_data = JFile.get("ReportData", {})
+    last_report_time = report_data.get("LastReportTime", "")
+    report_count = report_data.get("ReportCount", 0)
+    
+    if last_report_time:
+        try:
+            last_time = datetime.strptime(last_report_time, "%Y-%m-%d %H:%M:%S")
+            time_diff = (datetime.now() - last_time).total_seconds()
+            if time_diff < 300:
+                return {"log": "ReportLimitReached"}
+        except:
+            pass
+    
+    report_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(16))
+    
+    report_record = {
+        "ReportID": report_id,
+        "Reporter": reporter,
+        "ReportedPlayer": request.ReportedPlayer,
+        "Reason": request.Reason,
+        "Description": request.Description,
+        "Timestamp": current_time,
+        "Status": "Pending"
+    }
+    
+    with open(get_path("Reports", report_id + ".json"), "w") as reportfile:
+        json.dump(report_record, reportfile, indent=4)
+    
+    report_data["LastReportTime"] = current_time
+    report_data["ReportCount"] = report_count + 1
+    JFile["ReportData"] = report_data
+    
+    with open(get_path("Accounts", reporter + ".json"), "w") as savefile:
+        json.dump(JFile, savefile, indent=4)
+    
+    return {"log": "ok", "reportId": report_id}
+
+# ============================================================================
+# HELPER FUNCTIONS
+# ============================================================================
+
+def readuserfile(ID: str):
+    """Read user account file"""
+    try:
+        with open(get_path("Accounts", ID + ".json"), "r") as savefile:
+            return json.load(savefile)
+    except FileNotFoundError:
+        return None
+    except Exception as e:
+        print(f"Error reading user file for {ID}: {e}")
+        return None
+
+def getuserfilebytoken(Token: str):
+    """Get user file by token"""
+    for player_id, token in TokenDict.items():
+        if token == Token:
+            return readuserfile(player_id)
+    return "MissingToken"
+
+def addtoken(ID: str):
+    """Generate and store new token"""
+    Token = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(30))
+    TokenDict[ID] = Token
+    return Token
+
+def removetoken(ID: str):
+    """Remove token from active tokens"""
+    if ID in TokenDict:
+        del TokenDict[ID]
+
+def createaccount(ID: str, Pass: str):
+    """Create new account"""
+    if len(ID) < 3:
+        return {"log": "IDTooShort"}
+    if len(Pass) < 9:
+        return {"log": "PassTooShort"}
+    
+    if os.path.exists(get_path("Accounts", ID + ".json")):
+        return {"log": "ExistingID"}
+    
+    try:
+        hashed = bcrypt.hashpw(Pass.encode('utf-8'), bcrypt.gensalt())
+    except Exception as e:
+        print(f"Bcrypt error: {e}")
+        return {"log": "ServerError"}
+    
+    account_data = {
+        "AccountName": ID,
+        "Pass": hashed.decode('utf-8'),
+        "Level": 1,
+        "XP": 0,
+        "CloudCoins": 0,
+        "OwnedSkins": [],
+        "EquippedSkin": "DefaultSkin",
+        "BanStatus": {
+            "IsBanned": False,
+            "BanReason": "",
+            "BannedAt": "",
+            "BannedBy": "",
+            "ExpiresAt": None
+        },
+        "ReportData": {
+            "LastReportTime": "",
+            "ReportCount": 0
+        }
+    }
+    
+    try:
+        with open(get_path("Accounts", ID + ".json"), "w") as savefile:
+            json.dump(account_data, savefile, indent=4)
+    except Exception as e:
+        print(f"Error creating account file: {e}")
+        return {"log": "ServerError"}
+    
+    print(f"Account created: {ID}")
+    return {"log": "AccountCreated", "Token": addtoken(ID)}
+
+def auth(ID: str, Pass: str):
+    """Authenticate user"""
+    if not os.path.exists(get_path("Accounts", ID + ".json")):
+        return {"log": "UserNameNotExist"}
+    
+    ban_status = isbanned(ID)
+    if ban_status["banned"]:
+        return {
+            "log": "AccountBanned",
+            "reason": ban_status["reason"],
+            "expiresAt": ban_status.get("expiresAt")
+        }
+    
+    JFile = readuserfile(ID)
+    if not JFile:
+        return {"log": "UserNameNotExist"}
+    
+    try:
+        AccPass = JFile["Pass"]
+        if bcrypt.checkpw(Pass.encode('utf-8'), AccPass.encode('utf-8')):
+            return {"log": "ConnectionOK", "token": addtoken(ID)}
+        else:
+            return {"log": "PassWrong"}
+    except Exception as e:
+        print(f"Auth error for {ID}: {e}")
+        return {"log": "ServerError"}
+
+def isbanned(ID: str):
+    """Check if player is banned"""
+    JFile = readuserfile(ID)
+    if not JFile:
+        return {"banned": False}
+    
+    ban_status = JFile.get("BanStatus", {})
+    is_banned = ban_status.get("IsBanned", False)
+    
+    if not is_banned:
+        return {"banned": False}
+    
+    expires_at = ban_status.get("ExpiresAt")
+    if expires_at:
+        try:
+            expire_time = datetime.strptime(expires_at, "%Y-%m-%d %H:%M:%S")
+            if datetime.now() >= expire_time:
+                JFile["BanStatus"]["IsBanned"] = False
+                with open(get_path("Accounts", ID + ".json"), "w") as savefile:
+                    json.dump(JFile, savefile, indent=4)
+                return {"banned": False}
+        except:
+            pass
+    
+    return {
+        "banned": True,
+        "reason": ban_status.get("BanReason", "No reason provided"),
+        "bannedAt": ban_status.get("BannedAt", ""),
+        "expiresAt": expires_at
+    }
+
+def banplayer(ID: str, Reason: str, BannedBy: str, ExpiresAt: str = None):
+    """Ban a player"""
+    if not os.path.exists(get_path("Accounts", ID + ".json")):
+        return {"log": "PlayerNotFound"}
+    
+    JFile = readuserfile(ID)
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    JFile["BanStatus"] = {
+        "IsBanned": True,
+        "BanReason": Reason,
+        "BannedAt": current_time,
+        "BannedBy": BannedBy,
+        "ExpiresAt": ExpiresAt
+    }
+    
+    with open(get_path("Accounts", ID + ".json"), "w") as savefile:
+        json.dump(JFile, savefile, indent=4)
+    
+    ban_record = {
+        "PlayerID": ID,
+        "Reason": Reason,
+        "BannedBy": BannedBy,
+        "BannedAt": current_time,
+        "ExpiresAt": ExpiresAt,
+        "Active": True
+    }
+    
+    with open(get_path("Bans", ID + ".json"), "w") as banfile:
+        json.dump(ban_record, banfile, indent=4)
+    
+    removetoken(ID)
+    print(f"Player banned: {ID}")
+    return {"log": "PlayerBanned"}
+
+def unbanplayer(ID: str):
+    """Unban a player"""
+    if not os.path.exists(get_path("Accounts", ID + ".json")):
+        return {"log": "PlayerNotFound"}
+    
+    JFile = readuserfile(ID)
+    JFile["BanStatus"]["IsBanned"] = False
+    
+    with open(get_path("Accounts", ID + ".json"), "w") as savefile:
+        json.dump(JFile, savefile, indent=4)
+    
+    ban_file = get_path("Bans", ID + ".json")
+    if os.path.exists(ban_file):
+        os.remove(ban_file)
+    
+    print(f"Player unbanned: {ID}")
+    return {"log": "PlayerUnbanned"}
+
+def getactivebans():
+    """Get list of all active bans"""
+    bans = []
+    ban_dir = get_path("Bans")
+    
+    if not os.path.exists(ban_dir):
+        return bans
+    
+    try:
+        for filename in os.listdir(ban_dir):
+            if filename.endswith(".json"):
+                with open(get_path("Bans", filename), "r") as banfile:
+                    ban_data = json.load(banfile)
+                    bans.append(ban_data)
+    except Exception as e:
+        print(f"Error reading bans: {e}")
+    
+    return bans
+
+# ============================================================================
+# WSGI APPLICATION OBJECT (ASGI TO WSGI WRAPPER)
+# ============================================================================
+
+# Wrap FastAPI (ASGI) for PythonAnywhere (WSGI)
+application = ASGIMiddleware(app)
+
+# ============================================================================
+# STARTUP MESSAGE
+# ============================================================================
+
+print("=" * 80)
+print("SKYFALL BACKEND - PYTHONANYWHERE READY (ASGI->WSGI)")
+print("=" * 80)
+print("Folders: Accounts, Bans, Reports")
+print("Admin Key:", ADMIN_KEY)
+print("WSGI application loaded successfully!")
+print("=" * 80)

@@ -1,0 +1,406 @@
+================================================================================
+🔍 ROCKET SELF-DAMAGE DEBUGGING GUIDE
+================================================================================
+
+ISSUE: Rocket doesn't damage the player who shot it
+ADDED: Extra debug logging to diagnose the issue
+
+================================================================================
+WHAT I ADDED
+================================================================================
+
+New Debug Logs:
+---------------
+1. "HitMask value: X" - Shows the LayerMask being used
+2. "Owner: [name]" - Shows who fired the rocket
+3. "Checking collider X: [name], Layer: [layer]" - Each collider found
+4. "No IHitTarget found on [name]" - If collider can't be damaged
+5. "HitAgent: [name], IsSelf: true/false" - Shows self-detection
+6. "Applying X damage to [name] (isSelf: true/false)" - Damage applied
+
+These logs will help identify the problem!
+
+================================================================================
+HOW TO DEBUG
+================================================================================
+
+Test Steps:
+-----------
+1. Start game in Play mode
+2. Open Console window (Ctrl+Shift+C)
+3. Clear console
+4. Fire rocket at ground near you
+5. Watch console logs
+
+What to Look For:
+-----------------
+
+Log 1: Explosion Position
+-------------------------
+"[RocketProjectile] Exploding at (x, y, z)"
+→ Shows where explosion happened
+
+Log 2: Explosion Settings
+--------------------------
+"[RocketProjectile] Explode called. Radius: 8.35, Damage: 100, HitMask: X"
+→ HitMask should be 192 or 384 (includes Agent layer)
+→ If different, explosion won't hit players!
+
+Log 3: Owner Detection
+----------------------
+"[RocketProjectile] Owner: PlayerName"
+→ Should show your player's name
+→ If "null", self-damage detection won't work!
+
+Log 4: Colliders Found
+-----------------------
+"[RocketProjectile] Found X colliders in explosion radius"
+→ Should be > 0 if you're in range
+→ If 0, you're too far or layer mask wrong!
+
+Log 5: Each Collider
+--------------------
+"[RocketProjectile] Checking collider 0: [name], Layer: Agent"
+→ Should include your player colliders
+→ Layer should be "Agent" for players
+
+Log 6: IHitTarget Check
+-----------------------
+"[RocketProjectile] No IHitTarget found on [name]"
+→ If you see this for your player, something's wrong!
+→ Player should have IHitTarget component
+
+Log 7: Self Detection
+---------------------
+"[RocketProjectile] HitAgent: PlayerName, IsSelf: true"
+→ Should say "true" when it's your player
+→ If "false", self-damage multiplier won't apply!
+
+Log 8: Damage Applied
+---------------------
+"[RocketProjectile] Applying 75 damage to PlayerName (isSelf: true)"
+→ Should show damage being applied to you
+→ isSelf should be "true"
+→ Damage should be reduced (75% of base)
+
+================================================================================
+POSSIBLE ISSUES AND FIXES
+================================================================================
+
+Issue 1: "Found 0 colliders"
+-----------------------------
+Problem: OverlapSphere not finding anything
+Possible Causes:
+→ Explosion radius too small (should be 8.35)
+→ Layer mask doesn't include "Agent"
+→ You're too far from explosion
+
+Check:
+- _explosionRadius = 8.35
+- _explosionHitMask includes "Agent" layer
+- Distance from explosion < 8.35m
+
+Fix:
+Make sure _explosionHitMask includes Agent layer!
+
+Issue 2: "No IHitTarget found"
+-------------------------------
+Problem: Player doesn't have IHitTarget component
+Possible Cause:
+→ Player prefab missing component
+
+Check:
+- Player has Agent component
+- Agent implements IHitTarget interface
+
+This should already be correct in TPSBR!
+
+Issue 3: "IsSelf: false" when it should be true
+------------------------------------------------
+Problem: Self-detection not working
+Possible Causes:
+→ Owner is null
+→ HitAgent doesn't match owner
+→ GetComponentInParent not finding Agent
+
+Check:
+- "Owner: [name]" log shows correct player
+- HitAgent found on collider
+- Both are same Agent instance
+
+Fix:
+Check owner initialization in Fire() method
+
+Issue 4: Damage is 0
+--------------------
+Problem: Damage calculated to 0
+Possible Causes:
+→ Distance from explosion > radius
+→ Damage multiplier calculation wrong
+
+Check:
+- Distance to explosion point
+- Should be < 8.35m
+- Damage = base * (1 - distance/radius) * selfMultiplier
+
+Issue 5: "_canDamageSelf = false"
+----------------------------------
+Problem: Self-damage disabled
+Check:
+- _canDamageSelf = true (should be!)
+- _selfDamageMultiplier = 0.75
+
+This should be correct in your prefab!
+
+Issue 6: HitMask Wrong Value
+-----------------------------
+Problem: Layer mask doesn't include Agent
+Expected Values:
+→ Agent layer = 6 (bit 6)
+→ Target layer = 3 (bit 3)
+→ HitMask = (1 << 6) | (1 << 3) = 64 + 8 = 72
+
+If HitMask value is wrong:
+→ Explosion won't detect players!
+
+Fix:
+Update _explosionHitMask to include Agent layer
+
+================================================================================
+LAYER MASK CALCULATION
+================================================================================
+
+Unity Layers (from context):
+-----------------------------
+0: Default
+1: TransparentFX
+2: Ignore Raycast
+3: Target
+4: Water
+5: UI
+6: Agent ← PLAYERS!
+7: Projectile
+8: FPV
+9: AgentKCC
+10: Interaction
+11: Pickup
+12: MapOnly
+13: Storm
+
+Layer Mask Bits:
+----------------
+Target (layer 3) = 1 << 3 = 8
+Agent (layer 6) = 1 << 6 = 64
+
+Combined Mask:
+--------------
+Agent + Target = 64 + 8 = 72
+
+Your HitMask should be 72!
+
+If you see different value in logs:
+→ That's the problem!
+
+================================================================================
+EXAMPLE DEBUG OUTPUT (WORKING)
+================================================================================
+
+Good Example:
+-------------
+[RocketProjectile] Exploding at (10, 0, 10)
+[RocketProjectile] Explode called. Radius: 8.35, Damage: 100, HitMask: 72
+[RocketProjectile] Found 3 colliders in explosion radius
+[RocketProjectile] Owner: Player_01
+[RocketProjectile] Checking collider 0: PlayerBody, Layer: Agent
+[RocketProjectile] HitAgent: Player_01, IsSelf: true
+[RocketProjectile] Applying 75 damage to PlayerBody (isSelf: true)
+
+Result: Self-damage works! ✓
+
+Bad Example #1 (No colliders):
+-------------------------------
+[RocketProjectile] Exploding at (10, 0, 10)
+[RocketProjectile] Explode called. Radius: 8.35, Damage: 100, HitMask: 8
+[RocketProjectile] Found 0 colliders in explosion radius
+[RocketProjectile] Owner: Player_01
+
+Problem: HitMask = 8 (only Target layer, missing Agent!)
+Fix: Add Agent layer to _explosionHitMask!
+
+Bad Example #2 (No IHitTarget):
+--------------------------------
+[RocketProjectile] Exploding at (10, 0, 10)
+[RocketProjectile] Explode called. Radius: 8.35, Damage: 100, HitMask: 72
+[RocketProjectile] Found 2 colliders in explosion radius
+[RocketProjectile] Owner: Player_01
+[RocketProjectile] Checking collider 0: PlayerBody, Layer: Agent
+[RocketProjectile] No IHitTarget found on PlayerBody
+
+Problem: Player doesn't have IHitTarget component!
+Fix: Shouldn't happen in TPSBR, check player prefab
+
+Bad Example #3 (IsSelf false):
+-------------------------------
+[RocketProjectile] Exploding at (10, 0, 10)
+[RocketProjectile] Explode called. Radius: 8.35, Damage: 100, HitMask: 72
+[RocketProjectile] Found 2 colliders in explosion radius
+[RocketProjectile] Owner: Player_01
+[RocketProjectile] Checking collider 0: PlayerBody, Layer: Agent
+[RocketProjectile] HitAgent: Player_02, IsSelf: false
+[RocketProjectile] Applying 100 damage to PlayerBody (isSelf: false)
+
+Problem: Wrong player detected as owner!
+Could be: Owner not set correctly in Fire()
+
+================================================================================
+TESTING PROCEDURE
+================================================================================
+
+Step-by-Step Test:
+------------------
+1. Start Play mode
+2. Open Console (clear it)
+3. Equip rocket launcher
+4. Fire straight down at ground
+5. Wait for explosion
+6. Read console logs
+
+Distance Test:
+--------------
+1. Fire rocket 2m away
+   Expected: ~70 damage to self
+   
+2. Fire rocket 4m away
+   Expected: ~35 damage to self
+   
+3. Fire rocket 8m away
+   Expected: ~5 damage to self
+   
+4. Fire rocket 10m away
+   Expected: 0 damage (outside radius)
+
+Angle Test:
+-----------
+1. Look straight down, fire
+   Expected: Explosion very close, high damage
+   
+2. Look 45° down, fire
+   Expected: Explosion 3-5m away, medium damage
+   
+3. Fire horizontal
+   Expected: Explosion far away, low/no damage
+
+All should apply self-damage if in radius!
+
+================================================================================
+QUICK DIAGNOSIS
+================================================================================
+
+Run this mental checklist:
+
+[ ] Did explosion happen? (effect visible)
+    → If no: collision not working
+    
+[ ] Were colliders found? (check "Found X colliders")
+    → If 0: layer mask or distance issue
+    
+[ ] Was owner detected? (check "Owner: [name]")
+    → If null: owner not set in Fire()
+    
+[ ] Was IHitTarget found? (no "No IHitTarget" log)
+    → If missing: player prefab issue
+    
+[ ] Was isSelf = true? (check "IsSelf: true")
+    → If false: wrong agent comparison
+    
+[ ] Was damage applied? (check "Applying X damage")
+    → If missing: damage calculation issue
+    
+[ ] Was damage reduced? (should be 75% of base)
+    → If not: self damage multiplier not applied
+
+Find which step fails → that's your issue!
+
+================================================================================
+MOST LIKELY ISSUES
+================================================================================
+
+#1 Most Common: Layer Mask
+---------------------------
+_explosionHitMask doesn't include Agent layer
+→ OverlapSphere never finds player
+→ No damage applied
+
+Fix: Check prefab _explosionHitMask setting
+
+#2 Second Most Common: Distance
+--------------------------------
+Player too far from explosion
+→ Outside 8.35m radius
+→ No damage applied
+
+Fix: Test at close range first
+
+#3 Third: Owner Not Set
+------------------------
+_ownerObject is null
+→ Can't detect self
+→ Self-damage not applied correctly
+
+Fix: Check Fire() method sets _ownerObject
+
+================================================================================
+WHAT TO SEND ME
+================================================================================
+
+If still not working, send me:
+-------------------------------
+1. Complete console log output from one explosion
+2. Distance from player to explosion (roughly)
+3. What damage you expected vs what happened
+4. Screenshot of RocketProjectile inspector settings
+
+I'll diagnose from there!
+
+================================================================================
+CURRENT SETTINGS (SHOULD BE)
+================================================================================
+
+RocketProjectile Component:
+----------------------------
+_explosionRadius: 8.35
+_explosionDamage: 100
+_explosionHitMask: Agent, Target
+_canDamageSelf: true ✓
+_selfDamageMultiplier: 0.75 ✓
+
+If any of these are wrong → that's the issue!
+
+================================================================================
+TL;DR
+================================================================================
+
+Problem:
+--------
+Rocket doesn't damage player who fired it
+
+Debug Steps:
+------------
+1. Fire rocket near yourself
+2. Check console logs
+3. Look for:
+   - "Found 0 colliders" → Layer mask issue
+   - "Owner: null" → Owner not set
+   - "IsSelf: false" → Detection issue
+   - "No IHitTarget" → Component missing
+
+Most Likely:
+------------
+Layer mask doesn't include Agent layer
+OR
+You're too far from explosion (> 8.35m)
+
+Test it and check the logs!
+They'll tell you exactly what's wrong! 🔍
+
+================================================================================

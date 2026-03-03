@@ -1,0 +1,188 @@
+═══════════════════════════════════════════════════════════════════════════════
+                         ANIMATION QUICK FIX
+═══════════════════════════════════════════════════════════════════════════════
+
+If your player is T-posing, follow these 3 QUICK steps:
+
+═══════════════════════════════════════════════════════════════════════════════
+
+STEP 1: CREATE ANIMATOR CONTROLLER (2 minutes)
+───────────────────────────────────────────────
+
+1. Project window > /Assets/Scripts folder
+2. Right-click > Create > Animator Controller
+3. Name it: "CinematicPlayerController"
+4. Double-click to open
+5. Create parameters (left panel, click "+"):
+   - Add Float named "MoveSpeed"
+   - Add Bool named "IsMoving"
+6. Create states (right-click empty space):
+   - Create State > Empty > name it "Idle"
+   - Create State > Empty > name it "Walk"
+7. Set Idle as default:
+   - Right-click "Idle" > Set as Layer Default State
+8. Add transitions:
+   - Right-click "Idle" > Make Transition > click "Walk"
+     - Select the arrow > Inspector > Uncheck "Has Exit Time"
+     - Conditions: click "+" > IsMoving = true
+   - Right-click "Walk" > Make Transition > click "Idle"
+     - Select the arrow > Inspector > Uncheck "Has Exit Time"
+     - Conditions: click "+" > IsMoving = false
+9. Save (Ctrl+S)
+
+DONE! Controller is ready.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+STEP 2: ADD ANIMATOR TO PLAYER PREFAB (1 minute)
+─────────────────────────────────────────────────
+
+1. Project > Navigate to:
+   /Assets/3rdParty/Maksim Bugrimov/Sci_Fi_Character_08/Prefabs/
+   
+2. Select: Sci_Fi_Character_08_03.prefab
+
+3. In Inspector, click "Open Prefab" button
+
+4. Make sure ROOT object is selected (Sci_Fi_Character_08_03)
+
+5. Inspector > Add Component > search "Animator" > add it
+
+6. In Animator component:
+   - Controller: Drag "CinematicPlayerController" from Step 1
+   - Avatar: Look for "Sci_Fi_Character_08Avatar" in same folder, drag it here
+     (If you don't see an Avatar, that's the problem - see bottom of this guide)
+   - UNCHECK "Apply Root Motion"
+   - Update Mode: Normal
+   - Culling Mode: Always Animate
+
+7. File > Save (or just close prefab mode, Unity will ask to save)
+
+DONE! Player now has Animator.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+STEP 3: TEST (30 seconds)
+──────────────────────────
+
+1. Open scene: /Assets/TPSBR/Scenes/Game.unity
+
+2. Enter Play mode
+
+3. Should see player laying down (or at least NOT T-posing)
+
+4. Press P to wake up
+
+5. Use WASD to move - should see walk animation
+
+═══════════════════════════════════════════════════════════════════════════════
+
+IF STILL T-POSING AFTER STEP 3:
+────────────────────────────────
+
+PROBLEM: Player model doesn't have an Avatar (rig isn't configured)
+
+FIX:
+1. Find the player MODEL file (not prefab):
+   /Assets/3rdParty/Maksim Bugrimov/Sci_Fi_Character_08/
+   Look for .FBX file (should be the base model file)
+
+2. Select it in Project window
+
+3. Inspector > "Rig" tab
+
+4. Animation Type: Select "Humanoid" (or "Generic" if Humanoid doesn't work)
+
+5. Avatar Definition: "Create From This Model"
+
+6. Click "Configure..." button
+
+7. You should see a skeleton preview - bones should be mapped (green)
+   If bones are red or missing, that's a problem with the model
+   
+8. Click "Apply" then "Done"
+
+9. An Avatar asset should now appear under the FBX in Project window
+
+10. NOW go back to STEP 2 above and assign this Avatar to Animator
+
+═══════════════════════════════════════════════════════════════════════════════
+
+IF ANIMATIONS FROM /ASSETS/CINEMATICS/ DON'T WORK:
+───────────────────────────────────────────────────
+
+Your animation FBX files might not be imported properly.
+
+For EACH FBX in /Assets/Cinematics/:
+1. Select the FBX
+2. Inspector > "Rig" tab
+3. Animation Type: Match your player (usually "Humanoid")
+4. If "Humanoid":
+   - Avatar Definition: "Copy From Other Avatar"
+   - Source: Drag the player's Avatar here
+5. Inspector > "Animation" tab
+6. Check "Import Animation" checkbox
+7. Click "Apply"
+8. Expand FBX in Project window - you should see animation clips inside
+
+═══════════════════════════════════════════════════════════════════════════════
+
+ALTERNATIVE: USE DIFFERENT ANIMATIONS
+──────────────────────────────────────
+
+If Cinematics animations don't work, use Mobility_Pro animations instead:
+
+1. Scene > Select "SeasonCinematicController" GameObject
+
+2. Inspector > find these fields and assign:
+   
+   - Laying Down Idle Clip: (leave empty for now)
+   - Wake Up Clip: (leave empty for now)  
+   - Idle Clip: 
+     /Assets/3rdParty/Mobility_Pro/Animation/MOB1_Stand_Relaxed_Idle_v2_IPC
+   - Walk Clip:
+     /Assets/3rdParty/Mobility_Pro/Animation/MOB1_Jog_F_Loop_IPC
+
+3. Also assign these to Animator Controller states:
+   - Open CinematicPlayerController
+   - Select "Idle" state
+   - Inspector > Motion: Drag MOB1_Stand_Relaxed_Idle_v2_IPC
+   - Select "Walk" state
+   - Inspector > Motion: Drag MOB1_Jog_F_Loop_IPC
+
+4. Test - player will skip laydown/wakeup but will walk normally
+
+═══════════════════════════════════════════════════════════════════════════════
+
+STILL BROKEN? CHECK CONSOLE!
+─────────────────────────────
+
+When you enter Play mode, Console should show:
+✓ "SeasonCinematicController: Playing laying down animation..."
+✓ OR warning about missing animation (that's OK, at least script is working)
+
+If you see:
+✗ "Player prefab needs an Animator with a Controller!"
+  → Go back to STEP 2, make sure Animator is added with Controller assigned
+
+✗ No messages at all
+  → SeasonCinematicController might not be running
+  → Check if GameObject is active in Hierarchy
+
+✗ "Animator has no Avatar"
+  → Follow "IF STILL T-POSING AFTER STEP 3" section above
+
+═══════════════════════════════════════════════════════════════════════════════
+
+WHAT EACH PART DOES:
+────────────────────
+
+1. Animator Controller: Defines how animations blend (Idle ↔ Walk)
+2. Animator Component: Plays animations on the character
+3. Avatar: Tells Unity how bones map to the rig (required for Humanoid)
+4. Animation Clips: The actual animation data
+5. PlayableGraph: Overrides Animator temporarily for cinematic clips
+
+The T-pose happens when Animator has no controller or avatar is missing!
+
+═══════════════════════════════════════════════════════════════════════════════

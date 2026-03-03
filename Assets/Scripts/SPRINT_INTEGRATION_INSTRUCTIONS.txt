@@ -1,0 +1,94 @@
+========================================
+SPRINT SYSTEM INTEGRATION INSTRUCTIONS
+========================================
+
+Your SprintSystem.cs and UISprintIndicator.cs are PERFECT and ready to go!
+
+To make them work, follow these exact steps:
+
+========================================
+STEP 1: Add Sprint Property to Agent.cs
+========================================
+
+File: Assets/TPSBR/Scripts/Gameplay/Agent/Agent.cs
+
+A) Find this section (around line 20-23):
+    public AgentSenses       Senses       => _senses;
+    public Jetpack           Jetpack      => _jetpack;
+    public AgentVFX          Effects      => _agentVFX;
+    public AgentInterestView InterestView => _interestView;
+
+   CHANGE TO:
+    public AgentSenses       Senses       => _senses;
+    public Jetpack           Jetpack      => _jetpack;
+    public SprintSystem      Sprint       => _sprint;
+    public AgentVFX          Effects      => _agentVFX;
+    public AgentInterestView InterestView => _interestView;
+
+
+B) Find this section (around line 52-56):
+    private Weapons             _weapons;
+    private Jetpack             _jetpack;
+    private AgentSenses         _senses;
+    private Health              _health;
+
+   CHANGE TO:
+    private Weapons             _weapons;
+    private Jetpack             _jetpack;
+    private SprintSystem        _sprint;
+    private AgentSenses         _senses;
+    private Health              _health;
+
+
+C) Find the Awake() method (around line 222-227):
+    _agentVFX     = GetComponent<AgentVFX>();
+    _senses       = GetComponent<AgentSenses>();
+    _jetpack      = GetComponent<Jetpack>();
+    _interestView = GetComponent<AgentInterestView>();
+}
+
+   CHANGE TO:
+    _agentVFX     = GetComponent<AgentVFX>();
+    _senses       = GetComponent<AgentSenses>();
+    _jetpack      = GetComponent<Jetpack>();
+    _sprint       = GetComponent<SprintSystem>();
+    _interestView = GetComponent<AgentInterestView>();
+}
+
+
+========================================
+STEP 2: Add SprintSystem to Player Prefab
+========================================
+
+1. In Project window, find your player prefab (Marine, Ghost, etc.)
+2. Open it in the Inspector
+3. Click "Add Component"
+4. Search for "Sprint System"
+5. Add the SprintSystem component
+6. Save the prefab
+
+
+========================================
+OPTIONAL: Add UI Sprint Indicator
+========================================
+
+If you want to display the sprint bar in your UI:
+
+1. In your player HUD Canvas, create a UI Image for the sprint bar
+2. Add a TextMeshPro text for the status text
+3. Add the UISprintIndicator component to a GameObject
+4. Assign the Image and Text references in the Inspector
+5. Call Initialize(agent) when the HUD spawns
+
+
+========================================
+WHAT YOUR SPRINT SYSTEM WILL DO:
+========================================
+
+✓ Hold LEFT SHIFT to sprint
+✓ Sprint at 1.5x speed for 7 seconds
+✓ Automatic 7-second cooldown after sprint ends
+✓ Fully networked with Fusion
+✓ Works with your existing movement system
+
+========================================

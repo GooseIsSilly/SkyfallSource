@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c6c0b01db2d345409a48ce3c0bbf647, type: 3}
+  m_Name: LiveEvent
+  m_EditorClassIdentifier: 
+  EventStartTimeEST: 2026-04-05 10:55:43
+  CountdownDuration: 604800
+  EventName: SOS...
+  EventAnimation: {fileID: 7400000, guid: fdf6cf98192e28c46b658a625a1017c5, type: 2}
+  EventAudio: {fileID: 8300000, guid: 45b783e73be4935448df31be216cb3fd, type: 3}
+  ShowCountdownUI: 1
+  CountdownVisibilityThreshold: 604800
+  RedTextThreshold: 60
+  EnableIslandFlip: 0
+  FlipDuration: 0
+  FlipRotation: {x: 180, y: 0, z: 0}
+  IsSeasonEndEvent: 1
+  SeasonEndDelay: 33
+  EnableExplosion: 1
+  ExplosionPrefab: {fileID: 1836639356757348, guid: fb752cdf71ec06149a4faf8b604c6884, type: 3}
+  ExplosionSound: {fileID: 8300000, guid: 79310e5b4348a60439512d2a6a2d56b0, type: 3}
+  ExplosionPosition: {x: 492.64, y: 127.86, z: 399.93}
+  ExplosionDelay: 29
+  ExplosionLifetime: 2.5

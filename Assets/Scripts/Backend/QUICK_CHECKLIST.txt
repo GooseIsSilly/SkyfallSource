@@ -1,0 +1,45 @@
+================================================================================
+QUICK SETUP CHECKLIST - LOGIN WITH EVERYTHING HIDDEN
+================================================================================
+
+✓ Backend is running (python Account.py)
+
+IN MENU.UNITY SCENE:
+================================================================================
+
+[ ] 1. CREATE LOGINPANEL
+    - Right-click Canvas → UI → Panel → Name: "LoginPanel"
+    - Add: UsernameInput (Input Field TMP)
+    - Add: PasswordInput (Input Field TMP, Content Type: Password)
+    - Add: LoginButton (Button TMP, text: "Login")
+    - Add: CreateAccountButton (Button TMP, text: "Create Account")
+    - Add: FeedbackText (Text TMP, empty text, yellow color)
+
+[ ] 2. ATTACH SIMPLE LOGIN UI
+    - Select LoginPanel
+    - Add Component → "Simple Login UI"
+    - Drag all UI elements to matching slots
+
+[ ] 3. CREATE LOGIN SCENE MANAGER
+    - Right-click Hierarchy → Create Empty → Name: "LoginSceneManager"
+    - Add Component → "Login Scene Manager"
+    - Login Panel: Drag LoginPanel here
+    - Hide Everything On Start: ✓ CHECK THIS!
+
+[ ] 4. MAKE SURE BACKENDMANAGERS EXISTS
+    - Should have: Backend Service Manager component
+    - Should have: Ban Check Service component
+    - Backend URL: http://localhost:8000
+
+[ ] 5. SAVE SCENE (CTRL+S)
+
+[ ] 6. PRESS PLAY
+    - Should see ONLY LoginPanel
+    - Everything else should be HIDDEN
+    - Create account → Login
+    - Everything should APPEAR
+    - LoginPanel should DISAPPEAR
+
+DONE! ✓
+
+================================================================================

@@ -1,0 +1,80 @@
+================================================================================
+📋 AUTO-LOGIN REFERENCE CARD
+================================================================================
+
+ENABLE AUTO-LOGIN (30 SECONDS):
+--------------------------------
+1. Menu scene → SimplerLoginManager component
+2. Check "Auto Login On Start" ✓
+3. Done!
+
+================================================================================
+
+HOW IT WORKS:
+-------------
+First Time:  Login manually → Token saved
+Every Time After: Token validated → Auto-login! ✓
+
+================================================================================
+
+TESTING:
+--------
+1. Play → Login
+2. Stop play mode
+3. Play again
+4. Auto-login! ✓
+
+================================================================================
+
+OPTIONAL LOADING PANEL:
+-----------------------
+1. Create UI Panel in Canvas
+2. Add "Logging in..." text
+3. Assign to SimplerLoginManager → Loading Panel
+4. Smoother experience! ✓
+
+================================================================================
+
+LOGOUT BUTTON (OPTIONAL):
+--------------------------
+```csharp
+public void OnLogoutClicked()
+{
+    BackendServiceManager.Instance.Logout(() => {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    });
+}
+```
+
+================================================================================
+
+TROUBLESHOOTING:
+----------------
+Not working? Check:
+[ ] "Auto Login On Start" enabled
+[ ] Backend running
+[ ] Console for errors
+
+Shows login every time? 
+→ Backend restarted (dev mode)
+→ Just login again - saves new token
+
+================================================================================
+
+DOCUMENTATION:
+--------------
+📖 AUTO_LOGIN_QUICK_START.txt - Setup guide
+📖 AUTO_LOGIN_GUIDE.txt - Complete docs
+📖 PERSISTENT_LOGIN_SUMMARY.txt - Overview
+
+================================================================================
+
+PLAYER EXPERIENCE:
+------------------
+Before: Login every time ❌
+After: Login once! ✓
+
+Time Saved: Every game session!
+Satisfaction: +++
+
+================================================================================

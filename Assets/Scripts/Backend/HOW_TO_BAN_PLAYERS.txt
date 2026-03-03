@@ -1,0 +1,287 @@
+================================================================================
+HOW TO BAN PLAYERS - COMPLETE GUIDE
+================================================================================
+
+There are 3 ways to ban players:
+
+================================================================================
+METHOD 1: ADMIN DASHBOARD (EASIEST - RECOMMENDED)
+================================================================================
+
+STEP 1: Open Admin Dashboard
+-----------------------------
+1. Find the file: Assets/Scripts/Backend/admin_dashboard.html
+2. Copy it to your backend folder (where Account.py is)
+3. Open it in a web browser (Chrome, Firefox, etc.)
+
+STEP 2: Login to Dashboard
+-----------------------------
+1. You'll see "Admin Login" screen
+2. Enter Admin Key: your_secret_admin_key_12345_CHANGE_THIS
+   (This is from your Account.py file, line 26)
+3. Click "Login"
+
+STEP 3: Ban a Player
+-----------------------------
+1. Click "Bans" tab at top
+2. Click "Ban Player" button
+3. Fill in:
+   - Player Username: (e.g., "Novafy")
+   - Ban Reason: (e.g., "Hacking/Cheating")
+   - Permanent Ban: Check for permanent, uncheck for temporary
+   - If temporary: Select expiration date/time
+4. Click "Ban Player"
+
+DONE! Player is now banned!
+
+STEP 4: Test It
+-----------------------------
+1. Try to login with that account in Unity
+2. Should see: "Account banned. Reason: Hacking/Cheating"
+3. Player CANNOT login!
+
+If player is already in-game:
+- Within 30 seconds, they'll be kicked
+- Message shown: "You have been banned"
+
+================================================================================
+METHOD 2: VIA WEB BROWSER (NO DASHBOARD NEEDED)
+================================================================================
+
+Just paste this URL in browser (replace values):
+
+http://localhost:8000/admin/ban?AdminKey=your_secret_admin_key_12345_CHANGE_THIS&PlayerID=USERNAME&Reason=Hacking
+
+Example:
+http://localhost:8000/admin/ban?AdminKey=your_secret_admin_key_12345_CHANGE_THIS&PlayerID=Novafy&Reason=Cheating
+
+For temporary ban (expires in 24 hours):
+http://localhost:8000/admin/ban?AdminKey=your_secret_admin_key_12345_CHANGE_THIS&PlayerID=Novafy&Reason=Toxic&ExpiresAt=2024-01-16%2015:30:00
+
+Date format: YYYY-MM-DD HH:MM:SS (URL encoded)
+
+================================================================================
+METHOD 3: FROM UNITY CODE (FOR AUTO-BAN SYSTEMS)
+================================================================================
+
+You can call the ban endpoint from Unity:
+
+using UnityEngine.Networking;
+
+string adminKey = "your_secret_admin_key_12345_CHANGE_THIS";
+string playerID = "HackerUsername";
+string reason = "Auto-detected aimbot";
+
+string url = $"http://localhost:8000/admin/ban?AdminKey={adminKey}&PlayerID={playerID}&Reason={UnityWebRequest.EscapeURL(reason)}";
+
+UnityWebRequest request = UnityWebRequest.Get(url);
+yield return request.SendWebRequest();
+
+if (request.result == UnityWebRequest.Result.Success)
+{
+    Debug.Log("Player banned!");
+}
+
+================================================================================
+HOW THE BAN SYSTEM WORKS
+================================================================================
+
+When you ban a player:
+
+1. Backend updates player's JSON file:
+   - Sets IsBanned = true
+   - Saves ban reason
+   - Saves ban date/time
+   - Saves expiration (if temporary)
+
+2. Backend creates ban record:
+   - Saves to /Bans/PlayerName.json
+   - Contains all ban details
+
+3. When player tries to login:
+   - Backend checks if player is banned
+   - If banned: Login REJECTED with ban message
+   - If not banned: Login allowed
+
+4. For players already in-game:
+   - BanCheckService checks every 30 seconds
+   - If ban detected: Player kicked immediately
+   - Shows ban message and returns to menu
+
+================================================================================
+VIEWING ACTIVE BANS
+================================================================================
+
+Via Admin Dashboard:
+- Click "Bans" tab
+- See list of all banned players
+- Can unban from here
+
+Via Browser:
+http://localhost:8000/admin/listbans?AdminKey=your_secret_admin_key_12345_CHANGE_THIS
+
+Via File System:
+- Open your backend folder
+- Check /Bans/ folder
+- Each banned player has a JSON file
+
+================================================================================
+UNBANNING PLAYERS
+================================================================================
+
+Via Admin Dashboard:
+1. Go to "Bans" tab
+2. Find the player
+3. Click "Unban" button
+4. Player can now login again!
+
+Via Browser:
+http://localhost:8000/admin/unban?AdminKey=your_secret_admin_key_12345_CHANGE_THIS&PlayerID=USERNAME
+
+The ban record moves to /Bans/Archive/
+
+================================================================================
+TEMPORARY BANS
+================================================================================
+
+When creating a temporary ban:
+
+1. Set expiration date/time
+2. Player is banned until that time
+3. After expiration, they can login automatically
+4. Ban is automatically removed when expired
+
+Example: Ban for 24 hours
+- Banned at: 2024-01-15 10:00:00
+- Expires at: 2024-01-16 10:00:00
+- At 10:01 on Jan 16, player can login again
+
+================================================================================
+PLAYER REPORTING (FUTURE FEATURE)
+================================================================================
+
+You can also let players report each other:
+
+1. Add "Report Player" button to scoreboard
+2. Players can report hackers
+3. View reports in Admin Dashboard
+4. Review reports and decide to ban
+
+(This is already coded but needs UI integration)
+
+================================================================================
+TESTING THE BAN SYSTEM
+================================================================================
+
+Test 1: Ban Before Login
+-------------------------
+1. Create test account: testplayer
+2. Ban it via admin dashboard
+3. Try to login in Unity
+4. Should be rejected with ban message ✓
+
+Test 2: Ban During Gameplay
+-------------------------
+1. Login with account
+2. Start playing (don't need to join match)
+3. Ban the account via dashboard
+4. Wait up to 30 seconds
+5. Should be kicked with ban message ✓
+
+Test 3: Temporary Ban
+-------------------------
+1. Ban account with 1 minute expiration
+2. Try to login - should be rejected
+3. Wait 1 minute
+4. Try to login - should work ✓
+
+Test 4: Unban
+-------------------------
+1. Ban account
+2. Verify can't login
+3. Unban via dashboard
+4. Try to login - should work ✓
+
+================================================================================
+BAN SECURITY
+================================================================================
+
+Important security notes:
+
+1. CHANGE THE ADMIN KEY!
+   - Edit Account.py line 26
+   - Use something long and random
+   - Never share it with players
+
+2. Keep admin dashboard password protected
+   - Don't share admin key
+   - Only trusted admins should have it
+
+3. In production:
+   - Use HTTPS for backend
+   - Store admin key in environment variable
+   - Add IP whitelist for admin endpoints
+
+================================================================================
+CHECKING IF PLAYER IS BANNED (FROM UNITY)
+================================================================================
+
+If you want to check ban status from Unity code:
+
+BackendServiceManager.Instance.CheckBanStatus((isBanned, reason, expiresAt) =>
+{
+    if (isBanned)
+    {
+        Debug.Log($"Player is banned! Reason: {reason}");
+        Debug.Log($"Expires: {expiresAt}");
+    }
+    else
+    {
+        Debug.Log("Player is not banned");
+    }
+});
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problem: "InvalidAdminKey" error
+Solution: Check admin key in Account.py matches what you're entering
+         Copy it exactly, it's case-sensitive
+
+Problem: Player not kicked after ban
+Solution: Make sure BanCheckService is running in game scene
+         Check ban check interval (default 30 seconds)
+         Player will be kicked on next check
+
+Problem: Can't see bans in dashboard
+Solution: Check backend is running
+         Check admin key is correct
+         Check /Bans/ folder exists in backend directory
+
+Problem: Temporary ban not expiring
+Solution: Check date format is correct: YYYY-MM-DD HH:MM:SS
+         Check server time is correct
+         Player must try to login for ban to be checked
+
+================================================================================
+SUMMARY
+================================================================================
+
+To ban someone:
+1. Open admin_dashboard.html
+2. Login with admin key
+3. Go to Bans → Ban Player
+4. Enter username and reason
+5. Click Ban Player
+
+They can't login anymore!
+
+To unban:
+1. Same dashboard
+2. Find player in Bans list
+3. Click Unban
+
+Simple! ✓
+
+================================================================================

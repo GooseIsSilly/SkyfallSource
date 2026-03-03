@@ -1,0 +1,133 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    CINEMATIC PLAYER CONTROLS
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTROLS:
+─────────
+
+1. BEFORE WAKE UP:
+   P Key = Wake Up (trigger wake-up animation)
+
+2. AFTER WAKE UP:
+   W = Move Forward (relative to where you're looking)
+   S = Move Backward
+   A = Strafe Left
+   D = Strafe Right
+   
+   Mouse = Look Around (full camera control)
+   
+   E Key (Hold) = Talk to NPC when close
+
+═══════════════════════════════════════════════════════════════════════════════
+
+FIXED ISSUES:
+─────────────
+
+✅ ISSUE #1: Player head visible / goes back to laying down
+   FIX: 
+   - PlayableGraph is now properly destroyed after wake-up animation
+   - Animator is properly re-enabled and rebound after wake-up
+   - Player head is set to ShadowsOnly mode (invisible to camera, still casts shadows)
+
+✅ ISSUE #2: Inverted keyboard / no mouse control
+   FIX:
+   - Movement is now camera-relative (WASD moves relative to where you look)
+   - Mouse look added for full camera control
+   - Player rotates with horizontal mouse movement
+   - Camera pitch (up/down) is controlled by vertical mouse movement
+   - Cursor is locked and hidden during gameplay
+
+═══════════════════════════════════════════════════════════════════════════════
+
+HOW IT WORKS:
+─────────────
+
+CAMERA SYSTEM:
+- A "CameraTarget" is created as a child of the player
+- Positioned at head height (1.6 units up)
+- Cinemachine Follow and LookAt this target
+- Mouse controls rotate both player (yaw) and camera target (pitch)
+- This creates smooth, FPS-style camera control
+
+MOVEMENT:
+- WASD moves relative to where the player is facing
+- W = Forward in the direction you're looking
+- S = Backward from where you're looking
+- A/D = Strafe left/right
+- Player automatically rotates with mouse horizontal movement
+
+ANIMATION:
+- Laying Down: Uses PlayableGraph to override Animator
+- Wake Up: Plays wake-up animation, then destroys PlayableGraph
+- Walking: Uses Animator's blend tree with MoveSpeed and IsMoving parameters
+
+HEAD HIDING:
+- Automatically hides renderers with "head" or "hair" in their name
+- Uses ShadowCastingMode.ShadowsOnly so head is invisible but still casts shadow
+- This prevents seeing inside the player's head in first-person view
+
+═══════════════════════════════════════════════════════════════════════════════
+
+CUSTOMIZATION:
+──────────────
+
+You can adjust these settings in the Inspector:
+
+SimpleCinematicPlayerController component:
+- Move Speed: How fast the player walks (default: 3)
+- Rotation Speed: How smooth player rotation is (default: 10)
+- Mouse Sensitivity: How fast camera turns (default: 2)
+- Min Pitch / Max Pitch: Camera vertical look limits (default: -80 to 80)
+
+SeasonCinematicController component:
+- Camera Target Height: Adjust the Y value in CameraTarget's local position
+  (currently 1.6 - increase for taller view, decrease for lower)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+KNOWN CONSIDERATIONS:
+─────────────────────
+
+1. If the player's head is still visible:
+   - The head mesh might not contain "head" or "hair" in its name
+   - Manually set that renderer to ShadowCastingMode.ShadowsOnly
+   - Or adjust the HidePlayerHead() method to match your mesh names
+
+2. If mouse sensitivity is too fast/slow:
+   - Select the spawned player in Hierarchy during play mode
+   - Find SimpleCinematicPlayerController component
+   - Adjust "Mouse Sensitivity" value (try 1.0 or 3.0)
+
+3. If movement feels wrong:
+   - Movement is relative to player facing direction (not camera)
+   - This is intentional for third-person style control
+   - If you want pure FPS controls, the movement would need to be camera-relative
+
+4. Camera pitch resets when player spawns:
+   - This is normal - camera starts level
+   - Player can look up/down after wake-up
+
+═══════════════════════════════════════════════════════════════════════════════
+
+TROUBLESHOOTING:
+────────────────
+
+Q: Mouse doesn't move the camera?
+A: Make sure Cursor.lockState is set to Locked. The script does this automatically
+   when EnableControl(true) is called.
+
+Q: Player can't move after waking up?
+A: Check Console for errors during wake-up animation. The CharacterController
+   should be enabled after the animation completes.
+
+Q: Camera is too close/far/high/low?
+A: This is controlled by Cinemachine Virtual Camera settings:
+   - Select "PlayerFollowCam" in Hierarchy
+   - Adjust Body > Transposer > Follow Offset (X, Y, Z)
+   - Y controls height, Z controls distance behind player
+
+Q: Player head/body parts visible in first person?
+A: Select the spawned player during Play mode, find all SkinnedMeshRenderers
+   in children, and manually set problematic ones to ShadowsOnly.
+
+═══════════════════════════════════════════════════════════════════════════════
