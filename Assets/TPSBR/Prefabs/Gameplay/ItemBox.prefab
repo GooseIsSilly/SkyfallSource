@@ -547,7 +547,7 @@ MonoBehaviour:
     - Pickup: {fileID: 6198615961083387491, guid: 2f3aad8a90c6ade42a5eca39072fdc64, type: 3}
       Probability: 20
     - Pickup: {fileID: 6198615961083387491, guid: e22938d3443a7844da96ea5c04e6deb1, type: 3}
-      Probability: 10
+      Probability: 3
   - Transform: {fileID: 1902573880166076804}
     Pickups:
     - Pickup: {fileID: 1214334607122330860, guid: 515d0a7122c2eca4cb0841021a46116a, type: 3}

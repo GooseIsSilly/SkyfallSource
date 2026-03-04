@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fc28646e007891e499787c9be88347b7
+timeCreated: 1463410340
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 10303
+  packageName: The Shed
+  packageVersion: draft
+  assetPath: Assets/BlackantMasterStudio/The Shed/Shed_Anims.txt
+  uploadId: 118044
