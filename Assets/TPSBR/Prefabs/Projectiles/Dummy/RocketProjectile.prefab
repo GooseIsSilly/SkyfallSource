@@ -5405,7 +5405,7 @@ MonoBehaviour:
   _impactPenetration: 0
   _spawnImpactEffectOnTimeout: 0
   _spawnImpactOnStaticHitOnly: 1
-  _showProjectileVisualAfterDistance: 0
+  _showProjectileVisualAfterDistance: 0.48
   _projectileVisual: {fileID: 9067982104017374318}
   _dummyRotationTarget: {fileID: 1557866819752007256}
   _velocityToRotationMultiplier: 10
