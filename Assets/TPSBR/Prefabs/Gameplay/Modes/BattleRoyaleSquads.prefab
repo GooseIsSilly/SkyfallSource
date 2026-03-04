@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7731271928684039470}
   - component: {fileID: 1410779368292521494}
   m_Layer: 0
-  m_Name: BattleRoyale
+  m_Name: BattleRoyaleSquads
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SortKey: 1723450081
+  SortKey: 4256211682
   ObjectInterest: 1
   Flags: 2305
   NestedObjects: []
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 159c2285db2bfc14cb48e82d5340d077, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameplayName: Battle Royale
+  GameplayName: Battle Royale Squads
   MaxPlayers: 100
   ScorePerKill: 10
   ScorePerDeath: 0
@@ -124,8 +124,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67475d5e160561c4dbafa381d9c5dc31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enableTeamSystem: 0
-  _teamMode: 2
-  _autoAssignTeams: 0
+  _enableTeamSystem: 1
+  _teamMode: 4
+  _autoAssignTeams: 1
   _enableReviveSystem: 0
   _enableDebugLogs: 0

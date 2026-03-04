@@ -1173,6 +1173,9 @@ MonoBehaviour:
   - {fileID: 1664282842}
   - {fileID: 495557902}
   - {fileID: 1631322392}
+  loadingPanel: {fileID: 0}
+  autoLoginOnStart: 1
+  setNicknameFromBackend: 1
 --- !u!1 &155113862
 GameObject:
   m_ObjectHideFlags: 0
@@ -7921,6 +7924,9 @@ MonoBehaviour:
     OwnedSkins:
     - 
     EquippedSkin: 
+    HasBattlePass: 0
+    BattlePassTier: 0
+    BattlePassXP: 0
   allCharacters:
   - {fileID: 11400000, guid: 0f2bbe7d846b010478b46b08ff56a85b, type: 2}
   - {fileID: 11400000, guid: dac5096bcfa175346aa3f5e17bc06363, type: 2}
@@ -10995,11 +11001,11 @@ PrefabInstance:
     - target: {fileID: 2758504172944162673, guid: 5501285fdd3374d49b20039d2e914d61, type: 3}
       propertyPath: '_modePrefabs.Array.data[0]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 6461819204825746839, guid: 5932dd8436215414894111639686f18c, type: 3}
     - target: {fileID: 2758504172944162673, guid: 5501285fdd3374d49b20039d2e914d61, type: 3}
       propertyPath: '_modePrefabs.Array.data[1]'
       value: 
-      objectReference: {fileID: 6461819204825746839, guid: 5932dd8436215414894111639686f18c, type: 3}
+      objectReference: {fileID: 6461819204825746839, guid: 4f32f4d219faa1c46b056d39c1d4af36, type: 3}
     - target: {fileID: 2786062988665680141, guid: 5501285fdd3374d49b20039d2e914d61, type: 3}
       propertyPath: _context.UI
       value: 
