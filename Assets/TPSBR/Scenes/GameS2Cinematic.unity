@@ -76333,7 +76333,7 @@ Transform:
   m_GameObject: {fileID: 1483741726}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1895.7621, y: 20.643, z: 275.69818}
+  m_LocalPosition: {x: 1895.7621, y: 20.89, z: 275.69818}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -93341,8 +93341,8 @@ MonoBehaviour:
   _playerPrefab: {fileID: 8353203653604872220, guid: 713912b46b0763b49a839f8b18f51cb5, type: 3}
   _layingDownIdleClip: {fileID: -203655887218126122, guid: ab79c1aebd235e14c9bb7cdf6e4be3db, type: 3}
   _wakeUpClip: {fileID: -203655887218126122, guid: 4d5aba6d171d99e43a1a36e450b91c90, type: 3}
-  _idleClip: {fileID: -203655887218126122, guid: e41b4ed3b722dc94286712e95b165106, type: 3}
-  _walkClip: {fileID: 7400000, guid: d363fad2d49c9804fbb1949d87b4626b, type: 2}
+  _idleClip: {fileID: 7400000, guid: c99d7148f04b3c045baef46891a3d89e, type: 2}
+  _walkClip: {fileID: 7400000, guid: fd42b5b399c8a664eaddcd3b1f372149, type: 2}
   _npcCharacter: {fileID: 8203059968551603573}
   _npcTransform: {fileID: 8835164412480231375}
   _npcAnimator: {fileID: 3205687639536782773}

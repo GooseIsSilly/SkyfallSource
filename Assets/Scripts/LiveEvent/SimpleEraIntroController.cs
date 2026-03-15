@@ -90,6 +90,7 @@ namespace TPSBR
         private bool _hasFlybyReachedFinalWaypoint = false;
 
         private const string PREF_LAST_ERA_SHOWN = "SimpleEraIntro_LastEraShown";
+        private const float GROUND_SKIN_WIDTH = 0.05f;
 
         private void Awake()
         {
@@ -505,6 +506,10 @@ namespace TPSBR
                 Debug.LogWarning($"[SimpleEraIntroController] No ground found, spawning at Y=0");
             }
 
+            // Prevent the CharacterController capsule from sitting flush with the surface,
+            // which would cause downward root motion to phase the mesh into the terrain.
+            spawnPosition.y += GROUND_SKIN_WIDTH;
+
             Debug.Log($"[SimpleEraIntroController] Final spawn position: {spawnPosition}");
 
             _spawnedPlayer = Instantiate(_playerPrefab, spawnPosition, _playerSpawnPoint.rotation);
@@ -786,7 +791,7 @@ namespace TPSBR
 
             if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 20f))
             {
-                float targetY = hit.point.y;
+                float targetY = hit.point.y + GROUND_SKIN_WIDTH;
                 if (position.y < targetY)
                 {
                     position.y = targetY;
@@ -1285,6 +1290,14 @@ namespace TPSBR
                 Debug.Log("[SimpleEraIntroController] DISABLED CinemachineBrain - Agent will control camera directly");
             }
 
+            // Restore game UI now that the full cinematic is done
+            ShowGameUI();
+
+            // Release cursor only after the flyby is complete so the escape key
+            // cannot open the pause menu while cinematic cameras are still active.
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+
             _isIntroActive = false;
 
             Debug.Log("[SimpleEraIntroController] All intro cameras disabled, camera control returned to Agent - Player should now be on airplane");
@@ -1316,12 +1329,7 @@ namespace TPSBR
                 _uiCanvas.gameObject.SetActive(false);
             }
 
-            ShowGameUI();
-
             _isIntroActive = false;
-
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
 
             Debug.Log("[SimpleEraIntroController] NPC dialogue complete - preparing for flyby");
         }
@@ -1563,6 +1571,10 @@ namespace TPSBR
                 Debug.LogWarning("[SimpleEraIntroController] Cannot setup locomotion - missing animator or clips");
                 return;
             }
+
+            // Disable root motion so gameplay clips with baked root motion
+            // don't fight the CharacterController-driven movement.
+            _playerAnimator.applyRootMotion = false;
 
             if (_playableGraph.IsValid())
             {
