@@ -93341,21 +93341,8 @@ MonoBehaviour:
   _playerPrefab: {fileID: 8353203653604872220, guid: 713912b46b0763b49a839f8b18f51cb5, type: 3}
   _layingDownIdleClip: {fileID: -203655887218126122, guid: ab79c1aebd235e14c9bb7cdf6e4be3db, type: 3}
   _wakeUpClip: {fileID: -203655887218126122, guid: 4d5aba6d171d99e43a1a36e450b91c90, type: 3}
-<<<<<<< Updated upstream
   _idleClip: {fileID: 7400000, guid: c99d7148f04b3c045baef46891a3d89e, type: 2}
   _walkClip: {fileID: 7400000, guid: fd42b5b399c8a664eaddcd3b1f372149, type: 2}
-=======
-  _gameplayIdleClip: {fileID: 7400000, guid: c99d7148f04b3c045baef46891a3d89e, type: 2}
-  _gameplayJogFClip: {fileID: 7400000, guid: fd42b5b399c8a664eaddcd3b1f372149, type: 2}
-  _gameplayJogBClip: {fileID: 7400000, guid: d363fad2d49c9804fbb1949d87b4626b, type: 2}
-  _gameplayJogLClip: {fileID: 7400000, guid: 2150ee4476e1f3945af437f07736ff1a, type: 2}
-  _gameplayJogRClip: {fileID: 7400000, guid: d357b5865e83f8045b139fb3fc81a9bf, type: 2}
-  _gameplayJogFLClip: {fileID: 7400000, guid: a1e21a81534d7df4cbda047c0201089c, type: 2}
-  _gameplayJogFRClip: {fileID: 7400000, guid: 862e668f8e2273c42837de421292b570, type: 2}
-  _gameplayJogBLClip: {fileID: 7400000, guid: 515bc936cdf51534bae1231f0171bd72, type: 2}
-  _gameplayJogBRClip: {fileID: 7400000, guid: 436ee10b254500447b4d2ba180115ad0, type: 2}
-  _playerFeetOffset: 0
->>>>>>> Stashed changes
   _npcCharacter: {fileID: 8203059968551603573}
   _npcTransform: {fileID: 8835164412480231375}
   _npcAnimator: {fileID: 3205687639536782773}
