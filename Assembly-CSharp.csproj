@@ -153,6 +153,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Core\Scene.cs" />
     <Compile Include="Assets\TPSBR\Scripts\UI\Core\UIColoredElements.cs" />
+    <Compile Include="Assets\TPSBR\Scripts\UI\Widgets\UIManhuntWidget.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Gameplay\Weapons\HitscanWeapon.cs" />
     <Compile Include="Assets\Photon\FusionAddons\KCC\Core\KCC.cs" />
     <Compile Include="Assets\Photon\FusionAddons\KCC\Core\KCCCollider.cs" />
@@ -547,6 +548,7 @@
     <Compile Include="Assets\TPSBR\Scripts\Gameplay\Projectiles\ThrowableProjectile.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Gameplay\KillFloor.cs" />
     <Compile Include="Assets\Scripts\TeamSystem\TeamData.cs" />
+    <Compile Include="Assets\TPSBR\Scripts\Gameplay\GameplayModes\ManhuntGameplayMode.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Input\IBackHandler.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Settings\MapSettings.cs" />
     <Compile Include="Assets\Photon\FusionAddons\InterestManagement\Shapes\InterestBox.cs" />

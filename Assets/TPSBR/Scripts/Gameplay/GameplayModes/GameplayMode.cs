@@ -27,6 +27,7 @@ namespace TPSBR
 	{
 		None,
 		BattleRoyale,
+		Manhunt,
 	}
 
 	public abstract class GameplayMode : ContextBehaviour

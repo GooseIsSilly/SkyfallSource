@@ -244,6 +244,12 @@ namespace TPSBR
 				input = _agentInput.FixedInput;
 			}
 
+			// Manhunt: freeze all movement and actions during the waiting/reveal phases.
+			if (Context?.GameplayMode is ManhuntGameplayMode manhuntMode && manhuntMode.InputFrozen == true)
+			{
+				input = default;
+			}
+
 			if (input.Aim == true)
 			{
 				input.Aim &= CanAim(kccFixedData);

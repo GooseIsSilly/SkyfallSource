@@ -39,8 +39,13 @@ namespace TPSBR.UI
         private float _searchStartTime;
         private List<SessionInfo> _availableSessions = new List<SessionInfo>();
         private UIMatchmakerView _matchmakerView;
+        // Set to true to re-enable Manhunt in the quick-play rotation.
+        private const bool MANHUNT_ENABLED = false;
+
         private int _currentGamemodeIndex = 0;
-        private EGameplayType[] _availableGamemodes = new EGameplayType[] { EGameplayType.BattleRoyale };
+        private EGameplayType[] _availableGamemodes = MANHUNT_ENABLED
+            ? new EGameplayType[] { EGameplayType.BattleRoyale, EGameplayType.Manhunt }
+            : new EGameplayType[] { EGameplayType.BattleRoyale };
         
         protected override void OnInitialize()
         {
@@ -469,11 +474,14 @@ namespace TPSBR.UI
             _currentGamemodeIndex = (_currentGamemodeIndex + 1) % _availableGamemodes.Length;
             _gameplayType = _availableGamemodes[_currentGamemodeIndex];
             
+            // Manhunt caps at 10 players; restore default for other modes
+            _maxPlayers = _gameplayType == EGameplayType.Manhunt ? 10 : 100;
+
             UpdateGamemodeDisplay();
             
             Debug.Log($"[UIFortniteLobbyView] Gamemode changed to: {GetGamemodeName(_gameplayType)}");
         }
-        
+
         private void UpdateGamemodeDisplay()
         {
             if (_gamemodeButtonText != null)
@@ -489,6 +497,8 @@ namespace TPSBR.UI
             {
                 case EGameplayType.BattleRoyale:
                     return "BATTLE ROYALE - SOLO";
+                case EGameplayType.Manhunt:
+                    return "LTM - MANHUNT";
                 case EGameplayType.None:
                 default:
                     return "SELECT GAMEMODE";

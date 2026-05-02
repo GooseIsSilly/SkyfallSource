@@ -32,6 +32,9 @@ namespace TPSBR.UI
 
 		// PRIVATE MEMBERS
 
+		// Set to true to re-enable Manhunt in the create-session dropdown.
+		private const bool MANHUNT_ENABLED = false;
+
 		private bool _uiPrepared;
 
 		// UIView INTERFACE
@@ -142,9 +145,16 @@ namespace TPSBR.UI
 				if (value == EGameplayType.None)
 					continue;
 
+				if (!MANHUNT_ENABLED && value == EGameplayType.Manhunt)
+					continue;
+
 				if (value == EGameplayType.BattleRoyale)
 				{
 					options.Add("Battle Royale");
+				}
+				else if (value == EGameplayType.Manhunt)
+				{
+					options.Add("LTM - Manhunt");
 				}
 				else
 				{
