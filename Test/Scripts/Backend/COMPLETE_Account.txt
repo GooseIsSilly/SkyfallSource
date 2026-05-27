@@ -1,0 +1,488 @@
+import json
+import os
+import random
+import string
+import bcrypt
+import shutil
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+from pydantic import BaseModel
+from datetime import datetime
+import glob
+
+app = FastAPI()
+
+# Add CORS middleware to allow Unity to connect
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+parentfolder = os.path.dirname(os.path.abspath(__file__))
+print(parentfolder)
+
+UserIDList = []
+TokenDict = {}
+
+# ADMIN KEY - CHANGE THIS TO A SECURE VALUE
+ADMIN_KEY = "your_secret_admin_key_12345_CHANGE_THIS"
+
+# ============================================================================
+# BASIC ENDPOINTS
+# ============================================================================
+
+@app.get("/")
+def index():
+    return {"log": "MeteorBackend"}
+
+@app.get("/login/createaccount")
+def appcreateacc(ID: str, Pass: str) -> dict[str, str]:
+    return createaccount(ID, Pass)
+
+@app.get("/login/connect")
+def appconnect(ID: str, Pass: str) -> dict[str, str]:
+    return auth(ID, Pass)
+
+@app.get("/login/logout")
+def applogout(Token: str):
+    JFile = getuserfilebytoken(Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    removetoken(JFile["AccountName"])
+    return {"log": "ok"}
+
+@app.get("/login/connectbytoken")
+def appconnectbytoken(Token: str):
+    JFile = getuserfilebytoken(Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    
+    # Check ban status when connecting with token
+    ban_status = isbanned(JFile["AccountName"])
+    if ban_status["banned"]:
+        removetoken(JFile["AccountName"])
+        return {
+            "log": "AccountBanned",
+            "reason": ban_status["reason"],
+            "expiresAt": ban_status.get("expiresAt")
+        }
+    
+    return {"log": "ok", "username": JFile["AccountName"]}
+
+# ============================================================================
+# BAN MANAGEMENT ENDPOINTS
+# ============================================================================
+
+@app.get("/admin/ban")
+def appbanplayer(AdminKey: str, PlayerID: str, Reason: str, ExpiresAt: str = None):
+    if AdminKey != ADMIN_KEY:
+        return {"log": "InvalidAdminKey"}
+    return banplayer(PlayerID, Reason, "Admin", ExpiresAt)
+
+@app.get("/admin/unban")
+def appunbanplayer(AdminKey: str, PlayerID: str):
+    if AdminKey != ADMIN_KEY:
+        return {"log": "InvalidAdminKey"}
+    return unbanplayer(PlayerID)
+
+@app.get("/admin/listbans")
+def applistbans(AdminKey: str):
+    if AdminKey != ADMIN_KEY:
+        return {"log": "InvalidAdminKey"}
+    return {"log": "ok", "bans": getactivebans()}
+
+@app.get("/player/checkban")
+def appcheckban(Token: str):
+    JFile = getuserfilebytoken(Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    
+    ban_status = isbanned(JFile["AccountName"])
+    return {"log": "ok", "banStatus": ban_status}
+
+# ============================================================================
+# REPORTING ENDPOINTS
+# ============================================================================
+
+class ReportRequest(BaseModel):
+    Token: str
+    ReportedPlayer: str
+    Reason: str
+    Description: str
+
+@app.post("/reports/submit")
+def appsubmitreport(request: ReportRequest):
+    JFile = getuserfilebytoken(request.Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    
+    reporter_id = JFile["AccountName"]
+    
+    if not canreport(reporter_id):
+        return {"log": "ReportLimitReached"}
+    
+    if not os.path.exists("Reports"):
+        os.makedirs("Reports")
+    
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    report_id = f"{timestamp}_{reporter_id}_{request.ReportedPlayer}"
+    
+    report_data = {
+        "ReportID": report_id,
+        "Reporter": reporter_id,
+        "ReportedPlayer": request.ReportedPlayer,
+        "Reason": request.Reason,
+        "Description": request.Description,
+        "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "Status": "pending"
+    }
+    
+    with open(f"Reports/{report_id}.json", "w") as reportfile:
+        json.dump(report_data, reportfile, indent=4)
+    
+    updatereportcount(reporter_id)
+    print(f"Report submitted: {reporter_id} reported {request.ReportedPlayer}")
+    
+    return {"log": "ok", "reportId": report_id}
+
+@app.get("/admin/listreports")
+def applistreports(AdminKey: str):
+    if AdminKey != ADMIN_KEY:
+        return {"log": "InvalidAdminKey"}
+    
+    if not os.path.exists("Reports"):
+        return {"log": "ok", "reports": []}
+    
+    report_files = glob.glob("Reports/*.json")
+    reports = []
+    
+    for report_file in report_files:
+        with open(report_file, "r") as f:
+            report_data = json.load(f)
+            reports.append(report_data)
+    
+    reports.sort(key=lambda x: x["Timestamp"], reverse=True)
+    return {"log": "ok", "reports": reports}
+
+class UpdateReportRequest(BaseModel):
+    AdminKey: str
+    ReportID: str
+    Status: str
+
+@app.post("/admin/updatereport")
+def appupdatereport(request: UpdateReportRequest):
+    if request.AdminKey != ADMIN_KEY:
+        return {"log": "InvalidAdminKey"}
+    
+    report_path = f"Reports/{request.ReportID}.json"
+    if not os.path.exists(report_path):
+        return {"log": "ReportNotFound"}
+    
+    with open(report_path, "r") as f:
+        report_data = json.load(f)
+    
+    report_data["Status"] = request.Status
+    
+    with open(report_path, "w") as f:
+        json.dump(report_data, f, indent=4)
+    
+    return {"log": "ok"}
+
+# ============================================================================
+# HELPER FUNCTIONS - FILE MANAGEMENT
+# ============================================================================
+
+def createuserfile(ID: str):
+    shutil.copy("DefaultAccount.json", "Accounts/" + ID + ".json")
+    with open("Accounts/" + ID + ".json", "r") as file:
+        print("Created account named", ID)
+        UserIDList.append(ID)
+        jfile = readuserfile(ID)
+        jfile["AccountName"] = ID
+        with open("Accounts/" + ID + ".json", "w") as savefile:
+            json.dump(jfile, savefile, indent=4)
+        file.close
+        return
+
+def readuserfile(ID):
+    with open("Accounts/" + ID + ".json") as file:
+        return json.load(file)
+
+def addtoken(ID):
+    Token = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(30))
+    TokenDict[ID] = Token
+    print("Created token for", ID)
+    return Token
+
+def removetoken(ID):
+    if ID in TokenDict:
+        del TokenDict[ID]
+        print(ID + "'s token deleted.")
+        return
+    else:
+        print(ID + "'s token could not be deleted as it didn't exist")
+        return
+
+def getuserfilebytoken(Token):
+    FoundPlayer = [key for key, value in TokenDict.items() if value == Token]
+    if len(FoundPlayer) == 1:
+        return readuserfile(FoundPlayer[0])
+    else:
+        print("Token not found")
+        return "MissingToken"
+
+def setpass(ID, Pass):
+    jfile = readuserfile(ID)
+    jfile["Pass"] = Pass.decode("utf-8")
+    with open("Accounts/" + ID + ".json", "w") as savefile:
+        json.dump(jfile, savefile, indent=4)
+    print("SetPassword")
+    return
+
+# ============================================================================
+# AUTHENTICATION FUNCTIONS
+# ============================================================================
+
+def createaccount(ID: str, Pass: str):
+    if not os.path.exists("Accounts/" + ID + ".json"):
+        if len(ID) <= 2:
+            print("Account was not created as ID is too short")
+            return {"Log": "IDTooShort"}
+        if len(Pass) <= 8:
+            print("Account was not created as pass is too short")
+            return {"log": "PassTooShort"}
+        Hash = bcrypt.hashpw(Pass.encode('utf-8'), bcrypt.gensalt())
+        createuserfile(ID)
+        setpass(ID, Hash)
+        return {"log": "AccountCreated", "Token": addtoken(ID)}
+    else:
+        print("Could not create account", ID, "as another account already has that name")
+        return {"Log": "ExistingID"}
+
+def auth(ID: str, Pass: str):
+    if not os.path.exists("Accounts/" + ID + ".json"):
+        print("Connection failed, username does not exist.")
+        return {"log": "UserNameNotExist"}
+    
+    # Check ban status before authentication
+    ban_status = isbanned(ID)
+    if ban_status["banned"]:
+        print(f"{ID} attempted to login but is banned.")
+        return {
+            "log": "AccountBanned",
+            "reason": ban_status["reason"],
+            "expiresAt": ban_status.get("expiresAt")
+        }
+    
+    JFile = readuserfile(ID)
+    AccPass = JFile["Pass"]
+    if bcrypt.checkpw(Pass.encode('utf-8'), AccPass.encode('utf-8')):
+        print(ID, "connected successfully.")
+        return {"log": "ConnectionOK", "token": addtoken(ID)}
+    else:
+        print(ID, "input a wrong pass.")
+        return {"log": "PassWrong"}
+
+# ============================================================================
+# BAN MANAGEMENT FUNCTIONS
+# ============================================================================
+
+def banplayer(ID: str, Reason: str, BannedBy: str, ExpiresAt: str = None):
+    if not os.path.exists("Accounts/" + ID + ".json"):
+        return {"log": "PlayerNotFound"}
+    
+    JFile = readuserfile(ID)
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    JFile["BanStatus"] = {
+        "IsBanned": True,
+        "BanReason": Reason,
+        "BannedAt": current_time,
+        "BannedBy": BannedBy,
+        "ExpiresAt": ExpiresAt
+    }
+    
+    with open("Accounts/" + ID + ".json", "w") as savefile:
+        json.dump(JFile, savefile, indent=4)
+    
+    if not os.path.exists("Bans"):
+        os.makedirs("Bans")
+    
+    ban_record = {
+        "PlayerID": ID,
+        "Reason": Reason,
+        "BannedBy": BannedBy,
+        "BannedAt": current_time,
+        "ExpiresAt": ExpiresAt,
+        "IsActive": True
+    }
+    
+    with open(f"Bans/{ID}.json", "w") as banfile:
+        json.dump(ban_record, banfile, indent=4)
+    
+    removetoken(ID)
+    print(f"{ID} has been banned. Reason: {Reason}")
+    return {"log": "PlayerBanned"}
+
+def unbanplayer(ID: str):
+    if not os.path.exists("Accounts/" + ID + ".json"):
+        return {"log": "PlayerNotFound"}
+    
+    JFile = readuserfile(ID)
+    JFile["BanStatus"]["IsBanned"] = False
+    
+    with open("Accounts/" + ID + ".json", "w") as savefile:
+        json.dump(JFile, savefile, indent=4)
+    
+    if os.path.exists(f"Bans/{ID}.json"):
+        if not os.path.exists("Bans/Archive"):
+            os.makedirs("Bans/Archive")
+        shutil.move(f"Bans/{ID}.json", f"Bans/Archive/{ID}.json")
+    
+    print(f"{ID} has been unbanned.")
+    return {"log": "PlayerUnbanned"}
+
+def checkbanexpired(ID: str):
+    JFile = readuserfile(ID)
+    
+    if "BanStatus" not in JFile or not JFile["BanStatus"]["IsBanned"]:
+        return False
+    
+    expires_at = JFile["BanStatus"].get("ExpiresAt")
+    if expires_at is None:
+        return False
+    
+    try:
+        expire_time = datetime.strptime(expires_at, "%Y-%m-%d %H:%M:%S")
+        if datetime.now() >= expire_time:
+            unbanplayer(ID)
+            return True
+    except:
+        pass
+    
+    return False
+
+def isbanned(ID: str):
+    if not os.path.exists("Accounts/" + ID + ".json"):
+        return {"banned": False}
+    
+    checkbanexpired(ID)
+    JFile = readuserfile(ID)
+    
+    if "BanStatus" not in JFile:
+        JFile["BanStatus"] = {
+            "IsBanned": False,
+            "BanReason": "",
+            "BannedAt": "",
+            "BannedBy": "",
+            "ExpiresAt": None
+        }
+        with open("Accounts/" + ID + ".json", "w") as savefile:
+            json.dump(JFile, savefile, indent=4)
+        return {"banned": False}
+    
+    if JFile["BanStatus"]["IsBanned"]:
+        return {
+            "banned": True,
+            "reason": JFile["BanStatus"]["BanReason"],
+            "bannedAt": JFile["BanStatus"]["BannedAt"],
+            "expiresAt": JFile["BanStatus"]["ExpiresAt"]
+        }
+    
+    return {"banned": False}
+
+def getactivebans():
+    if not os.path.exists("Bans"):
+        return []
+    
+    ban_files = glob.glob("Bans/*.json")
+    active_bans = []
+    
+    for ban_file in ban_files:
+        with open(ban_file, "r") as f:
+            ban_data = json.load(f)
+            if ban_data.get("IsActive", True):
+                active_bans.append(ban_data)
+    
+    return active_bans
+
+# ============================================================================
+# REPORT MANAGEMENT FUNCTIONS
+# ============================================================================
+
+def canreport(ID: str):
+    JFile = readuserfile(ID)
+    
+    if "ReportData" not in JFile:
+        JFile["ReportData"] = {
+            "LastReportTime": "",
+            "ReportCount": 0
+        }
+        with open("Accounts/" + ID + ".json", "w") as savefile:
+            json.dump(JFile, savefile, indent=4)
+        return True
+    
+    last_report = JFile["ReportData"].get("LastReportTime", "")
+    if last_report == "":
+        return True
+    
+    try:
+        last_time = datetime.strptime(last_report, "%Y-%m-%d %H:%M:%S")
+        time_diff = (datetime.now() - last_time).total_seconds()
+        
+        if time_diff < 3600:
+            report_count = JFile["ReportData"].get("ReportCount", 0)
+            if report_count >= 5:
+                return False
+        else:
+            JFile["ReportData"]["ReportCount"] = 0
+            with open("Accounts/" + ID + ".json", "w") as savefile:
+                json.dump(JFile, savefile, indent=4)
+    except:
+        pass
+    
+    return True
+
+def updatereportcount(ID: str):
+    JFile = readuserfile(ID)
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    if "ReportData" not in JFile:
+        JFile["ReportData"] = {
+            "LastReportTime": current_time,
+            "ReportCount": 1
+        }
+    else:
+        last_report = JFile["ReportData"].get("LastReportTime", "")
+        try:
+            last_time = datetime.strptime(last_report, "%Y-%m-%d %H:%M:%S")
+            time_diff = (datetime.now() - last_time).total_seconds()
+            
+            if time_diff >= 3600:
+                JFile["ReportData"]["ReportCount"] = 1
+            else:
+                JFile["ReportData"]["ReportCount"] = JFile["ReportData"].get("ReportCount", 0) + 1
+        except:
+            JFile["ReportData"]["ReportCount"] = 1
+        
+        JFile["ReportData"]["LastReportTime"] = current_time
+    
+    with open("Accounts/" + ID + ".json", "w") as savefile:
+        json.dump(JFile, savefile, indent=4)
+
+# ============================================================================
+# RUN SERVER
+# ============================================================================
+
+if __name__ == "__main__":
+    print("=" * 80)
+    print("SKYFALL BACKEND SERVER STARTING")
+    print("=" * 80)
+    print(f"Admin Key: {ADMIN_KEY}")
+    print("IMPORTANT: Change the ADMIN_KEY to a secure value!")
+    print("=" * 80)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

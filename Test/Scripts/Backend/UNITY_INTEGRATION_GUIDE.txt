@@ -1,0 +1,468 @@
+================================================================================
+UNITY INTEGRATION GUIDE - Backend Authentication and Ban System
+================================================================================
+
+This guide shows you how to integrate the backend authentication and ban system
+into your existing Skyfall battle royale game.
+
+================================================================================
+PART 1: SETUP BACKEND MANAGERS IN YOUR SCENE
+================================================================================
+
+1. Open your Menu scene: Assets/TPSBR/Scenes/Menu.unity
+
+2. Create Backend Managers GameObject:
+   - Right-click in Hierarchy → Create Empty
+   - Name it "BackendManagers"
+   - Add Component → Backend Service Manager (TPSBR.Backend.BackendServiceManager)
+   - Add Component → Ban Check Service (TPSBR.Backend.BanCheckService)
+   
+3. Configure BackendServiceManager:
+   - Set Backend URL to: http://localhost:8000 (or your server URL)
+   - Set API Timeout: 10 seconds
+   - Set Retry Attempts: 3
+
+4. Configure BanCheckService:
+   - Set Ban Check Interval: 30 seconds
+   - Enable "Check On Start" checkbox
+   
+5. Mark as DontDestroyOnLoad:
+   - Both components already handle this automatically in code
+
+================================================================================
+PART 2: CREATE BACKEND CONFIGURATION ASSET
+================================================================================
+
+1. In Project window, navigate to: Assets/Resources/Settings/
+
+2. Right-click → Create → TPSBR → Backend → Backend Configuration
+
+3. Name it: BackendConfig
+
+4. Configure the settings:
+   - Development URL: http://localhost:8000
+   - Staging URL: (leave empty or add if you have one)
+   - Production URL: (your production server URL)
+   - API Timeout: 10
+   - Retry Attempts: 3
+   - Ban Check Interval: 30
+   - Current Environment: Development
+
+5. (Optional) Update BackendServiceManager to use this config:
+   - You can modify BackendServiceManager.cs to load settings from this asset
+
+================================================================================
+PART 3: INTEGRATE WITH EXISTING LOGIN UI
+================================================================================
+
+Your game likely has a login/menu UI. Let's integrate authentication:
+
+1. Find your existing login UI script in: Assets/TPSBR/Scripts/UI/MenuViews/
+
+2. Add these using statements at the top:
+   using TPSBR.Backend;
+
+3. Add fields for username/password input (if not already present):
+   [SerializeField] private TMP_InputField usernameInput;
+   [SerializeField] private TMP_InputField passwordInput;
+   [SerializeField] private Button loginButton;
+   [SerializeField] private Button createAccountButton;
+   [SerializeField] private TextMeshProUGUI errorText;
+
+4. Replace your existing login logic with:
+
+   private void OnLoginButtonClick()
+   {
+       string username = usernameInput.text.Trim();
+       string password = passwordInput.text;
+       
+       if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+       {
+           ShowError("Please enter username and password");
+           return;
+       }
+       
+       loginButton.interactable = false;
+       ShowError("Logging in...");
+       
+       BackendServiceManager.Instance.LoginPlayer(username, password, (success, message) =>
+       {
+           loginButton.interactable = true;
+           
+           if (success)
+           {
+               ShowError("Login successful!");
+               // Continue with your existing Photon connection logic
+               ConnectToPhoton();
+           }
+           else
+           {
+               ShowError(message);
+           }
+       });
+   }
+
+5. Add create account logic:
+
+   private void OnCreateAccountButtonClick()
+   {
+       string username = usernameInput.text.Trim();
+       string password = passwordInput.text;
+       
+       if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+       {
+           ShowError("Please enter username and password");
+           return;
+       }
+       
+       createAccountButton.interactable = false;
+       ShowError("Creating account...");
+       
+       BackendServiceManager.Instance.CreateAccount(username, password, (success, message) =>
+       {
+           createAccountButton.interactable = true;
+           
+           if (success)
+           {
+               ShowError("Account created! You can now login.");
+           }
+           else
+           {
+               ShowError(message);
+           }
+       });
+   }
+
+6. Add auto-login on startup (if token exists):
+
+   private void Start()
+   {
+       if (BackendServiceManager.Instance.HasStoredToken())
+       {
+           ShowError("Validating session...");
+           
+           BackendServiceManager.Instance.ValidateToken((success, message) =>
+           {
+               if (success)
+               {
+                   ShowError($"Welcome back, {message}!");
+                   // Optionally auto-connect to Photon
+               }
+               else
+               {
+                   ShowError("Session expired. Please login again.");
+               }
+           });
+       }
+   }
+
+7. Add logout button functionality:
+
+   private void OnLogoutButtonClick()
+   {
+       BackendServiceManager.Instance.Logout(() =>
+       {
+           ShowError("Logged out successfully");
+           // Return to login screen
+       });
+   }
+
+================================================================================
+PART 4: INTEGRATE BAN CHECKING WITH PHOTON FUSION CONNECTION
+================================================================================
+
+1. Find your NetworkRunner initialization code in:
+   Assets/TPSBR/Scripts/Core/ or Assets/TPSBR/Scripts/Networking/
+
+2. Before starting the NetworkRunner, validate the token:
+
+   private void StartNetworkRunner()
+   {
+       // Validate token before connecting
+       BackendServiceManager.Instance.ValidateToken((success, username) =>
+       {
+           if (success)
+           {
+               // Token is valid, continue with Photon connection
+               StartPhotonConnection(username);
+           }
+           else
+           {
+               // Token invalid or player banned, return to menu
+               Debug.LogWarning("Authentication failed or player banned");
+               ReturnToMenu();
+           }
+       });
+   }
+
+3. Pass username to Photon Fusion:
+
+   private void StartPhotonConnection(string username)
+   {
+       // Use username as player nickname in Photon
+       var args = new StartGameArgs
+       {
+           // ... your existing args
+           PlayerNickname = username,
+           // ... other settings
+       };
+       
+       Runner.StartGame(args);
+   }
+
+4. Start ban checking when game session starts:
+
+   public void OnConnectedToServer(NetworkRunner runner)
+   {
+       // Start checking for bans every 30 seconds
+       BanCheckService.Instance.StartBanChecking();
+   }
+
+5. Stop ban checking when disconnecting:
+
+   public void OnDisconnectedFromServer(NetworkRunner runner)
+   {
+       BanCheckService.Instance.StopBanChecking();
+   }
+
+================================================================================
+PART 5: HANDLE PLAYER BEING BANNED DURING GAMEPLAY
+================================================================================
+
+1. Subscribe to ban detection event in your game manager or network manager:
+
+   private void OnEnable()
+   {
+       if (BanCheckService.Instance != null)
+       {
+           BanCheckService.Instance.OnPlayerBanned.AddListener(OnPlayerBannedDetected);
+       }
+   }
+   
+   private void OnDisable()
+   {
+       if (BanCheckService.Instance != null)
+       {
+           BanCheckService.Instance.OnPlayerBanned.RemoveListener(OnPlayerBannedDetected);
+       }
+   }
+
+2. Implement the ban handler:
+
+   private void OnPlayerBannedDetected(string reason, string expiresAt)
+   {
+       Debug.LogWarning($"Player has been banned! Reason: {reason}");
+       
+       // Disconnect from Photon Fusion
+       if (Runner != null && Runner.IsRunning)
+       {
+           Runner.Shutdown(destroyGameObject: false);
+       }
+       
+       // Show ban message to player
+       ShowBanMessage(reason, expiresAt);
+       
+       // Wait a few seconds then return to menu
+       StartCoroutine(ReturnToMenuAfterDelay(5f));
+   }
+
+3. Create ban message UI:
+
+   private void ShowBanMessage(string reason, string expiresAt)
+   {
+       // Create or show a full-screen ban message panel
+       string message = $"You have been banned from the game.\n\nReason: {reason}";
+       
+       if (!string.IsNullOrEmpty(expiresAt))
+       {
+           message += $"\n\nBan expires: {expiresAt}";
+       }
+       else
+       {
+           message += "\n\nThis ban is permanent.";
+       }
+       
+       // Show this message in a UI panel
+       // Example: banMessageText.text = message;
+       // Example: banMessagePanel.SetActive(true);
+   }
+
+================================================================================
+PART 6: ADD PLAYER REPORTING TO SCOREBOARD
+================================================================================
+
+1. Find your scoreboard UI prefab in: Assets/TPSBR/UI/Prefabs/
+
+2. Add a "Report Player" button to each player entry in the scoreboard
+
+3. Create a PlayerReportUI prefab:
+   - Create Canvas → Panel (name it ReportPanel)
+   - Add: Text "Report Player"
+   - Add: InputField for "Reported Player Name" (read-only)
+   - Add: Dropdown for "Reason"
+   - Add: InputField (multiline) for "Description"
+   - Add: Button "Submit"
+   - Add: Button "Cancel"
+   - Add: Text for feedback messages
+
+4. Attach PlayerReportUI.cs to the ReportPanel
+
+5. Assign UI references in the Inspector:
+   - Report Panel: The panel GameObject
+   - Reported Player Input: The name input field
+   - Reason Dropdown: The reason dropdown
+   - Description Input: The description field
+   - Submit Button: The submit button
+   - Cancel Button: The cancel button
+   - Feedback Text: The feedback text
+
+6. In your scoreboard script, add report button click handler:
+
+   private void OnReportPlayerButtonClick(string playerName)
+   {
+       // Assuming you have a reference to PlayerReportUI
+       playerReportUI.ShowReportPanel(playerName);
+   }
+
+7. The PlayerReportUI will handle the rest automatically
+
+================================================================================
+PART 7: TESTING THE INTEGRATION
+================================================================================
+
+1. Start your Python backend server (make sure it's running on localhost:8000)
+
+2. Play your game in Unity Editor
+
+3. Test login flow:
+   - Enter username and password
+   - Click "Create Account" (first time)
+   - Click "Login"
+   - Should store token and proceed to game
+
+4. Test ban system:
+   - While logged in, use admin dashboard to ban your account
+   - Wait up to 30 seconds
+   - You should be kicked from the game with ban message
+
+5. Test reporting:
+   - Open scoreboard
+   - Click "Report Player" on another player
+   - Fill out form and submit
+   - Check Reports/ folder in your backend
+
+6. Test token persistence:
+   - Close and reopen the game
+   - Should auto-validate token and log you in
+
+================================================================================
+PART 8: UPDATING PLAYER DATA INTEGRATION
+================================================================================
+
+Your game already has PlayerData.cs with UserID and UnityID. Let's integrate:
+
+1. In your existing player data initialization, use the backend username:
+
+   private void InitializePlayerData()
+   {
+       string username = BackendServiceManager.Instance.GetStoredUsername();
+       
+       // Set this as the UserID in your existing PlayerData
+       // Example: playerData.UserID = username;
+   }
+
+2. When spawning the Player network object, pass the authenticated username
+
+3. This ensures the username from backend matches the in-game player
+
+================================================================================
+PART 9: OPTIONAL ENHANCEMENTS
+================================================================================
+
+1. Auto-Logout on Exit:
+   - Add OnApplicationQuit() to logout and clear token
+
+2. Remember Me Feature:
+   - Store encrypted username in PlayerPrefs
+   - Auto-fill username field on startup
+
+3. Password Requirements UI:
+   - Show password strength indicator
+   - Display requirements (min 9 characters, etc.)
+
+4. Connection Status Indicator:
+   - Show "Connecting to backend..." message
+   - Display connection errors clearly
+
+5. Offline Mode:
+   - Handle backend being unavailable
+   - Fallback to local play or show maintenance message
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problem: "Backend service not available" error
+Solution: Make sure BackendServiceManager GameObject exists in the scene and
+         the component is attached
+
+Problem: Login always fails
+Solution: Check that your Python backend is running on the correct port
+         Check the backend URL in BackendServiceManager matches your server
+
+Problem: Ban check not working
+Solution: Make sure BanCheckService.StartBanChecking() is called after
+         connecting to Photon Fusion
+
+Problem: Reports not submitting
+Solution: Check that the player has a valid auth token
+         Check backend logs for errors
+
+Problem: CORS errors in browser testing
+Solution: Make sure CORS middleware is added to your Python backend
+
+================================================================================
+COMPLETE INTEGRATION CHECKLIST
+================================================================================
+
+Backend:
+[ ] Updated Account.py with all ban/report functions
+[ ] Updated DefaultAccount.json template
+[ ] Started FastAPI server
+[ ] Changed ADMIN_KEY to unique value
+
+Unity Setup:
+[ ] Created BackendManagers GameObject in Menu scene
+[ ] Added BackendServiceManager component
+[ ] Added BanCheckService component
+[ ] Created BackendConfig ScriptableObject
+[ ] Set backend URL in config
+
+Login Integration:
+[ ] Added username/password input fields to UI
+[ ] Updated login button to call BackendServiceManager.LoginPlayer()
+[ ] Added create account button functionality
+[ ] Added auto-login on startup with token validation
+[ ] Added logout button
+
+Game Integration:
+[ ] Validate token before Photon connection
+[ ] Start ban checking when game session starts
+[ ] Subscribe to OnPlayerBanned event
+[ ] Handle ban detection (disconnect + show message)
+[ ] Stop ban checking on disconnect
+
+Reporting:
+[ ] Created PlayerReportUI prefab
+[ ] Added "Report Player" buttons to scoreboard
+[ ] Connected report button to PlayerReportUI.ShowReportPanel()
+
+Testing:
+[ ] Tested account creation
+[ ] Tested login
+[ ] Tested token persistence
+[ ] Tested ban system (manual ban via admin dashboard)
+[ ] Tested auto-kick when banned
+[ ] Tested player reporting
+
+================================================================================

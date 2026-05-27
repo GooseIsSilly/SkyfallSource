@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1203708572482856
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4463598664183040}
+  - component: {fileID: 3803130586718200939}
+  - component: {fileID: 714671708937422365}
+  m_Layer: 0
+  m_Name: Bullet 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4463598664183040
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203708572482856}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3803130586718200939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203708572482856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cacc414b767f84d439022d63a2778b05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _damage:
+    Damage: 10
+    MaxDistance: 300
+    FullDamageDistance: 80
+  _fireDespawnTime: 3
+  _impactDespawnTime: 1
+  _gravity: 20
+  _impactEffect: {fileID: 6841296474125052540, guid: ca9c335e1f297714ab0e76bac18e9734, type: 3}
+  _impactSetup: {fileID: 11400000, guid: 95f210b9b38003d48925d0002284fcb4, type: 2}
+  _impactPenetration: 0
+  _spawnImpactEffectOnTimeout: 1
+  _spawnImpactOnStaticHitOnly: 0
+  _showProjectileVisualAfterDistance: 0
+  _projectileVisual: {fileID: 1203708572482856}
+  _dummyRotationTarget: {fileID: 0}
+  _velocityToRotationMultiplier: 10
+  _canBounce: 0
+  _bounceVelocityMultiplier: 0.7
+  _bounceObjectRadius: 0.05
+  _bounceEffect: {fileID: 0}
+  _explosionRadius: 7
+  _explosionDamage: 100
+  _explosionEffect: {fileID: 1203708572482856}
+  _explosionHitMask:
+    serializedVersion: 2
+    m_Bits: 256
+  _rocketSpeed: 15
+  _useGravity: 0
+  _canDamageSelf: 1
+  _selfDamageMultiplier: 0.5
+--- !u!114 &714671708937422365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203708572482856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 368618940
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 3803130586718200939}
+  ForceRemoteRenderTimeframe: 0

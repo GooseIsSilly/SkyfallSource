@@ -1,0 +1,270 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    CINEMATIC SEQUENCE FLOW DIAGRAM
+═══════════════════════════════════════════════════════════════════════════════
+
+START
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ INITIALIZATION                                                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ • Check PlayerPrefs: "Season_HasSeenIntro"                                  │
+│ • If already seen → Skip cinematic, start normal game                       │
+│ • If first time → Continue to cinematic                                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ PHASE 1: FADE IN & WAKE UP                                    [Intro Cam]  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  [BLACK SCREEN] ──────(Fade In 2s)──────> [SCENE VISIBLE]                  │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────┐              │
+│  │ Player spawned (laying down position)                    │              │
+│  │ Playing: Laying Down Idle Animation (loop)               │              │
+│  │ Camera: Intro Cam (framing player on ground)             │              │
+│  │ Music: Wake Up Music (fading in over 2 seconds)          │              │
+│  │                                                           │              │
+│  │ UI Display: "Press P To Start New Decade"                │              │
+│  └──────────────────────────────────────────────────────────┘              │
+│                                                                             │
+│  Wait for input...                                                          │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────┐              │
+│  │ PLAYER PRESSES 'P'                                        │              │
+│  └──────────────────────────────────────────────────────────┘              │
+│                        │                                                    │
+│                        ▼                                                    │
+│  ┌──────────────────────────────────────────────────────────┐              │
+│  │ • Clear UI text                                           │              │
+│  │ • Play Wake Up Animation                                 │              │
+│  │ • Wait for animation to complete                         │              │
+│  │ • Enable CharacterController                             │              │
+│  │ • Enable SimpleCinematicPlayerController                 │              │
+│  │ • Enable Animator for locomotion                         │              │
+│  └──────────────────────────────────────────────────────────┘              │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ PHASE 2: WALK TO NPC                                 [Player Follow Cam]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────┐              │
+│  │ Player standing up                                        │              │
+│  │ Camera: Switched to Player Follow Cam (3rd person)       │              │
+│  │ Music: Wake Up Music (still playing)                     │              │
+│  │ Controls: WASD to move, mouse to rotate                  │              │
+│  │                                                           │              │
+│  │ [PLAYER] ─────(walking)─────> [NPC]                      │              │
+│  │   ↑                              ↑                        │              │
+│  │   └──(distance check)────────────┘                        │              │
+│  └──────────────────────────────────────────────────────────┘              │
+│                                                                             │
+│  Distance > 3 units: No UI                                                  │
+│  Distance ≤ 3 units: Show "Hold P To Talk"                                  │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────┐              │
+│  │ PLAYER HOLDS 'P' FOR 2 SECONDS                            │              │
+│  │ UI shows progress: "Hold P To Talk [0%] → [100%]"        │              │
+│  └──────────────────────────────────────────────────────────┘              │
+│                        │                                                    │
+│                        ▼                                                    │
+│  ┌──────────────────────────────────────────────────────────┐              │
+│  │ • Interaction triggered                                   │              │
+│  │ • Clear UI text                                           │              │
+│  │ • Disable player movement                                │              │
+│  └──────────────────────────────────────────────────────────┘              │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ PHASE 3: FIRST DIALOG                                  [Dialogue Cam]      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────┐              │
+│  │ Camera: Switch to Dialogue Cam (framing NPC)             │              │
+│  │ NPC Animator: Play "Talking" animation state             │              │
+│  │ Audio: Play First Dialog Clip                            │              │
+│  │ Music: Wake Up Music (still playing in background)       │              │
+│  │                                                           │              │
+│  │ [NPC TALKING] ───(dialog duration)───> [DIALOG ENDS]     │              │
+│  └──────────────────────────────────────────────────────────┘              │
+│                                                                             │
+│  When dialog ends:                                                          │
+│  ┌──────────────────────────────────────────────────────────┐              │
+│  │ • Stop NPC talking animation                              │              │
+│  │ • Start music crossfade (2 seconds):                     │              │
+│  │   Wake Up Music ──(fade out)──┐                          │              │
+│  │                                ├──(crossfade)             │              │
+│  │   Plane Music ───(fade in)─────┘                         │              │
+│  └──────────────────────────────────────────────────────────┘              │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ PHASE 4: MAP FLYBY                                       [Flyby Cam]       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────┐              │
+│  │ Camera: Switch to Flyby Cam                               │              │
+│  │ Music: Plane Music (now playing)                         │              │
+│  │                                                           │              │
+│  │ Waypoint Path:                                            │              │
+│  │                                                           │              │
+│  │  [Waypoint 1] ──(smooth lerp)──> [Waypoint 2]            │              │
+│  │                                        │                  │              │
+│  │                                        ▼                  │              │
+│  │                                  [Waypoint 3]             │              │
+│  │                                        │                  │              │
+│  │                                        ▼                  │              │
+│  │                                  [Waypoint 4]             │              │
+│  │                                        │                  │              │
+│  │                                        ▼                  │              │
+│  │                                [Final Waypoint]           │              │
+│  │                                        │                  │              │
+│  │                                        ▼                  │              │
+│  │                           (hold for 3 seconds)            │              │
+│  │                                                           │              │
+│  │ Total flyby duration: 10 seconds                         │              │
+│  │ Position & Rotation: Lerp between waypoints              │              │
+│  └──────────────────────────────────────────────────────────┘              │
+│                                                                             │
+│  Camera smoothly moves through all waypoints                                │
+│  Rotation follows waypoint rotation                                         │
+│  Shows different areas of the map                                           │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ PHASE 5: SECOND DIALOG                              [Flyby Cam - Final]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────┐              │
+│  │ Camera: Still at Final Waypoint (held)                   │              │
+│  │ Audio: Play Second Dialog Clip                           │              │
+│  │ Music: Plane Music (continuing)                          │              │
+│  │                                                           │              │
+│  │ [SECOND DIALOG] ───(dialog duration)───> [DIALOG ENDS]   │              │
+│  │                                                           │              │
+│  │ Example dialog: "There's your stop! Get ready to jump!"  │              │
+│  └──────────────────────────────────────────────────────────┘              │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ PHASE 6: CLEANUP & TRANSITION                                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────┐              │
+│  │ • Fade out Plane Music (2 seconds)                       │              │
+│  │ • Destroy cinematic player GameObject                    │              │
+│  │ • Hide NPC character                                     │              │
+│  │ • Hide cinematic UI canvas                               │              │
+│  │ • Disable all cinematic cameras                          │              │
+│  │ • Reset cursor (visible, unlocked)                       │              │
+│  │                                                           │              │
+│  │ • Set PlayerPrefs: "Season_HasSeenIntro" = 1             │              │
+│  │ • Save PlayerPrefs                                       │              │
+│  └──────────────────────────────────────────────────────────┘              │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ PHASE 7: START BATTLE ROYALE                                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────┐              │
+│  │ Call: BattleRoyaleGameplayMode.StartImmediately()        │              │
+│  └──────────────────────────────────────────────────────────┘              │
+│                        │                                                    │
+│                        ▼                                                    │
+│  ┌──────────────────────────────────────────────────────────┐              │
+│  │ • Airplane spawns                                         │              │
+│  │ • Real player spawns as AirplaneAgent                    │              │
+│  │ • Player is in airplane                                  │              │
+│  │ • Drop window activates                                  │              │
+│  │ • Player can jump with controls                          │              │
+│  │ • Normal game music/audio takes over                     │              │
+│  └──────────────────────────────────────────────────────────┘              │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ NORMAL GAMEPLAY                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ • Player jumps from airplane                                                │
+│ • Lands on map                                                              │
+│ • Battle royale gameplay continues normally                                 │
+│ • Cinematic will NOT play again (PlayerPrefs check)                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+  │
+  ▼
+END (Return to main menu, next match, etc.)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                          MUSIC TIMELINE
+═══════════════════════════════════════════════════════════════════════════────
+
+Time  Phase                          Music
+─────────────────────────────────────────────────────────────────────────────
+0s    Fade In                        [Silent]
+                                      ↓ (fade in)
+2s    Wake Up Prompt                 [Wake Up Music] ████████████
+      Player Wakes Up                [Wake Up Music] ████████████
+      Walk to NPC                    [Wake Up Music] ████████████
+      First Dialog                   [Wake Up Music] ████████████
+                                      ↓ (crossfade 1s out)
+      After First Dialog                  ↓ (crossfade 1s in)
+                                     [Plane Music] ██████████████
+      Map Flyby                      [Plane Music] ██████████████
+      Second Dialog                  [Plane Music] ██████████████
+                                      ↓ (fade out)
+      Cleanup                        [Plane Music fading...] ████
+      Transition                     [Silent]
+      Battle Royale                  [Game Music from BR system]
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                          CAMERA TIMELINE
+═══════════════════════════════════════════════════════════════════════════════
+
+Phase                          Active Camera          Priority
+─────────────────────────────────────────────────────────────────────────────
+Fade In                        Intro Cam              100
+Wake Up Prompt                 Intro Cam              100
+Player Wakes Up                Intro Cam → Transition  
+Walk to NPC                    Player Follow Cam      100
+Near NPC                       Player Follow Cam      100
+First Dialog                   Dialogue Cam           100
+Map Flyby                      Flyby Cam              100
+Second Dialog                  Flyby Cam              100
+Cleanup                        All cameras Priority 0
+Battle Royale                  Game cameras take over
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                          INPUT TIMELINE
+═══════════════════════════════════════════════════════════════════════════════
+
+Phase                          Input                  Response
+─────────────────────────────────────────────────────────────────────────────
+Wake Up Prompt                 Press P                Wake up animation
+Walk to NPC                    WASD                   Move player
+Near NPC                       Hold P (2s)            Start first dialog
+First Dialog                   [No input]             [Cinematic]
+Map Flyby                      [No input]             [Cinematic]
+Second Dialog                  [No input]             [Cinematic]
+Battle Royale                  Game controls          Jump from plane
+
+
+═══════════════════════════════════════════════════════════════════════════════

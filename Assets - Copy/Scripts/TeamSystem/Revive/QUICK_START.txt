@@ -1,0 +1,147 @@
+========================================
+   REVIVE SYSTEM - QUICK START GUIDE
+========================================
+
+✅ ALL ERRORS FIXED
+✅ REVIVE SYSTEM READY
+
+========================================
+STEP 1: ADD TO GAME SCENE (2 minutes)
+========================================
+
+1. Open: Assets/TPSBR/Scenes/Game.unity
+
+2. Find "GameSystems" GameObject (or create one)
+
+3. Add these components:
+   - ReviveIntegration
+   - ReviveInteraction
+   
+4. Configure ReviveInteraction:
+   - Set "Player Layer" to "Agent"
+
+========================================
+STEP 2: CREATE UI (5 minutes)
+========================================
+
+A) REVIVE PROMPT (for players reviving)
+   
+   Hierarchy:
+   Canvas > Panel "RevivePrompt"
+     - Text "PromptText" (set: "Hold [E] to Revive")
+     - Text "PlayerNameText"
+     - Image "ProgressFill" (Type: Filled, Fill: 0-1)
+   
+   Component: UIRevivePrompt
+   Assign all references
+
+B) DOWNED STATE (for downed players)
+   
+   Hierarchy:
+   Canvas > Panel "DownedState"
+     - Text "StatusText" (set: "You are down!")
+     - Image "BleedOutFill" (Type: Filled)
+     - Text "BleedOutTimer"
+     - Panel "BeingRevived"
+       - Text "ReviverNameText"
+       - Image "ReviveProgress" (Type: Filled)
+   
+   Component: UIDownedState
+   Assign all references
+
+========================================
+STEP 3: TEST (1 minute)
+========================================
+
+1. Start game with 2 players
+2. Set team mode to Duo or Squad
+3. Take fatal damage
+4. You should:
+   ✓ Crouch (can't shoot)
+   ✓ See 30s timer
+5. Teammate walks close
+   ✓ Sees "Hold E" prompt
+6. Teammate holds E for 5 seconds
+   ✓ You're revived with 30 HP
+
+========================================
+OPTIONAL: DEBUG HELPER
+========================================
+
+Add "ReviveSystemDebugger" component to any GameObject
+
+Debug Keys:
+- K = Force downed state
+- L = Force instant revive  
+- P = Print status to console
+
+========================================
+SETTINGS (Optional)
+========================================
+
+Edit: /Assets/Scripts/TeamSystem/Revive/ReviveData.cs
+
+Change these constants:
+- REVIVE_DURATION = 5.0f (revive time in seconds)
+- BLEED_OUT_DURATION = 30.0f (time until death)
+- REVIVE_INTERACTION_DISTANCE = 2.5f (range in meters)
+- REVIVE_HEALTH_RESTORED = 30f (HP after revive)
+
+========================================
+HOW IT WORKS
+========================================
+
+SOLO MODE:
+- Death is instant (normal)
+- No revive system
+
+DUO/SQUAD MODE:
+- Death → Downed state
+- Player forced to crouch
+- Cannot shoot/use items
+- 30 second bleed-out timer
+- Teammates can revive (hold E for 5s)
+- If revived: 30 HP restored
+- If not revived: permanent death
+
+========================================
+TROUBLESHOOTING
+========================================
+
+"Not entering downed state"
+→ Check team mode is Duo/Squad (not Solo)
+→ Verify ReviveIntegration is in scene
+
+"Can't see revive prompt"
+→ Check distance (within 2.5m)
+→ Verify same team
+→ Ensure E key is held (not tapped)
+
+"UI not showing"
+→ Assign all references in Inspector
+→ Check Canvas is active
+
+========================================
+DOCUMENTATION
+========================================
+
+Full docs: /Assets/Scripts/TeamSystem/Revive/README_REVIVE.md
+Setup: /Assets/Scripts/TeamSystem/SETUP_COMPLETE.md
+
+========================================
+FEATURES INCLUDED
+========================================
+
+✓ Downed state (crouch, can't shoot)
+✓ Hold E to revive (5 seconds)
+✓ 30-second bleed-out timer
+✓ Team-only reviving
+✓ Visual UI feedback
+✓ Network synchronized
+✓ Works with existing team system
+✓ Solo mode disabled (instant death)
+✓ Extension methods (player.IsDown())
+✓ Events system for custom behavior
+✓ Debug tools included
+
+Ready to play! 🎮

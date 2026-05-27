@@ -1,0 +1,504 @@
+================================================================================
+UNITY TIMELINE CINEMATIC CREATION GUIDE
+================================================================================
+
+This guide explains how to create cinematics using Unity Timeline for your
+Era Intro system, similar to Fortnite Chapter cinematics.
+
+================================================================================
+PART 1: UNDERSTANDING TIMELINE
+================================================================================
+
+WHAT IS TIMELINE?
+-----------------
+Timeline is Unity's built-in cinematic sequencing tool that lets you:
+• Control camera movements
+• Trigger animations
+• Play audio
+• Activate/deactivate objects
+• Create scripted sequences
+
+TIMELINE PACKAGE
+----------------
+You already have Timeline installed (com.unity.timeline 1.8.9)
+✅ No additional installation needed!
+
+================================================================================
+PART 2: QUICK START - CREATE YOUR FIRST CINEMATIC
+================================================================================
+
+STEP 1: CREATE TIMELINE ASSET
+------------------------------
+1. In Project window, right-click
+2. Select: Create → Timeline
+3. Name it: "Era2_Cinematic"
+
+✅ Timeline asset created!
+
+STEP 2: CREATE CINEMATIC SCENE SETUP
+-------------------------------------
+1. Create a new scene: File → New Scene
+   OR use your existing Menu scene
+
+2. Add objects you want in your cinematic:
+   
+   Example Setup:
+   Hierarchy:
+   ├── Main Camera          (for rendering)
+   ├── Directional Light    (lighting)
+   ├── CharacterModel       (your character)
+   ├── Environment          (background objects)
+   └── VirtualCameras       (Cinemachine cameras)
+
+STEP 3: OPEN TIMELINE WINDOW
+-----------------------------
+1. Window → Sequencing → Timeline
+2. Timeline window opens (dock it for convenience)
+
+STEP 4: CREATE PLAYABLE DIRECTOR
+---------------------------------
+1. Create empty GameObject: "CinematicDirector"
+2. Select it
+3. In Timeline window, click "Create"
+4. Save Timeline asset (if prompted)
+
+✅ PlayableDirector component added automatically!
+
+STEP 5: ADD YOUR FIRST TRACK
+-----------------------------
+In Timeline window:
+
+1. Click "Add" button (+ icon)
+2. Select track type:
+   • Animation Track → For character animations
+   • Cinemachine Track → For camera movements
+   • Audio Track → For music/sound effects
+   • Activation Track → To show/hide objects
+
+Let's start with an Animation Track!
+
+================================================================================
+PART 3: ANIMATION TRACK - ANIMATE YOUR CHARACTER
+================================================================================
+
+CREATE ANIMATION TRACK
+----------------------
+1. Timeline window → Click "Add" → Animation Track
+2. Drag your character GameObject into the track
+3. Track is now bound to your character
+
+ADD ANIMATION CLIPS
+-------------------
+Method 1: Use Existing Animation
+1. Find your animation clip in Project window
+2. Drag it onto the Animation Track
+3. Position it on the timeline
+
+Method 2: Record New Animation
+1. Click red Record button in Timeline window
+2. Move/rotate/scale objects in Scene view
+3. Unity auto-creates keyframes
+4. Click Record again to stop
+
+EXAMPLE: Character Appearance Animation
+----------------------------------------
+Timeline (0-10 seconds):
+├── 0s-2s:  Character fades in (scale 0 → 1)
+├── 2s-4s:  Camera zooms to face
+├── 4s-6s:  Character poses (idle animation)
+└── 6s-10s: Camera pulls back for epic shot
+
+================================================================================
+PART 4: CINEMACHINE TRACK - CAMERA MOVEMENTS
+================================================================================
+
+SETUP CINEMACHINE (One-Time)
+-----------------------------
+Cinemachine is already installed! (com.unity.cinemachine 2.10.4)
+
+CREATE VIRTUAL CAMERAS
+----------------------
+1. GameObject → Cinemachine → Virtual Camera
+2. Name it: "CM_IntroShot"
+3. Position camera in Scene view
+4. Set "Look At" target to your character
+
+Create multiple cameras for different shots:
+├── CM_WideShot     (full body view)
+├── CM_CloseUp      (face closeup)
+├── CM_OverShoulder (dynamic angle)
+└── CM_FinalShot    (epic pullback)
+
+ADD CINEMACHINE TRACK
+---------------------
+1. Timeline window → Add → Cinemachine Track
+2. Drag virtual cameras onto track as clips
+3. Timeline will blend between cameras!
+
+EXAMPLE CAMERA SEQUENCE
+-----------------------
+Timeline:
+0s ───┬─── 3s ───┬─── 6s ───┬─── 10s
+      │          │          │
+  WideShot   CloseUp   FinalShot
+  
+Result: Smooth camera transitions!
+
+================================================================================
+PART 5: AUDIO TRACK - ADD MUSIC & SOUND
+================================================================================
+
+ADD AUDIO TRACK
+---------------
+1. Timeline window → Add → Audio Track
+2. Drag audio clip onto track
+3. Adjust volume in Inspector
+
+TIPS FOR AUDIO
+--------------
+• Fade in/out: Right-click clip → Blend In/Out Curves
+• Loop music: Enable "Loop" in clip properties
+• Multiple layers: Add multiple Audio Tracks
+  - Track 1: Background music
+  - Track 2: Sound effects
+  - Track 3: Voice over
+
+EXAMPLE AUDIO SETUP
+-------------------
+Audio Track 1: "Epic Music"
+├── 0s: Fade in (2s)
+├── 2s-8s: Full volume
+└── 8s-10s: Fade out
+
+Audio Track 2: "Sound Effects"
+├── 2s: Whoosh sound
+├── 4s: Impact sound
+└── 6s: Ambient wind
+
+================================================================================
+PART 6: ACTIVATION TRACK - SHOW/HIDE OBJECTS
+================================================================================
+
+WHAT IS ACTIVATION TRACK?
+--------------------------
+Controls when GameObjects are active/inactive during cinematic.
+
+CREATE ACTIVATION TRACK
+-----------------------
+1. Timeline window → Add → Activation Track
+2. Drag GameObject onto track
+3. Add clips to control when object is active
+
+EXAMPLE: REVEAL EFFECTS
+-----------------------
+Timeline:
+├── 0s-2s:  Logo hidden
+├── 2s-4s:  Logo appears (Activation clip)
+├── 4s-6s:  Particles active
+└── 6s-10s: Everything visible
+
+PRACTICAL USE CASES
+-------------------
+• Fade in title cards
+• Show particle effects at specific times
+• Reveal environment elements
+• Hide UI elements during cinematic
+
+================================================================================
+PART 7: SIGNAL TRACK - TRIGGER EVENTS
+================================================================================
+
+SIGNALS FOR CUSTOM EVENTS
+--------------------------
+Use signals to trigger code at specific timeline moments.
+
+CREATE SIGNAL ASSET
+-------------------
+1. Project → Right-click → Create → Timeline → Signal Asset
+2. Name it: "CinematicEvent"
+
+ADD SIGNAL TRACK
+----------------
+1. Timeline window → Add → Signal Track
+2. Right-click on track → Add Signal Emitter
+3. Assign your Signal Asset
+
+USE IN CODE
+-----------
+In your script:
+```csharp
+public void OnCinematicMoment()
+{
+    Debug.Log("Signal triggered!");
+    // Spawn effects, change lighting, etc.
+}
+```
+
+Assign in Signal Receiver component.
+
+================================================================================
+PART 8: COMPLETE ERA CINEMATIC EXAMPLE
+================================================================================
+
+EXAMPLE: "ERA 2" OPENING CINEMATIC (10 seconds)
+------------------------------------------------
+
+SCENE SETUP:
+├── CharacterModel (your character)
+├── IslandEnvironment (background)
+├── CM_WideShot (Cinemachine camera)
+├── CM_CloseUp (Cinemachine camera)
+├── CM_FinalShot (Cinemachine camera)
+└── ParticleEffects (VFX)
+
+TIMELINE TRACKS:
+
+1. CINEMACHINE TRACK
+   0s ────┬──── 4s ────┬──── 10s
+          │            │
+      WideShot     CloseUp
+   
+2. ANIMATION TRACK (Character)
+   0s-4s:  Idle animation
+   4s-8s:  Pose animation
+   8s-10s: Idle animation
+
+3. AUDIO TRACK 1 (Music)
+   0s-10s: Epic orchestral music (fade in/out)
+
+4. AUDIO TRACK 2 (SFX)
+   2s: Whoosh sound
+   6s: Impact sound
+
+5. ACTIVATION TRACK (Particles)
+   5s-10s: Particle system active
+
+6. ACTIVATION TRACK (Logo)
+   7s-10s: Era logo visible
+
+RESULT:
+-------
+0s:    Fade in from black, wide shot of character
+2s:    Whoosh sound, character starts moving
+4s:    Camera switches to closeup of character face
+5s:    Particles appear around character
+6s:    Impact sound, character strikes pose
+7s:    Era logo fades in
+10s:   Cinematic ends, returns to menu
+
+================================================================================
+PART 9: INTEGRATE WITH ERA INTRO SYSTEM
+================================================================================
+
+STEP 1: ASSIGN TIMELINE TO ERA DATA
+------------------------------------
+1. Select your Era2Intro asset
+2. Check "Has Cinematic"
+3. Drag "Era2_Cinematic" Timeline into "Cinematic Timeline" field
+4. Check "Allow Skip" if you want ESC to skip
+
+STEP 2: CONNECT TO CONTROLLER
+------------------------------
+Your EraIntroController already has PlayableDirector!
+The system automatically:
+1. Loads the Timeline from Era Data
+2. Plays it when player holds P
+3. Detects when cinematic finishes
+4. Returns to menu
+
+STEP 3: TEST
+------------
+1. Tools → Live Event → Reset Era Progress
+2. Enter Play mode
+3. Hold P to start
+4. Cinematic plays!
+5. Press ESC to skip (if allowed)
+
+================================================================================
+PART 10: ADVANCED TIPS & TRICKS
+================================================================================
+
+CAMERA MOVEMENT TIPS
+--------------------
+• Use Cinemachine Dolly Track for smooth camera paths
+• Add noise to cameras for handheld feel
+• Use "Transposer" for follow cameras
+• Blend between cameras for smooth transitions
+
+ANIMATION TIPS
+--------------
+• Use Animation Override tracks for layering
+• Blend animations with ease curves
+• Record facial animations separately
+• Use root motion for character movement
+
+LIGHTING TIPS
+-------------
+• Add Activation tracks for different lights
+• Animate light intensity/color over time
+• Use animated skyboxes for atmosphere
+• Add lens flares for dramatic effect
+
+PERFORMANCE TIPS
+----------------
+• Keep cinematics under 30 seconds
+• Optimize particle systems
+• Use LOD for distant objects
+• Bake lighting when possible
+
+POST-PROCESSING
+---------------
+• Add Post Processing Volume
+• Animate volume weight in Timeline
+• Use depth of field for focus
+• Add bloom for glowing effects
+• Color grading for mood
+
+================================================================================
+PART 11: COMMON TIMELINE SHORTCUTS
+================================================================================
+
+TIMELINE WINDOW:
+F          - Frame selected clip
+A          - Show all clips
+Spacebar   - Play/Pause
+, (comma)  - Previous frame
+. (period) - Next frame
+Home       - Go to start
+End        - Go to end
+
+EDITING:
+Ctrl+C     - Copy clip
+Ctrl+V     - Paste clip
+Delete     - Delete clip
+Ctrl+D     - Duplicate clip
+
+TIMELINE PLAYBACK:
+Shift+Spacebar - Play from start
+Ctrl+Spacebar  - Play from timeline position
+
+================================================================================
+PART 12: EXAMPLE CINEMATICS TO STUDY
+================================================================================
+
+SIMPLE CINEMATIC (Good for learning)
+-------------------------------------
+Duration: 5 seconds
+• 1 camera
+• 1 character animation
+• 1 audio track
+• Basic fade in/out
+
+MEDIUM CINEMATIC
+----------------
+Duration: 15 seconds
+• 3 camera shots
+• Character + environment
+• Music + sound effects
+• Particle effects
+• Title cards
+
+COMPLEX CINEMATIC (Advanced)
+-----------------------------
+Duration: 30+ seconds
+• 5+ camera shots
+• Multiple characters
+• Layered audio
+• Dynamic lighting
+• Environmental changes
+• Signal events
+
+================================================================================
+PART 13: TROUBLESHOOTING
+================================================================================
+
+CINEMATIC DOESN'T PLAY
+----------------------
+✓ Check Timeline is assigned to Era Data
+✓ Check PlayableDirector component exists
+✓ Check "Has Cinematic" is enabled
+✓ Look for errors in Console
+
+CAMERA NOT MOVING
+-----------------
+✓ Check Cinemachine Brain on Main Camera
+✓ Verify virtual cameras are set up
+✓ Check camera priorities
+✓ Ensure track is bound correctly
+
+AUDIO NOT PLAYING
+-----------------
+✓ Check Audio Source component
+✓ Verify clip is assigned
+✓ Check volume levels
+✓ Ensure audio track is not muted
+
+ANIMATION NOT WORKING
+---------------------
+✓ Check Animator component exists
+✓ Verify animation clips are valid
+✓ Check track binding
+✓ Ensure object is active
+
+TIMELINE ENDS TOO EARLY
+-----------------------
+✓ Extend timeline duration
+✓ Check playback range markers
+✓ Verify clips aren't cut off
+
+================================================================================
+PART 14: NEXT STEPS
+================================================================================
+
+BEGINNER EXERCISES:
+1. Create a 5-second cinematic with one camera move
+2. Add background music
+3. Animate a character appearing
+4. Add a title card that fades in
+
+INTERMEDIATE EXERCISES:
+1. Create a 15-second cinematic with 3 camera shots
+2. Add sound effects at key moments
+3. Use Activation tracks to reveal environment
+4. Implement camera blending
+
+ADVANCED EXERCISES:
+1. Create a 30-second epic cinematic
+2. Use multiple characters
+3. Implement dynamic lighting changes
+4. Add particle effects
+5. Use signals to trigger custom events
+
+================================================================================
+RESOURCES
+================================================================================
+
+Unity Documentation:
+• Timeline Manual: Window → Package Manager → Timeline → Documentation
+• Cinemachine Manual: Window → Package Manager → Cinemachine → Documentation
+
+YouTube Tutorials:
+• Search: "Unity Timeline Tutorial"
+• Search: "Unity Cinemachine Cinematic"
+• Search: "Fortnite Style Cinematic Unity"
+
+Sample Timelines:
+• Unity Learn: Timeline Tutorials
+• Asset Store: Free cinematic assets
+
+================================================================================
+QUICK REFERENCE CHECKLIST
+================================================================================
+
+✓ Create Timeline asset
+✓ Create scene with objects
+✓ Add PlayableDirector to GameObject
+✓ Open Timeline window
+✓ Add tracks (Animation, Cinemachine, Audio, Activation)
+✓ Add clips to tracks
+✓ Configure clip properties
+✓ Test playback in editor
+✓ Assign Timeline to Era Data
+✓ Test in Era Intro system
+
+================================================================================

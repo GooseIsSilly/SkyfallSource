@@ -1,0 +1,288 @@
+================================================================================
+SYNC GAME DATA TO BACKEND - Complete Guide
+================================================================================
+
+This guide shows you how to save player data (Level, Coins, Skins) to the
+backend JSON files so it persists across sessions.
+
+================================================================================
+PART 1: UPDATE BACKEND TO STORE GAME DATA
+================================================================================
+
+STEP 1: Update DefaultAccount.json Template
+--------------------------------------------
+
+Open: DefaultAccount.json (in your backend folder)
+
+Replace the ENTIRE content with this:
+
+{
+    "AccountName": "",
+    "Pass": "",
+    "Level": 1,
+    "XP": 0,
+    "CloudCoins": 0,
+    "OwnedSkins": [],
+    "EquippedSkin": "DefaultSkin",
+    "BanStatus": {
+        "IsBanned": false,
+        "BanReason": "",
+        "BannedAt": "",
+        "BannedBy": "",
+        "ExpiresAt": null
+    },
+    "ReportData": {
+        "LastReportTime": "",
+        "ReportCount": 0
+    }
+}
+
+Save and close.
+
+STEP 2: Add New Endpoints to Account.py
+--------------------------------------------
+
+Open Account.py and add these endpoints BEFORE the line that says:
+if __name__ == "__main__":
+
+Paste this code:
+
+# ============================================================================
+# GAME DATA SYNC ENDPOINTS
+# ============================================================================
+
+@app.get("/account/getgamedata")
+def appgetgamedata(Token: str):
+    JFile = getuserfilebytoken(Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    
+    return {
+        "log": "ok",
+        "Level": JFile.get("Level", 1),
+        "XP": JFile.get("XP", 0),
+        "CloudCoins": JFile.get("CloudCoins", 0),
+        "OwnedSkins": JFile.get("OwnedSkins", []),
+        "EquippedSkin": JFile.get("EquippedSkin", "DefaultSkin")
+    }
+
+class GameDataUpdate(BaseModel):
+    Token: str
+    Level: int = None
+    XP: int = None
+    CloudCoins: int = None
+    OwnedSkins: list = None
+    EquippedSkin: str = None
+
+@app.post("/account/updategamedata")
+def appupdategamedata(request: GameDataUpdate):
+    JFile = getuserfilebytoken(request.Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    
+    player_id = JFile["AccountName"]
+    
+    # Update only provided fields
+    if request.Level is not None:
+        JFile["Level"] = request.Level
+    if request.XP is not None:
+        JFile["XP"] = request.XP
+    if request.CloudCoins is not None:
+        JFile["CloudCoins"] = request.CloudCoins
+    if request.OwnedSkins is not None:
+        JFile["OwnedSkins"] = request.OwnedSkins
+    if request.EquippedSkin is not None:
+        JFile["EquippedSkin"] = request.EquippedSkin
+    
+    with open("Accounts/" + player_id + ".json", "w") as savefile:
+        json.dump(JFile, savefile, indent=4)
+    
+    print(f"Game data updated for {player_id}")
+    return {"log": "ok"}
+
+@app.get("/account/addcoins")
+def appaddcoins(Token: str, Amount: int):
+    JFile = getuserfilebytoken(Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    
+    player_id = JFile["AccountName"]
+    current_coins = JFile.get("CloudCoins", 0)
+    JFile["CloudCoins"] = current_coins + Amount
+    
+    with open("Accounts/" + player_id + ".json", "w") as savefile:
+        json.dump(JFile, savefile, indent=4)
+    
+    return {"log": "ok", "NewTotal": JFile["CloudCoins"]}
+
+@app.get("/account/addxp")
+def appaddxp(Token: str, Amount: int):
+    JFile = getuserfilebytoken(Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    
+    player_id = JFile["AccountName"]
+    current_xp = JFile.get("XP", 0)
+    current_level = JFile.get("Level", 1)
+    
+    new_xp = current_xp + Amount
+    xp_for_next_level = 1000  # XP needed per level
+    
+    # Level up logic
+    while new_xp >= xp_for_next_level and current_level < 100:
+        new_xp -= xp_for_next_level
+        current_level += 1
+        print(f"{player_id} reached level {current_level}!")
+    
+    JFile["XP"] = new_xp
+    JFile["Level"] = current_level
+    
+    with open("Accounts/" + player_id + ".json", "w") as savefile:
+        json.dump(JFile, savefile, indent=4)
+    
+    return {"log": "ok", "Level": current_level, "XP": new_xp}
+
+@app.get("/account/unlockskin")
+def appunlockskin(Token: str, SkinID: str):
+    JFile = getuserfilebytoken(Token)
+    if JFile == "MissingToken":
+        return {"log": "TokenDoesNotExist"}
+    
+    player_id = JFile["AccountName"]
+    owned_skins = JFile.get("OwnedSkins", [])
+    
+    if SkinID not in owned_skins:
+        owned_skins.append(SkinID)
+        JFile["OwnedSkins"] = owned_skins
+        
+        with open("Accounts/" + player_id + ".json", "w") as savefile:
+            json.dump(JFile, savefile, indent=4)
+        
+        return {"log": "ok", "message": "Skin unlocked"}
+    else:
+        return {"log": "AlreadyOwned"}
+
+Save Account.py.
+
+STEP 3: Restart Backend Server
+--------------------------------------------
+
+1. Stop the backend (CTRL+C in terminal)
+2. Run: python Account.py
+3. Should start without errors
+
+STEP 4: Fix Existing Accounts (IMPORTANT!)
+--------------------------------------------
+
+Any accounts created BEFORE this update won't have the new fields.
+You need to manually add them OR delete old accounts.
+
+Option A: Delete old accounts and recreate
+- Delete all files in /Accounts/ folder
+- Create new accounts from Unity
+
+Option B: Manually add fields to existing accounts
+- Open each .json file in /Accounts/
+- Add these lines (before the closing }):
+    "Level": 1,
+    "XP": 0,
+    "CloudCoins": 0,
+    "OwnedSkins": [],
+    "EquippedSkin": "DefaultSkin",
+
+================================================================================
+PART 2: CREATE UNITY SCRIPTS TO SYNC DATA
+================================================================================
+
+I'll create these scripts for you:
+- PlayerDataManager.cs - Manages syncing data
+- BackendDataSync.cs - Helper methods for saving/loading
+
+These files will be created next...
+
+================================================================================
+PART 3: HOW TO USE IN YOUR GAME
+================================================================================
+
+After login, load player data:
+
+PlayerDataManager.Instance.LoadPlayerData((success, data) =>
+{
+    if (success)
+    {
+        int level = data.Level;
+        int coins = data.CloudCoins;
+        string[] skins = data.OwnedSkins;
+        
+        // Update UI
+        levelText.text = $"Level {level}";
+        coinsText.text = $"{coins} Coins";
+    }
+});
+
+When player earns coins:
+
+PlayerDataManager.Instance.AddCoins(100, (success, newTotal) =>
+{
+    if (success)
+    {
+        Debug.Log($"New coin total: {newTotal}");
+    }
+});
+
+When player gains XP:
+
+PlayerDataManager.Instance.AddXP(500, (success, level, xp) =>
+{
+    if (success)
+    {
+        Debug.Log($"Level: {level}, XP: {xp}");
+    }
+});
+
+When player unlocks skin:
+
+PlayerDataManager.Instance.UnlockSkin("RareSkin01", (success, message) =>
+{
+    if (success)
+    {
+        Debug.Log("Skin unlocked!");
+    }
+});
+
+================================================================================
+TESTING
+================================================================================
+
+1. Create new account in Unity
+2. Check backend /Accounts/ folder
+3. Open the .json file
+4. Should see:
+   - Level: 1
+   - XP: 0
+   - CloudCoins: 0
+   - OwnedSkins: []
+   - EquippedSkin: "DefaultSkin"
+
+5. Manually change values:
+   - Set CloudCoins to 1000
+   - Set Level to 25
+   - Save file
+
+6. Restart Unity and login
+7. Load player data
+8. Should see Level 25 and 1000 coins!
+
+================================================================================
+WHAT'S NEXT
+================================================================================
+
+I'll create the Unity scripts next:
+- PlayerDataManager.cs
+- BackendDataSync.cs extension for BackendServiceManager
+
+These will handle all the syncing automatically!
+
+Let me create those now...
+
+================================================================================

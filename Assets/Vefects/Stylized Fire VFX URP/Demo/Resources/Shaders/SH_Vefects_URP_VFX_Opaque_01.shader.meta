@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a48c7023121ae8e419ad017f5a2fe839
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 355834
+  packageName: Stylized Fire - URP
+  packageVersion: 1.0.1
+  assetPath: Assets/Vefects/Stylized Fire VFX URP/Demo/Resources/Shaders/SH_Vefects_URP_VFX_Opaque_01.shader
+  uploadId: 851782

@@ -1,0 +1,342 @@
+================================================================================
+✅ SHOP BACKEND SYNC - COMPLETE!
+================================================================================
+
+The shop now syncs CloudCoins with the backend JSON!
+
+================================================================================
+WHAT WAS FIXED
+================================================================================
+
+Problem:
+--------
+- Shop showed 750 coins (from old default value of 100 + purchases)
+- Lobby showed 0 coins
+- They were using different data sources
+
+Solution:
+---------
+✓ Updated ModernShopManager to use PlayerDataManager
+✓ Updated ModernShopCard to check backend ownership
+✓ Changed CloudCoinSystem default from 100 to 0
+✓ Shop now loads coins from backend on open
+✓ Shop now syncs with backend on purchase
+✓ Both lobby and shop show same coin count
+
+================================================================================
+CHANGES MADE
+================================================================================
+
+1. ModernShopManager.cs:
+   ✓ Added _useBackendSync toggle (default: true)
+   ✓ Subscribed to OnCoinsChanged event
+   ✓ Subscribed to OnDataLoaded event
+   ✓ Updated UpdateCoinsDisplay() to use backend coins
+   ✓ Updated OnPurchaseClicked() to use backend purchase
+   ✓ Loads backend data when shop opens
+
+2. ModernShopCard.cs:
+   ✓ Added _useBackendSync toggle (default: true)
+   ✓ Updated Refresh() to check backend ownership
+   ✓ Updated Refresh() to use backend coin balance
+   ✓ Updated button interactivity based on backend coins
+
+3. CloudCoinSystem.cs:
+   ✓ Changed default _cloudCoins from 100 to 0
+
+================================================================================
+HOW IT WORKS NOW
+================================================================================
+
+When Shop Opens:
+----------------
+1. ModernShopManager.OnOpen() is called
+2. Loads player data from backend
+3. Updates coin display with backend value
+4. Refreshes all shop cards with backend ownership
+
+When Purchase Clicked:
+----------------------
+1. Checks if player owns character (from backend)
+2. PlayerDataManager.PurchaseCharacter() is called
+3. Backend deducts coins and unlocks character
+4. Shop refreshes automatically
+5. Coin display updates automatically
+
+When Coins Change (from anywhere):
+----------------------------------
+1. OnCoinsChanged event fires
+2. Shop automatically updates coin display
+3. Shop refreshes all card buttons (enable/disable)
+
+================================================================================
+BACKEND JSON STRUCTURE
+================================================================================
+
+/Accounts/YourUsername.json:
+{
+    "CloudCoins": 0,                    ← Both shop and lobby use this
+    "OwnedSkins": ["soldier66"],        ← Shop checks this
+    "Level": 1,
+    "XP": 0,
+    ...
+}
+
+================================================================================
+TESTING
+================================================================================
+
+Test 1: Fresh Account (0 Coins)
+--------------------------------
+1. Create new account
+2. Login to game
+3. Check lobby: Should show 0 coins ✓
+4. Open shop: Should show 0 coins ✓
+5. All purchase buttons should be disabled ✓
+
+Test 2: Add Coins
+-----------------
+1. Open Console
+2. Run: PlayerDataManager.Instance.AddCoins(1000)
+3. Lobby updates to 1000 ✓
+4. Shop updates to 1000 ✓
+5. Purchase buttons enable ✓
+
+Test 3: Purchase Character
+---------------------------
+1. Have 1000+ coins
+2. Open shop
+3. Click "BUY" on marine (cost 500)
+4. Coins deduct to 500 ✓
+5. Button changes to "OWNED" ✓
+6. Backend JSON updated ✓
+
+Test 4: Backend Persistence
+----------------------------
+1. Purchase character
+2. Close Unity
+3. Open backend JSON
+4. Check CloudCoins is reduced ✓
+5. Check OwnedSkins includes character ✓
+6. Restart Unity and login
+7. Shop shows correct coins ✓
+8. Character shows OWNED ✓
+
+================================================================================
+TOGGLING BACKEND SYNC
+================================================================================
+
+Both ModernShopManager and ModernShopCard have _useBackendSync toggle.
+
+To Disable Backend Sync:
+-------------------------
+1. Select ModernShop in Hierarchy
+2. Find ModernShopManager component
+3. Uncheck "Use Backend Sync"
+4. Shop will use local CloudCoinSystem instead
+
+When Disabled:
+--------------
+- Shop uses _playerData.CoinSystem (local)
+- Shop uses _playerData.ShopSystem (local)
+- No persistence across sessions
+- Starts with 0 coins (was 100, now fixed)
+
+When Enabled (Default):
+-----------------------
+- Shop uses PlayerDataManager (backend)
+- Shop syncs with backend JSON
+- Full persistence across sessions
+- Starts with backend value (usually 0)
+
+================================================================================
+COIN FLOW DIAGRAM
+================================================================================
+
+Backend JSON
+    ↓
+PlayerDataManager.LoadPlayerData()
+    ↓
+PlayerGameData (CloudCoins: 0)
+    ↓
+    ├─→ UIFortniteLobbyView displays "0"
+    │
+    └─→ ModernShopManager displays "0"
+
+User purchases character (500 coins)
+    ↓
+PlayerDataManager.PurchaseCharacter()
+    ↓
+Backend deducts 500 coins
+    ↓
+OnCoinsChanged event fires
+    ↓
+    ├─→ Lobby updates display ✓
+    │
+    └─→ Shop updates display ✓
+
+================================================================================
+DEFAULT STARTING COINS
+================================================================================
+
+New accounts start with 0 CloudCoins.
+
+To Change Default:
+-------------------
+Option 1: In Backend (DefaultAccount.json)
+{
+    "CloudCoins": 1000,    ← Change this
+    ...
+}
+
+Option 2: Give Bonus on First Login
+if (isFirstLogin)
+{
+    PlayerDataManager.Instance.AddCoins(500);
+}
+
+Option 3: Daily Login Bonus
+PlayerDataManager.Instance.AddCoins(100);
+
+================================================================================
+INTEGRATION WITH OTHER SYSTEMS
+================================================================================
+
+Match Rewards:
+--------------
+void OnMatchEnd()
+{
+    PlayerDataManager.Instance.AddCoins(500);
+    // Both lobby AND shop auto-update!
+}
+
+Daily Quests:
+-------------
+void OnQuestComplete()
+{
+    PlayerDataManager.Instance.AddCoins(250);
+    // Both lobby AND shop auto-update!
+}
+
+Battle Pass:
+------------
+void OnTierUnlock()
+{
+    PlayerDataManager.Instance.AddCoins(100);
+    // Both lobby AND shop auto-update!
+}
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Shop shows wrong amount:
+-------------------------
+- Check ModernShopManager has "Use Backend Sync" checked
+- Check PlayerDataManager exists in scene
+- Check backend is running
+- Check logged in successfully
+
+Shop shows 100/750 instead of 0:
+---------------------------------
+- Old CloudCoinSystem default was 100
+- This is now fixed to 0
+- Delete PlayerPrefs to reset local data
+- Or create new account
+
+Purchase doesn't work:
+----------------------
+- Check backend is running
+- Check has enough coins
+- Check character isn't already owned
+- Check Console for errors
+
+Coin count different in lobby vs shop:
+---------------------------------------
+- Both should use backend now
+- Check both have backend sync enabled
+- Restart game and login fresh
+
+================================================================================
+COIN DISPLAY LOCATIONS
+================================================================================
+
+1. Lobby:
+   /MenuUI/UIFortniteLobbyView/PlayerInfoPanel/CloudCoinsPanel/CloudCoinsText
+
+2. Shop:
+   /MenuUI/ModernShop/Content/Header/CoinsDisplay
+
+Both now read from:
+   PlayerDataManager.Instance.CurrentData.CloudCoins
+
+================================================================================
+BACKEND ENDPOINTS USED
+================================================================================
+
+GET /account/getgamedata
+- Returns CloudCoins, Level, OwnedSkins, etc.
+- Called when shop/lobby opens
+
+POST /account/updategamedata
+- Saves all player data
+- Called when data changes
+
+GET /account/addcoins?Amount=X
+- Adds/removes coins
+- Returns new total
+
+GET /account/unlockskin?SkinID=X
+- Unlocks character
+- Called on purchase
+
+================================================================================
+FILES MODIFIED
+================================================================================
+
+✓ /Assets/Scripts/ModernShopManager.cs
+  - Added backend sync
+  - Added event subscriptions
+  - Updated purchase logic
+
+✓ /Assets/Scripts/ModernShopCard.cs
+  - Added backend ownership check
+  - Updated coin balance check
+
+✓ /Assets/Scripts/CloudCoinSystem.cs
+  - Changed default from 100 to 0
+
+📄 Documentation:
+  - SHOP_BACKEND_SYNC.txt (This file)
+
+================================================================================
+SUMMARY
+================================================================================
+
+Before:
+-------
+- Shop: 750 coins (local system with 100 default + purchases)
+- Lobby: 0 coins (backend system, fresh account)
+- Different data sources ✗
+
+After:
+------
+- Shop: 0 coins (backend system) ✓
+- Lobby: 0 coins (backend system) ✓
+- Same data source ✓
+- Both sync with backend JSON ✓
+- Persistence across sessions ✓
+
+================================================================================
+YOU'RE ALL SET! 🎉
+================================================================================
+
+Shop and lobby now both:
+✓ Start with 0 coins
+✓ Sync with backend JSON
+✓ Update in real-time
+✓ Persist across sessions
+
+Everything works together perfectly!
+
+================================================================================

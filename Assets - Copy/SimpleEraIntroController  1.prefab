@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8311065962484034407
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2881358130686785165}
+  - component: {fileID: 8062684469203164678}
+  m_Layer: 0
+  m_Name: SimpleEraIntroController  1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &2881358130686785165
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8311065962484034407}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8062684469203164678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8311065962484034407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aaac2c251460204596cfd4c1259fe82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerSpawnPoint: {fileID: 0}
+  _playerPrefab: {fileID: 8353203653604872220, guid: 713912b46b0763b49a839f8b18f51cb5, type: 3}
+  _layingDownIdleClip: {fileID: -203655887218126122, guid: ab79c1aebd235e14c9bb7cdf6e4be3db, type: 3}
+  _wakeUpClip: {fileID: -203655887218126122, guid: 4d5aba6d171d99e43a1a36e450b91c90, type: 3}
+  _idleClip: {fileID: -203655887218126122, guid: e41b4ed3b722dc94286712e95b165106, type: 3}
+  _walkClip: {fileID: -203655887218126122, guid: e968ac2d7022aeb40a15fc1d497089a6, type: 3}
+  _npcCharacter: {fileID: 0}
+  _npcTransform: {fileID: 0}
+  _npcAnimator: {fileID: 0}
+  _npcTalkAnimationClip: {fileID: 0}
+  _npcIdleAnimationClip: {fileID: 0}
+  _interactionDistance: 1.5
+  _uiCanvas: {fileID: 0}
+  _promptText: {fileID: 0}
+  _fadeImage: {fileID: 0}
+  _fadeDuration: 2
+  _canvasesToHideDuringCutscene:
+  - {fileID: 0}
+  - {fileID: 80474068889901861, guid: b287f5a3e14a9cb42b3fe91794c3877f, type: 3}
+  _introCam: {fileID: 0}
+  _playerFollowCam: {fileID: 0}
+  _dialogueCam: {fileID: 0}
+  _flybyCamera: {fileID: 0}
+  _flybyWaypoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _flybyDuration: 10
+  _mainCamera: {fileID: 0}
+  _npcDialogueClip: {fileID: 8300000, guid: 0645ff301abe9214088d097833dcaa52, type: 3}
+  _theresYourStopClip: {fileID: 8300000, guid: 8d1af6b86fb14e940a17cf10631cfa94, type: 3}
+  _wakeUpMusic: {fileID: 8300000, guid: aa46fee99e481d842869b86751f54cb0, type: 3}
+  _flybyMusic: {fileID: 8300000, guid: a65324e3c8166d345a9ec5aaac6dcff7, type: 3}
+  _planeMusic: {fileID: 8300000, guid: 7d437fb8dffaa634e92e94e866f7030c, type: 3}
+  _audioSource: {fileID: 0}
+  _musicAudioSource: {fileID: 0}
+  _musicFadeDuration: 2
+  _wakeUpMusicVolume: 0.4
+  _flybyMusicVolume: 0.5
+  _planeMusicVolume: 0.6
+  _holdDuration: 2

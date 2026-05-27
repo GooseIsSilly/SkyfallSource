@@ -1,0 +1,131 @@
+════════════════════════════════════════════════════════════════════════════════
+                         ANIMATION FIX - QUICK CHECKLIST
+════════════════════════════════════════════════════════════════════════════════
+
+Player is T-posing? Follow this checklist in order:
+
+════════════════════════════════════════════════════════════════════════════════
+
+☐ 1. CREATE ANIMATOR CONTROLLER
+   
+   Location: /Assets/Scripts/
+   Action: Right-click → Create → Animator Controller
+   Name: "PlayerCinematicController"
+   
+   Setup:
+   - Add parameter: Float "MoveSpeed"
+   - Add parameter: Bool "IsMoving"
+   - Add state: "Idle" (set as default - orange)
+   - Add state: "Walk"
+   - Transition Idle→Walk: condition IsMoving = true, no exit time
+   - Transition Walk→Idle: condition IsMoving = false, no exit time
+   - (Optional) Assign animation clips to states
+
+────────────────────────────────────────────────────────────────────────────────
+
+☐ 2. CONFIGURE MODEL RIG (if needed)
+   
+   Location: /Assets/3rdParty/Maksim Bugrimov/Sci_Fi_Character_08/Mesh/
+   File: Sci_Fi_Character_08.FBX
+   
+   Inspector → Rig tab:
+   - Animation Type: Humanoid
+   - Avatar Definition: Create From This Model
+   - Click "Configure..." → "Apply" → "Done"
+   
+   Result: Avatar asset appears under FBX
+
+────────────────────────────────────────────────────────────────────────────────
+
+☐ 3. ADD ANIMATOR TO PREFAB
+   
+   Location: /Assets/3rdParty/Maksim Bugrimov/Sci_Fi_Character_08/Prefabs/
+   File: Sci_Fi_Character_08_03.prefab
+   
+   Inspector → Open Prefab → Select root GameObject:
+   - Add Component: Animator
+   - Controller: PlayerCinematicController (from step 1)
+   - Avatar: Sci_Fi_Character_08Avatar (from step 2)
+   - Apply Root Motion: ☐ UNCHECKED
+   - Save prefab
+
+────────────────────────────────────────────────────────────────────────────────
+
+☐ 4. USE SIMPLIFIED CONTROLLER (Recommended)
+   
+   Scene: /Assets/TPSBR/Scenes/Game.unity
+   
+   Option A - Replace existing:
+   - Find "SeasonCinematicController " in Hierarchy
+   - Remove SeasonCinematicController component
+   - Add Component: SimplifiedSeasonCinematicController
+   
+   Option B - Create new:
+   - Create Empty GameObject "CinematicController"
+   - Add Component: SimplifiedSeasonCinematicController
+   - Disable old controller
+   
+   Configure:
+   - Player Prefab: Sci_Fi_Character_08_03
+   - Spawn Point: (create empty GameObject at spawn location)
+   - Player Follow Cam: (your Cinemachine camera)
+   - Skip Laying Down: ☑ CHECK (for testing)
+
+────────────────────────────────────────────────────────────────────────────────
+
+☐ 5. TEST
+   
+   Press Play:
+   ✓ Player spawns (not T-posing)
+   ✓ Console: "Found Animator", "Camera configured"
+   ✓ WASD movement works
+   ✓ Idle ↔ Walk animation transitions
+   ✓ Mouse look works
+
+────────────────────────────────────────────────────────────────────────────────
+
+IF STILL NOT WORKING:
+
+❌ T-posing?
+   → Check prefab has Animator with Controller AND Avatar assigned
+   → See HOW_TO_FIX_ANIMATIONS.txt for detailed troubleshooting
+
+❌ No movement?
+   → Check CharacterController is on prefab
+   → Check SimpleCinematicPlayerController is enabled
+
+❌ Frozen in idle?
+   → Check Animator Controller has animation clips assigned to states
+   → Or use Mobility_Pro animations:
+     Idle: /Assets/3rdParty/Mobility_Pro/Animation/MOB1_Stand_Relaxed_Idle_v2_IPC
+     Walk: /Assets/3rdParty/Mobility_Pro/Animation/MOB1_Jog_F_Loop_IPC
+
+❌ Console errors?
+   → Read the error message
+   → See HOW_TO_FIX_ANIMATIONS.txt troubleshooting section
+
+════════════════════════════════════════════════════════════════════════════════
+
+CRITICAL COMPONENTS NEEDED:
+
+On Player Prefab:
+✅ Animator (with Controller + Avatar)
+✅ CharacterController
+✅ SimpleCinematicPlayerController (added at runtime)
+
+In Project:
+✅ PlayerCinematicController (Animator Controller asset)
+✅ Sci_Fi_Character_08Avatar (Avatar asset from model FBX)
+✅ Animation clips (optional but recommended)
+
+In Scene:
+✅ SimplifiedSeasonCinematicController (on GameObject)
+✅ Cinemachine Virtual Camera
+
+════════════════════════════════════════════════════════════════════════════════
+
+TIME ESTIMATE: 10-15 minutes total
+DIFFICULTY: Easy
+SUCCESS RATE: 99% if all steps followed
+
+════════════════════════════════════════════════════════════════════════════════

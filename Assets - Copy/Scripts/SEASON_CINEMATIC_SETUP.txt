@@ -1,0 +1,259 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    SEASON CINEMATIC SETUP GUIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+This guide will help you set up the new season cinematic sequence for your
+battle royale game.
+
+───────────────────────────────────────────────────────────────────────────────
+STEP 1: CREATE THE CINEMATIC MANAGER
+───────────────────────────────────────────────────────────────────────────────
+
+1. In your scene, create an empty GameObject named "SeasonCinematicManager"
+2. Add the "SeasonCinematicController" component to it
+3. This object will persist across scenes (DontDestroyOnLoad)
+
+───────────────────────────────────────────────────────────────────────────────
+STEP 2: SETUP PLAYER SPAWN
+───────────────────────────────────────────────────────────────────────────────
+
+1. Create an empty GameObject named "CinematicPlayerSpawn"
+2. Position it where the player should start (laying down position)
+3. Rotate it to face the direction the player should face when waking up
+4. Assign this to the "Player Spawn Point" field in the controller
+
+5. Drag your player prefab (must have a humanoid animator) to "Player Prefab"
+   - The prefab should have a humanoid avatar configured
+   - The controller will add CharacterController and movement script automatically
+
+───────────────────────────────────────────────────────────────────────────────
+STEP 3: SETUP ANIMATIONS
+───────────────────────────────────────────────────────────────────────────────
+
+You'll need 4 animation clips:
+
+1. LAYING DOWN IDLE - Player lying on ground idle loop
+   → Assign to "Laying Down Idle Clip"
+
+2. WAKE UP - Player getting up from lying position
+   → Assign to "Wake Up Clip"
+
+3. IDLE - Standing idle animation (optional, for locomotion)
+   → Assign to "Idle Clip"
+
+4. WALK - Walking animation (optional, for locomotion)
+   → Assign to "Walk Clip"
+
+Note: You can find humanoid animations on Mixamo or create your own
+
+───────────────────────────────────────────────────────────────────────────────
+STEP 4: SETUP NPC CHARACTER
+───────────────────────────────────────────────────────────────────────────────
+
+1. Place your NPC character in the scene
+2. Position it where you want the player to walk to
+3. Add an Animator component with a "Talking" animation state
+4. Assign the NPC:
+   - "NPC Character" → The GameObject itself
+   - "NPC Transform" → The NPC's transform
+   - "NPC Animator" → The NPC's Animator component
+   - "NPC Talk State Name" → "Talking" (or your animation state name)
+
+5. Set "Interaction Distance" (default: 3 units)
+
+───────────────────────────────────────────────────────────────────────────────
+STEP 5: SETUP CAMERAS
+───────────────────────────────────────────────────────────────────────────────
+
+You need 4 Cinemachine Virtual Cameras:
+
+1. INTRO CAM - Shows the player laying down
+   - Create: GameObject > Cinemachine > Virtual Camera
+   - Name: "IntroCam"
+   - Position it to frame the passed-out player
+   - Assign to "Intro Cam"
+
+2. PLAYER FOLLOW CAM - Third-person camera following player
+   - Create: GameObject > Cinemachine > Virtual Camera
+   - Name: "PlayerFollowCam"
+   - Add "CinemachineTransposer" for Follow
+   - Add "CinemachineComposer" for LookAt
+   - Will auto-target the player when they wake up
+   - Assign to "Player Follow Cam"
+
+3. DIALOGUE CAM - Frames the NPC during conversation
+   - Create: GameObject > Cinemachine > Virtual Camera
+   - Name: "DialogueCam"
+   - Position to show NPC talking
+   - Assign to "Dialogue Cam"
+
+4. FLYBY CAM - Flies through the map
+   - Create: GameObject > Cinemachine > Virtual Camera
+   - Name: "FlybyCam"
+   - Assign to "Flyby Camera"
+
+───────────────────────────────────────────────────────────────────────────────
+STEP 6: SETUP FLYBY WAYPOINTS
+───────────────────────────────────────────────────────────────────────────────
+
+1. Create empty GameObjects as waypoints for the camera flyby
+2. Name them: "Waypoint1", "Waypoint2", "Waypoint3", etc.
+3. Position and rotate each waypoint to show different areas of your map
+4. The camera will smoothly move between them
+5. Add all waypoints to the "Flyby Waypoints" array (in order)
+
+6. Set "Flyby Duration" (time to fly through all waypoints, default: 10s)
+7. Set "Final Waypoint Hold Time" (pause at last waypoint, default: 3s)
+
+───────────────────────────────────────────────────────────────────────────────
+STEP 7: SETUP AUDIO - MUSIC
+───────────────────────────────────────────────────────────────────────────────
+
+You need 2 music tracks:
+
+1. WAKE UP MUSIC - Plays when player wakes up and walks to NPC
+   → Assign to "Wake Up Music"
+   → This music fades in at the start
+   → Crossfades to plane music after first dialog
+
+2. PLANE MUSIC - Plays during flyby, second dialog, and plane sequence
+   → Assign to "Plane Music"
+   → This music plays during the action/gameplay part
+
+3. Set "Music Fade Duration" (default: 2 seconds for fade in/out)
+
+───────────────────────────────────────────────────────────────────────────────
+STEP 8: SETUP AUDIO - DIALOG
+───────────────────────────────────────────────────────────────────────────────
+
+You need 2 dialog audio clips:
+
+1. FIRST DIALOG CLIP - Plays when talking to NPC
+   → Assign to "First Dialog Clip"
+   → This should be the NPC's first conversation
+
+2. SECOND DIALOG CLIP - Plays after flyby (at final waypoint)
+   → Assign to "Second Dialog Clip"
+   → This should be the "get ready to jump" type message
+
+───────────────────────────────────────────────────────────────────────────────
+STEP 9: UI CONFIGURATION
+───────────────────────────────────────────────────────────────────────────────
+
+The controller creates UI automatically, but you can customize:
+
+- "Fade Duration" → Screen fade in/out time (default: 2s)
+- "Hold Duration" → How long to hold P to talk to NPC (default: 2s)
+
+Optional: You can assign custom UI elements:
+- "UI Canvas" → Custom canvas
+- "Prompt Text" → Custom text element for prompts
+- "Fade Image" → Custom fade image
+
+If not assigned, they'll be created automatically.
+
+───────────────────────────────────────────────────────────────────────────────
+STEP 10: TESTING
+───────────────────────────────────────────────────────────────────────────────
+
+1. Play the scene
+2. The cinematic should start automatically (first time only)
+3. Follow the sequence:
+   → Press P to wake up
+   → Walk to NPC using WASD
+   → Hold P near NPC to talk
+   → Watch first dialog
+   → Watch camera flyby through map
+   → Listen to second dialog
+   → Battle royale starts → airplane sequence begins
+
+4. To test again:
+   - Right-click the SeasonCinematicController component
+   - Select "Reset Intro (Testing)"
+   - Or clear PlayerPrefs manually
+
+───────────────────────────────────────────────────────────────────────────────
+SEQUENCE FLOW SUMMARY
+───────────────────────────────────────────────────────────────────────────────
+
+1. Fade in from black
+2. Player laying down (passed out) → "Press P To Start New Decade" appears
+3. Wake up music fades in
+4. Player presses P → Wake up animation plays
+5. Player can walk (WASD) with follow camera
+6. Walk to NPC → "Hold P To Talk" appears
+7. Hold P → First dialog plays (NPC talking)
+8. Music crossfades to plane music
+9. Camera flies through waypoints showing the map
+10. Camera holds at final waypoint for a few seconds
+11. Second dialog plays (pre-jump message)
+12. Music fades out
+13. Cinematic player despawns
+14. Battle Royale mode starts
+15. Real player spawns in airplane
+16. Player can jump and play the game
+
+───────────────────────────────────────────────────────────────────────────────
+TROUBLESHOOTING
+───────────────────────────────────────────────────────────────────────────────
+
+Q: Player prefab is T-posing?
+A: Make sure the Animator has a humanoid Avatar assigned
+
+Q: Wake up animation doesn't work?
+A: Check that your animation clip is for humanoid avatars and is compatible
+
+Q: Player won't move after waking up?
+A: The SimpleCinematicPlayerController is added automatically. Check console
+   for errors. Make sure your player prefab doesn't have conflicting scripts.
+
+Q: Can't walk to NPC?
+A: Check the ground has a collider. The CharacterController needs ground.
+
+Q: Camera doesn't follow player?
+A: Make sure Cinemachine Brain is on your Main Camera
+
+Q: Battle Royale doesn't start after cinematic?
+A: Make sure BattleRoyaleGameplayMode exists in your scene
+
+Q: Music doesn't play?
+A: Check that Audio Sources are created. Look for errors in console.
+
+Q: Want to replay cinematic?
+A: Right-click component → "Reset Intro (Testing)" or clear PlayerPrefs
+
+───────────────────────────────────────────────────────────────────────────────
+ADVANCED CUSTOMIZATION
+───────────────────────────────────────────────────────────────────────────────
+
+Music Volume:
+- Music plays at full volume (0-1 range)
+- Modify _musicAudioSource.volume in the controller if needed
+
+Dialog Volume:
+- Dialog plays at full volume
+- Modify _dialogAudioSource.volume in the controller if needed
+
+Camera Blending:
+- Cinemachine handles smooth blending between cameras
+- Adjust blend times in Cinemachine Brain component
+
+Animation Blending:
+- SimpleCinematicPlayerController uses Animator parameters:
+  → "MoveSpeed" (float) - Movement speed 0-1
+  → "IsMoving" (bool) - Is player moving
+- Set these up in your Animator Controller for smooth locomotion
+
+───────────────────────────────────────────────────────────────────────────────
+NOTES
+───────────────────────────────────────────────────────────────────────────────
+
+- The cinematic only plays ONCE per player (saved in PlayerPrefs)
+- You can reset it for testing using the context menu
+- The system integrates with your existing BattleRoyaleGameplayMode
+- All cameras are automatically disabled after the cinematic
+- The cinematic player is destroyed when real gameplay starts
+- Music fades are smooth to avoid jarring transitions
+- The system uses the Input System package for input handling
+
+═══════════════════════════════════════════════════════════════════════════════

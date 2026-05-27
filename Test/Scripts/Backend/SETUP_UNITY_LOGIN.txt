@@ -1,0 +1,324 @@
+================================================================================
+UNITY LOGIN SETUP - STEP BY STEP GUIDE
+================================================================================
+
+Your backend is working! Now let's connect it to Unity and create a login system.
+
+================================================================================
+PART 1: SETUP BACKEND MANAGERS (5 minutes)
+================================================================================
+
+STEP 1: Open Your Menu Scene
+-----------------------------
+1. In Unity, open: Assets/TPSBR/Scenes/Menu.unity
+2. This is where players will login before joining the game
+
+STEP 2: Create Backend Managers GameObject
+-----------------------------
+1. Right-click in Hierarchy → Create Empty
+2. Rename it to: "BackendManagers"
+3. With BackendManagers selected, click "Add Component"
+4. Search for: "Backend Service Manager"
+5. Add it (from TPSBR.Backend namespace)
+6. Click "Add Component" again
+7. Search for: "Ban Check Service"
+8. Add it
+
+STEP 3: Configure Backend Service Manager
+-----------------------------
+With BackendManagers selected, in the Inspector you'll see:
+
+Backend Service Manager Component:
+- Backend URL: http://localhost:8000
+- Api Timeout: 10
+- Retry Attempts: 3
+
+Make sure Backend URL is: http://localhost:8000
+
+STEP 4: Configure Ban Check Service
+-----------------------------
+With BackendManagers still selected, scroll down to:
+
+Ban Check Service Component:
+- Ban Check Interval: 30
+- Check On Start: ✓ (checked)
+- On Player Banned: (leave empty for now, we'll set this up later)
+
+STEP 5: Save the Scene
+-----------------------------
+Press CTRL+S (CMD+S on Mac) to save
+
+✓ Backend managers are now set up!
+
+================================================================================
+PART 2: CREATE SIMPLE LOGIN UI (10 minutes)
+================================================================================
+
+You already have UI in your game, but let's create a simple test login first.
+
+STEP 1: Create Login Panel
+-----------------------------
+1. In Menu scene Hierarchy, find your Canvas (or create one if missing)
+2. Right-click on Canvas → UI → Panel
+3. Rename it to: "LoginPanel"
+4. Make it fullscreen (stretch to fill canvas)
+
+STEP 2: Add Username Input
+-----------------------------
+1. Right-click LoginPanel → UI → Input Field - TextMeshPro
+2. Rename it to: "UsernameInput"
+3. Position it in the center-top area
+4. In Inspector, find the placeholder text and change it to: "Username"
+
+STEP 3: Add Password Input
+-----------------------------
+1. Right-click LoginPanel → UI → Input Field - TextMeshPro
+2. Rename it to: "PasswordInput"
+3. Position it below UsernameInput
+4. In Inspector:
+   - Find the placeholder text → change to: "Password"
+   - Find "Content Type" → change to: "Password"
+
+STEP 4: Add Login Button
+-----------------------------
+1. Right-click LoginPanel → UI → Button - TextMeshPro
+2. Rename it to: "LoginButton"
+3. Position it below PasswordInput
+4. Change button text to: "Login"
+
+STEP 5: Add Create Account Button
+-----------------------------
+1. Right-click LoginPanel → UI → Button - TextMeshPro
+2. Rename it to: "CreateAccountButton"
+3. Position it below LoginButton
+4. Change button text to: "Create Account"
+
+STEP 6: Add Feedback Text
+-----------------------------
+1. Right-click LoginPanel → UI → Text - TextMeshPro
+2. Rename it to: "FeedbackText"
+3. Position it at the bottom of LoginPanel
+4. Change text to: "" (empty)
+5. Change color to white or red for visibility
+
+Your UI hierarchy should look like:
+Canvas
+└── LoginPanel
+    ├── UsernameInput
+    ├── PasswordInput
+    ├── LoginButton
+    ├── CreateAccountButton
+    └── FeedbackText
+
+================================================================================
+PART 3: CREATE LOGIN SCRIPT (5 minutes)
+================================================================================
+
+Now let's create a simple script to handle login.
+
+I'll create this script for you next, but here's what it will do:
+- Connect the UI buttons to backend calls
+- Handle login responses
+- Handle account creation
+- Show feedback messages
+
+The script is already created at:
+Assets/Scripts/Backend/SimpleLoginUI.cs
+
+Let's set it up!
+
+STEP 1: Add Script to LoginPanel
+-----------------------------
+1. Select "LoginPanel" in Hierarchy
+2. In Inspector, click "Add Component"
+3. Search for: "Simple Login UI"
+4. Add it
+
+STEP 2: Assign UI References
+-----------------------------
+With LoginPanel selected, you'll see the Simple Login UI component.
+Drag and drop each UI element to its slot:
+
+- Username Input: Drag UsernameInput here
+- Password Input: Drag PasswordInput here
+- Login Button: Drag LoginButton here
+- Create Account Button: Drag CreateAccountButton here
+- Feedback Text: Drag FeedbackText here
+
+STEP 3: Save Everything
+-----------------------------
+Press CTRL+S to save
+
+================================================================================
+PART 4: TEST THE LOGIN (2 minutes)
+================================================================================
+
+STEP 1: Make Sure Backend is Running
+-----------------------------
+In your terminal, make sure you see:
+"INFO: Uvicorn running on http://0.0.0.0:8000"
+
+If not, run: python Account.py
+
+STEP 2: Play the Game
+-----------------------------
+1. Click Play button in Unity
+2. You should see your login panel
+
+STEP 3: Create a Test Account
+-----------------------------
+1. Enter Username: testplayer
+2. Enter Password: testpassword123
+3. Click "Create Account"
+4. You should see: "Account created successfully"
+
+STEP 4: Login
+-----------------------------
+1. Enter Username: testplayer
+2. Enter Password: testpassword123
+3. Click "Login"
+4. You should see: "Login successful!"
+
+If you see these messages, IT'S WORKING! ✓
+
+================================================================================
+PART 5: CONNECT TO YOUR EXISTING GAME (10 minutes)
+================================================================================
+
+Now that login works, let's connect it to your actual game flow.
+
+STEP 1: Find Your Existing Game Start Logic
+-----------------------------
+You probably have code that starts the game or connects to Photon Fusion.
+It's likely in one of these places:
+- Assets/TPSBR/Scripts/UI/MenuViews/
+- Assets/TPSBR/Scripts/Core/
+- Assets/TPSBR/Scripts/Networking/
+
+Look for scripts that handle:
+- "Start Game" button
+- Photon connection
+- Scene loading to game scene
+
+STEP 2: Add Login Check Before Game Start
+-----------------------------
+In that script, before connecting to Photon or starting game, add:
+
+using TPSBR.Backend;
+
+// Before starting game:
+if (!BackendServiceManager.Instance.HasStoredToken())
+{
+    Debug.LogWarning("Player not logged in!");
+    // Show login UI
+    // Don't start game
+    return;
+}
+
+// Validate the token
+BackendServiceManager.Instance.ValidateToken((success, username) =>
+{
+    if (success)
+    {
+        // Token is valid, continue to game
+        Debug.Log($"Logged in as: {username}");
+        StartGame();
+    }
+    else
+    {
+        // Token invalid, show login UI
+        Debug.LogWarning("Session expired, please login");
+        // Return to login screen
+    }
+});
+
+STEP 3: Pass Username to Photon
+-----------------------------
+When creating the Photon session, use the authenticated username:
+
+string username = BackendServiceManager.Instance.GetStoredUsername();
+
+// Use this username as player nickname in Photon
+// Example: playerData.Nickname = username;
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problem: "Backend service not available" error
+Solution: Make sure BackendManagers GameObject exists with components
+
+Problem: Nothing happens when clicking Login
+Solution: Check Console for errors
+         Make sure backend is running (check terminal)
+         Make sure Backend URL is exactly: http://localhost:8000
+
+Problem: "Network error" when logging in
+Solution: Backend might not be running - check terminal
+         Check Backend URL in BackendServiceManager component
+         Try: http://127.0.0.1:8000 instead of localhost
+
+Problem: Login works but game doesn't start
+Solution: You need to integrate with your existing game start logic
+         Follow PART 5 above
+
+Problem: Can't find BackendServiceManager in Add Component
+Solution: Make sure the C# script compiled successfully
+         Check Console for compilation errors
+         The script is at: Assets/Scripts/Backend/BackendServiceManager.cs
+
+================================================================================
+WHAT'S NEXT?
+================================================================================
+
+Once login is working:
+
+1. BAN SYSTEM
+   - Test banning a player via admin dashboard
+   - Player should be kicked from game within 30 seconds
+   - See: admin_dashboard.html
+
+2. PLAYER REPORTING
+   - Add "Report Player" button to scoreboard
+   - Use PlayerReportUI component
+   - See: PlayerReportUI.cs
+
+3. PRODUCTION DEPLOYMENT
+   - Deploy backend to cloud server
+   - Change Backend URL to your server
+   - Enable HTTPS
+   - See: README.txt for deployment guide
+
+================================================================================
+COMPLETE CHECKLIST
+================================================================================
+
+Setup:
+[✓] Backend running on localhost:8000
+[✓] BackendManagers GameObject in Menu scene
+[✓] BackendServiceManager component added
+[✓] BanCheckService component added
+[✓] Backend URL set to http://localhost:8000
+
+UI:
+[ ] LoginPanel created with UI elements
+[ ] SimpleLoginUI script attached to LoginPanel
+[ ] All UI references assigned in Inspector
+
+Testing:
+[ ] Can create account from Unity
+[ ] Can login from Unity
+[ ] Feedback messages show correctly
+[ ] Token persists (close/reopen game, should stay logged in)
+
+Integration:
+[ ] Game checks for valid token before starting
+[ ] Username passed to Photon/game systems
+[ ] Ban checking starts when game session begins
+
+================================================================================
+
+You're almost done! Just create the login UI and connect it.
+If you get stuck, check the Console for error messages.
+
+================================================================================

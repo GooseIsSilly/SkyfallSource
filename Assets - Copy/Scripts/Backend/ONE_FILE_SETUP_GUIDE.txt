@@ -1,0 +1,235 @@
+================================================================================
+✅ ONE-FILE PYTHONANYWHERE SETUP (EASIEST METHOD!)
+================================================================================
+
+Instead of separate files, put EVERYTHING in the WSGI file!
+This is actually the BEST way to avoid import issues!
+
+================================================================================
+STEP-BY-STEP GUIDE (5 MINUTES)
+================================================================================
+
+Step 1: Install Dependencies First
+-----------------------------------
+1. Go to PythonAnywhere.com
+2. Login
+3. Click "Consoles" tab
+4. Click "Bash"
+5. Run these commands ONE BY ONE:
+
+pip3 install --user fastapi
+pip3 install --user uvicorn[standard]
+pip3 install --user bcrypt
+pip3 install --user pydantic
+
+Wait for each to finish!
+
+Step 2: Create Folders
+-----------------------
+Still in Bash console, run:
+
+cd mysite
+mkdir Accounts
+mkdir Bans
+mkdir Reports
+ls -la
+
+You should see the folders!
+
+Step 3: Edit WSGI File
+----------------------
+1. Click "Web" tab
+2. Find "Code:" section
+3. Click "WSGI configuration file" link (it will open an editor)
+4. DELETE EVERYTHING in that file
+5. Open: Assets/Scripts/Backend/COMPLETE_WSGI_FILE.txt (this Unity project)
+6. Copy EVERYTHING from that file
+7. Paste into PythonAnywhere WSGI editor
+8. Find line 27: path = '/home/YOURUSERNAME/mysite'
+9. Change YOURUSERNAME to your actual PythonAnywhere username!
+10. Save (Ctrl+S or click Save button)
+
+Step 4: Reload Web App
+-----------------------
+1. Click "Web" tab
+2. Click big green "Reload novafy.pythonanywhere.com" button
+3. Wait 10 seconds
+
+Step 5: Test Backend
+--------------------
+Open browser:
+https://novafy.pythonanywhere.com/
+
+Should see:
+{"log":"MeteorBackend"}  ✓
+
+If you see error:
+- Click "Web" tab
+- Click "Error log"
+- Read the error
+- Usually it's: forgot to install dependency OR wrong username in path
+
+Step 6: Test in Unity
+----------------------
+Your Unity settings are already correct!
+Just try logging in - should work now!
+
+================================================================================
+WHAT IF I GET AN ERROR?
+================================================================================
+
+Error in log: "ModuleNotFoundError: No module named 'fastapi'"
+Fix: Run in Bash: pip3 install --user fastapi
+
+Error in log: "ModuleNotFoundError: No module named 'bcrypt'"
+Fix: Run in Bash: pip3 install --user bcrypt
+
+Error in log: "No such file or directory: '/home/WRONGNAME/mysite'"
+Fix: Edit WSGI file line 27, change username to YOUR username
+
+Error in log: "Permission denied"
+Fix: Make sure folders exist (run mkdir commands again)
+
+Error in browser: "Something went wrong"
+Fix: Check error log (Web tab → Error log)
+
+================================================================================
+ADVANTAGES OF ONE-FILE METHOD
+================================================================================
+
+✓ No import path issues
+✓ No separate Account.py needed
+✓ Everything in one place
+✓ Easier to debug
+✓ PythonAnywhere recommends this for simple apps
+✓ Fewer files to manage
+
+This is actually BETTER than separate files!
+
+================================================================================
+FILE STRUCTURE ON PYTHONANYWHERE
+================================================================================
+
+After setup, you'll have:
+
+/home/yourusername/mysite/
+  ├── .wsgi_app (your WSGI file with all code)
+  ├── Accounts/ (created by code)
+  │   ├── player1.json
+  │   ├── player2.json
+  │   └── ...
+  ├── Bans/ (created by code)
+  │   └── bannedplayer.json
+  └── Reports/ (created by code)
+      └── report123.json
+
+That's it! One file does everything!
+
+================================================================================
+TESTING CHECKLIST
+================================================================================
+
+[ ] Installed: fastapi, uvicorn, bcrypt, pydantic (Step 1)
+[ ] Created folders: Accounts, Bans, Reports (Step 2)
+[ ] Pasted code into WSGI file (Step 3)
+[ ] Changed YOURUSERNAME to actual username (Step 3)
+[ ] Saved WSGI file (Step 3)
+[ ] Clicked Reload button (Step 4)
+[ ] Tested https://novafy.pythonanywhere.com/ (Step 5)
+[ ] Saw {"log":"MeteorBackend"} (Step 5)
+[ ] Tested login in Unity (Step 6)
+[ ] Login works! (Step 6)
+
+All checked = Success! ✓
+
+================================================================================
+AFTER SUCCESSFUL SETUP
+================================================================================
+
+Your backend endpoints:
+-----------------------
+https://novafy.pythonanywhere.com/
+https://novafy.pythonanywhere.com/docs (FastAPI docs)
+https://novafy.pythonanywhere.com/login/createaccount?ID=test&Pass=test123456
+https://novafy.pythonanywhere.com/login/connect?ID=test&Pass=test123456
+
+All should work!
+
+Your Unity BackendConfig:
+-------------------------
+URL: https://novafy.pythonanywhere.com/
+Already set correctly!
+
+You're done!
+-----------
+✓ Backend running on PythonAnywhere
+✓ Unity configured
+✓ Login/Auth working
+✓ Bans working
+✓ Game data sync working
+✓ Reports working
+
+Time to play! 🎮
+
+================================================================================
+ADMIN KEY
+================================================================================
+
+Default admin key in the code:
+"your_secret_admin_key_12345_CHANGE_THIS"
+
+IMPORTANT: Change this!
+
+Find line in WSGI file:
+ADMIN_KEY = "your_secret_admin_key_12345_CHANGE_THIS"
+
+Change to something secret:
+ADMIN_KEY = "MySecretKey9876XYZ"
+
+Use this key when calling admin endpoints!
+
+================================================================================
+MAKING CHANGES LATER
+================================================================================
+
+Need to update code?
+1. Edit WSGI file on PythonAnywhere
+2. Make changes
+3. Save
+4. Click "Reload" button
+5. Test!
+
+No need to upload new files - everything is in WSGI!
+
+================================================================================
+TROUBLESHOOTING TIP
+================================================================================
+
+If ANYTHING doesn't work:
+1. Web tab → Error log
+2. Read the LAST error message
+3. Google it if needed
+4. Fix that specific issue
+5. Reload
+6. Test again
+
+The error log tells you EXACTLY what's wrong!
+Don't guess - read the error!
+
+================================================================================
+YOU'RE READY! 🚀
+================================================================================
+
+Copy COMPLETE_WSGI_FILE.txt content
+Paste into PythonAnywhere WSGI file
+Change username
+Reload
+Test
+Done!
+
+Simpler than separate files!
+Everything in one place!
+
+Good luck! ✨
+
+================================================================================

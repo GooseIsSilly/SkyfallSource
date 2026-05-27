@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/TPSBR/Scenes/Menu.unity
     guid: 7edb050ce5fdfc441ad38623712e1f98
   - enabled: 1
+    path: Assets/TPSBR/Scenes/LobbyBackground.unity
+    guid: 42c1b6cc4b46f08409efaba6291ebcdf
+  - enabled: 1
     path: Assets/TPSBR/Scenes/LoadingScene.unity
     guid: ac04648df95beb944bbd8b8a7a2bc2f3
   - enabled: 1

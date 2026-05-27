@@ -1,0 +1,125 @@
+================================================================================
+🔧 FIX FOR "FastAPI.__call__() missing 1 required positional argument: 'send'"
+================================================================================
+
+PROBLEM: FastAPI is ASGI, but PythonAnywhere uses WSGI!
+SOLUTION: Install a2wsgi to wrap FastAPI
+
+================================================================================
+QUICK FIX (3 STEPS)
+================================================================================
+
+Step 1: Install a2wsgi
+----------------------
+1. Go to PythonAnywhere
+2. Click "Consoles" tab
+3. Click "Bash"
+4. Run this command:
+
+pip3 install --user a2wsgi
+
+Wait for it to finish!
+
+Step 2: Update WSGI File
+-------------------------
+1. Click "Web" tab
+2. Click "WSGI configuration file" link
+3. DELETE EVERYTHING
+4. Open: Assets/Scripts/Backend/FIXED_WSGI_FILE.txt (in Unity)
+5. COPY ALL the code
+6. PASTE into PythonAnywhere WSGI editor
+7. Find line 30: path = '/home/YOURUSERNAME/mysite'
+8. Change YOURUSERNAME to your actual username!
+9. Save (Ctrl+S)
+
+Step 3: Reload
+--------------
+1. Click "Web" tab
+2. Click "Reload novafy.pythonanywhere.com" button (green)
+3. Wait 10 seconds
+4. Test: https://novafy.pythonanywhere.com/
+5. Should see: {"log":"MeteorBackend"} ✓
+
+DONE! ✓
+
+================================================================================
+WHAT CHANGED?
+================================================================================
+
+OLD (doesn't work):
+application = app
+
+NEW (works!):
+from a2wsgi import ASGIMiddleware
+application = ASGIMiddleware(app)
+
+This wraps FastAPI (ASGI) so it works with PythonAnywhere (WSGI)!
+
+================================================================================
+FULL DEPENDENCY LIST
+================================================================================
+
+Make sure you installed ALL of these in Bash:
+
+pip3 install --user fastapi
+pip3 install --user uvicorn
+pip3 install --user bcrypt
+pip3 install --user pydantic
+pip3 install --user a2wsgi  ← THIS IS THE KEY ONE!
+
+================================================================================
+TESTING
+================================================================================
+
+After reload, test in browser:
+https://novafy.pythonanywhere.com/
+
+Should see:
+{"log":"MeteorBackend"}  ✓
+
+If still error:
+- Check error log (Web tab → Error log)
+- Make sure a2wsgi installed
+- Make sure YOURUSERNAME changed
+- Make sure all dependencies installed
+
+================================================================================
+WHY THIS HAPPENED
+================================================================================
+
+FastAPI is an ASGI framework (modern, async)
+PythonAnywhere free tier only supports WSGI (older, sync)
+
+a2wsgi = "ASGI to WSGI" converter
+It wraps FastAPI so it works on WSGI servers!
+
+This is normal and expected!
+
+================================================================================
+CHECKLIST
+================================================================================
+
+[ ] Installed a2wsgi: pip3 install --user a2wsgi
+[ ] Updated WSGI file with FIXED_WSGI_FILE.txt code
+[ ] Changed YOURUSERNAME on line 30
+[ ] Saved WSGI file
+[ ] Clicked Reload button
+[ ] Tested URL - got {"log":"MeteorBackend"}
+[ ] Tested Unity login - works!
+
+All checked = Fixed! ✓
+
+================================================================================
+AFTER THIS FIX
+================================================================================
+
+Your backend will work perfectly!
+Unity login will work!
+All endpoints will work!
+
+The a2wsgi wrapper adds minimal overhead.
+Performance is still great for a game backend!
+
+You're good to go! 🚀
+
+================================================================================

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b3ddcb47cb6778c44851259a3193eb42
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 355834
+  packageName: Stylized Fire - URP
+  packageVersion: 1.0.1
+  assetPath: Assets/Vefects/Stylized Fire VFX URP/Demo/Resources/Materials/M_VFX_Metallic_03.mat
+  uploadId: 851782

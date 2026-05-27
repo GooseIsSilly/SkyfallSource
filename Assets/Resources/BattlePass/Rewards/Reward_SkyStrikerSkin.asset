@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc76c869a6c354049abf51a31d9aeec9, type: 3}
+  m_Name: Reward_SkyStrikerSkin
+  m_EditorClassIdentifier: 
+  RewardID: bp_skin_skystriker
+  DisplayName: Sky Striker
+  Description: An elite tactical skin forged in the heat of battle.
+  Icon: {fileID: 0}
+  Type: 0
+  CloudCoinAmount: 0
+  Rarity: 3
+  IsPremium: 1

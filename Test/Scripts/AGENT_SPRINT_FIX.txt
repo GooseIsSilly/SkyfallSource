@@ -1,0 +1,45 @@
+================================================================
+COPY-PASTE THIS INTO Agent.cs TO FIX THE 4 SPRINT ERRORS
+================================================================
+
+STEP 1: Open Assets/TPSBR/Scripts/Gameplay/Agent/Agent.cs
+
+STEP 2: Find line 21 which says:
+    public Jetpack           Jetpack      => _jetpack;
+
+STEP 3: Add this line RIGHT AFTER IT:
+    public SprintSystem      Sprint       => _sprint;
+
+So it looks like:
+    public Jetpack           Jetpack      => _jetpack;
+    public SprintSystem      Sprint       => _sprint;
+    public AgentVFX          Effects      => _agentVFX;
+
+
+STEP 4: Find line 54 which says:
+    private Jetpack             _jetpack;
+
+STEP 5: Add this line RIGHT AFTER IT:
+    private SprintSystem        _sprint;
+
+So it looks like:
+    private Jetpack             _jetpack;
+    private SprintSystem        _sprint;
+    private AgentSenses         _senses;
+
+
+STEP 6: Find the Awake() method around line 226, find this line:
+    _jetpack      = GetComponent<Jetpack>();
+
+STEP 7: Add this line RIGHT AFTER IT:
+    _sprint       = GetComponent<SprintSystem>();
+
+So it looks like:
+    _jetpack      = GetComponent<Jetpack>();
+    _sprint       = GetComponent<SprintSystem>();
+    _interestView = GetComponent<AgentInterestView>();
+
+
+DONE! Save the file and all 4 errors will be fixed!
+
+================================================================

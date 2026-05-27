@@ -1,0 +1,443 @@
+================================================================================
+CHARACTER DATA INTEGRATION - UPDATED GUIDE
+================================================================================
+
+PlayerDataManager now works with your CharacterData system!
+
+================================================================================
+WHAT'S NEW
+================================================================================
+
+✓ Automatically loads all CharacterData assets
+✓ Works with characterID instead of skin strings
+✓ New methods to work with CharacterData directly
+✓ Purchase system integrated with CloudCoins
+✓ Get owned/locked characters
+✓ Check if player can afford characters
+
+================================================================================
+NEW METHODS AVAILABLE
+================================================================================
+
+Character Unlocking:
+-------------------
+UnlockCharacter(CharacterData character)
+UnlockCharacterByID(string characterID)
+
+Character Checking:
+-------------------
+HasCharacter(CharacterData character)
+HasCharacter(string characterID)
+CanAfford(CharacterData character)
+
+Character Selection:
+-------------------
+SetEquippedCharacter(CharacterData character)
+GetEquippedCharacter() → Returns CharacterData
+GetCharacterByID(string characterID) → Returns CharacterData
+
+Get All Characters:
+-------------------
+GetAllCharacters() → All CharacterData assets
+GetOwnedCharacters() → Only owned characters
+GetLockedCharacters() → Only locked characters
+
+Purchase System:
+-------------------
+PurchaseCharacter(CharacterData character) → Auto deducts coins and unlocks
+
+================================================================================
+SETUP (5 MINUTES)
+================================================================================
+
+STEP 1: Make Sure CharacterData Assets are Findable
+----------------------------------------------------
+Your CharacterData assets should be in one of these locations:
+
+Option A: Resources folder (RECOMMENDED)
+- Move to: Assets/Resources/CharacterData/
+- Create folder if it doesn't exist
+- Put soldier66.asset, marine.asset, etc. there
+
+Option B: Anywhere in project
+- Keep them where they are
+- PlayerDataManager will auto-find them in Editor
+
+STEP 2: Assign Characters (Optional)
+----------------------------------------------------
+If auto-loading doesn't work:
+
+1. Select PlayerDataManager GameObject
+2. In Inspector, expand "Character Data References"
+3. Set size to number of characters
+4. Drag each CharacterData asset into the array
+
+STEP 3: Test
+----------------------------------------------------
+Play game and check Console:
+Should see: "[PlayerDataManager] Loaded X characters"
+
+================================================================================
+USAGE EXAMPLES
+================================================================================
+
+EXAMPLE 1: Load Player's Owned Characters
+------------------------------------------
+
+PlayerDataManager.Instance.LoadPlayerData((success, data) =>
+{
+    if (success)
+    {
+        // Get all characters player owns
+        CharacterData[] ownedCharacters = PlayerDataManager.Instance.GetOwnedCharacters();
+        
+        Debug.Log($"Player owns {ownedCharacters.Length} characters:");
+        foreach (var character in ownedCharacters)
+        {
+            Debug.Log($"- {character.displayName} ({character.characterID})");
+        }
+    }
+});
+
+EXAMPLE 2: Display Character Shop
+----------------------------------
+
+public class CharacterShop : MonoBehaviour
+{
+    public void ShowShop()
+    {
+        // Get all locked characters (not owned yet)
+        CharacterData[] availableCharacters = PlayerDataManager.Instance.GetLockedCharacters();
+        
+        foreach (var character in availableCharacters)
+        {
+            CreateShopItem(character);
+        }
+    }
+    
+    void CreateShopItem(CharacterData character)
+    {
+        // Create UI element showing:
+        // - character.icon
+        // - character.displayName
+        // - character.price + " CloudCoins"
+        // - character.GetRarityColor()
+        // - Purchase button
+        
+        bool canAfford = PlayerDataManager.Instance.CanAfford(character);
+        // Enable/disable purchase button based on canAfford
+    }
+}
+
+EXAMPLE 3: Purchase Character from Shop
+----------------------------------------
+
+public void OnPurchaseButtonClick(CharacterData character)
+{
+    PlayerDataManager.Instance.PurchaseCharacter(character, (success, message) =>
+    {
+        if (success)
+        {
+            Debug.Log($"Successfully purchased {character.displayName}!");
+            ShowPurchaseSuccessUI();
+            RefreshShop(); // Update UI
+        }
+        else
+        {
+            Debug.Log($"Purchase failed: {message}");
+            ShowErrorMessage(message);
+        }
+    });
+}
+
+EXAMPLE 4: Character Selection Screen
+--------------------------------------
+
+public class CharacterSelector : MonoBehaviour
+{
+    public void ShowCharacterSelection()
+    {
+        // Get only owned characters
+        CharacterData[] ownedCharacters = PlayerDataManager.Instance.GetOwnedCharacters();
+        
+        foreach (var character in ownedCharacters)
+        {
+            CreateSelectionButton(character);
+        }
+        
+        // Highlight currently equipped character
+        CharacterData equipped = PlayerDataManager.Instance.GetEquippedCharacter();
+        if (equipped != null)
+        {
+            HighlightCharacter(equipped);
+        }
+    }
+    
+    public void SelectCharacter(CharacterData character)
+    {
+        // Check if player owns it
+        if (PlayerDataManager.Instance.HasCharacter(character))
+        {
+            // Equip it
+            PlayerDataManager.Instance.SetEquippedCharacter(character);
+            PlayerDataManager.Instance.SaveAllData();
+            
+            Debug.Log($"Equipped {character.displayName}");
+            UpdatePlayerModel(character);
+        }
+        else
+        {
+            Debug.Log("You don't own this character!");
+            ShowShop();
+        }
+    }
+}
+
+EXAMPLE 5: Unlock Character as Reward
+--------------------------------------
+
+public void OnQuestComplete(string rewardCharacterID)
+{
+    // Get the character data
+    CharacterData character = PlayerDataManager.Instance.GetCharacterByID(rewardCharacterID);
+    
+    if (character != null)
+    {
+        PlayerDataManager.Instance.UnlockCharacter(character, (success, message) =>
+        {
+            if (success)
+            {
+                Debug.Log($"Unlocked {character.displayName} as quest reward!");
+                ShowUnlockAnimation(character);
+            }
+        });
+    }
+}
+
+EXAMPLE 6: Check Ownership Before Loading
+------------------------------------------
+
+public void LoadPlayerCharacter()
+{
+    // Get equipped character ID from backend
+    CharacterData equipped = PlayerDataManager.Instance.GetEquippedCharacter();
+    
+    if (equipped != null)
+    {
+        // Player owns and has equipped this character
+        Debug.Log($"Loading character: {equipped.displayName}");
+        SpawnCharacterModel(equipped.agentID);
+    }
+    else
+    {
+        // No character equipped or invalid, use default
+        Debug.Log("No valid character equipped, using default");
+        SpawnDefaultCharacter();
+    }
+}
+
+EXAMPLE 7: Subscribe to Unlock Events
+--------------------------------------
+
+private void Start()
+{
+    PlayerDataManager.Instance.OnSkinUnlocked += OnCharacterUnlocked;
+}
+
+private void OnCharacterUnlocked(CharacterData character)
+{
+    Debug.Log($"NEW CHARACTER UNLOCKED: {character.displayName}!");
+    ShowUnlockPopup(character);
+    PlayUnlockSound();
+    
+    // Show character details
+    Debug.Log($"Rarity: {character.GetRarityText()}");
+    Debug.Log($"Description: {character.description}");
+}
+
+EXAMPLE 8: Filter Characters by Rarity
+---------------------------------------
+
+public void ShowLegendaryCharacters()
+{
+    CharacterData[] allCharacters = PlayerDataManager.Instance.GetAllCharacters();
+    
+    CharacterData[] legendaries = allCharacters
+        .Where(c => c.rarity == SkinRarity.Legendary)
+        .ToArray();
+    
+    foreach (var character in legendaries)
+    {
+        bool owned = PlayerDataManager.Instance.HasCharacter(character);
+        DisplayCharacter(character, owned);
+    }
+}
+
+EXAMPLE 9: Complete Shop UI Example
+------------------------------------
+
+public class CharacterShopUI : MonoBehaviour
+{
+    [SerializeField] private GameObject shopItemPrefab;
+    [SerializeField] private Transform shopContainer;
+    [SerializeField] private TextMeshProUGUI coinsText;
+    
+    private void Start()
+    {
+        // Subscribe to coin changes
+        PlayerDataManager.Instance.OnCoinsChanged += UpdateCoinsDisplay;
+        
+        RefreshShop();
+    }
+    
+    public void RefreshShop()
+    {
+        // Clear existing items
+        foreach (Transform child in shopContainer)
+        {
+            Destroy(child.gameObject);
+        }
+        
+        // Get characters not owned yet
+        CharacterData[] availableCharacters = PlayerDataManager.Instance.GetLockedCharacters();
+        
+        foreach (var character in availableCharacters)
+        {
+            GameObject item = Instantiate(shopItemPrefab, shopContainer);
+            CharacterShopItem shopItem = item.GetComponent<CharacterShopItem>();
+            
+            shopItem.Setup(character, () => OnPurchaseClick(character));
+            
+            // Disable if can't afford
+            bool canAfford = PlayerDataManager.Instance.CanAfford(character);
+            shopItem.SetInteractable(canAfford);
+        }
+        
+        UpdateCoinsDisplay(PlayerDataManager.Instance.CurrentData.CloudCoins);
+    }
+    
+    private void OnPurchaseClick(CharacterData character)
+    {
+        PlayerDataManager.Instance.PurchaseCharacter(character, (success, message) =>
+        {
+            if (success)
+            {
+                ShowSuccessMessage($"Purchased {character.displayName}!");
+                RefreshShop();
+            }
+            else
+            {
+                ShowErrorMessage(message);
+            }
+        });
+    }
+    
+    private void UpdateCoinsDisplay(int coins)
+    {
+        coinsText.text = $"{coins} CloudCoins";
+    }
+}
+
+================================================================================
+BACKEND INTEGRATION
+================================================================================
+
+The backend stores character ownership by characterID:
+
+Backend JSON (Accounts/PlayerName.json):
+{
+    "OwnedSkins": [
+        "soldier66",    ← characterID from CharacterData asset
+        "marine",       ← characterID from CharacterData asset
+    ],
+    "EquippedSkin": "marine"
+}
+
+When you call:
+- UnlockCharacter(character) → Adds character.characterID to OwnedSkins
+- SetEquippedCharacter(character) → Sets EquippedSkin to character.characterID
+
+================================================================================
+DEFAULT CHARACTERS
+================================================================================
+
+Characters with unlockedByDefault = true should be given to new players:
+
+In your login success handler:
+
+PlayerDataManager.Instance.LoadPlayerData((success, data) =>
+{
+    if (success)
+    {
+        // Get all default characters
+        CharacterData[] allChars = PlayerDataManager.Instance.GetAllCharacters();
+        
+        foreach (var character in allChars)
+        {
+            if (character.unlockedByDefault && !PlayerDataManager.Instance.HasCharacter(character))
+            {
+                // Unlock default characters
+                PlayerDataManager.Instance.UnlockCharacterByID(character.characterID);
+            }
+        }
+    }
+});
+
+================================================================================
+MIGRATION FROM OLD SYSTEM
+================================================================================
+
+If you had old skin IDs that don't match characterID:
+
+Create a mapping dictionary:
+
+Dictionary<string, string> oldToNewMapping = new Dictionary<string, string>
+{
+    { "OldSkinID1", "soldier66" },
+    { "OldSkinID2", "marine" },
+};
+
+Then migrate:
+
+foreach (var oldSkin in playerData.OwnedSkins)
+{
+    if (oldToNewMapping.TryGetValue(oldSkin, out string newID))
+    {
+        // Update to new character ID
+    }
+}
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problem: "Loaded 0 characters"
+Solution: Move CharacterData assets to Resources/CharacterData/ folder
+         Or assign manually in Inspector
+
+Problem: HasCharacter returns false for owned character
+Solution: Check characterID matches exactly (case-sensitive)
+         Check OwnedSkins in backend JSON file
+
+Problem: GetEquippedCharacter returns null
+Solution: EquippedSkin in backend might not match any characterID
+         Set a default equipped character after login
+
+Problem: Can't purchase character
+Solution: Check CanAfford returns true
+         Check character.price is set correctly
+         Check CloudCoins balance
+
+================================================================================
+SUMMARY
+================================================================================
+
+✓ PlayerDataManager now uses your CharacterData system
+✓ All methods work with CharacterData objects
+✓ Backend stores characterID strings
+✓ Easy to check ownership, purchase, and equip characters
+✓ Works seamlessly with your existing character shop system
+
+Use the examples above to integrate into your game!
+
+================================================================================

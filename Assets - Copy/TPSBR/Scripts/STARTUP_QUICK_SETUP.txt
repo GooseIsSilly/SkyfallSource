@@ -1,0 +1,208 @@
+================================================================================
+⚡ STARTUP 3D CHARACTERS - QUICK SETUP
+================================================================================
+
+✅ LevelManager now supports 2D images AND 3D animated characters!
+
+================================================================================
+QUICK START (30 SECONDS)
+================================================================================
+
+1. Open Startup scene
+2. Select "StartUpManager" GameObject
+3. In Inspector, find "Display Mode"
+4. ✅ Check "Use 3D Characters"
+5. Drag "MenuSoldier" prefab to "Character Model"
+6. Set Animation State Name: "Idle"
+7. Hit Play! ✓
+
+You now have an animated 3D character!
+
+================================================================================
+SETTINGS OVERVIEW
+================================================================================
+
+Display Mode:
+-------------
+[ ] Use 3D Characters  → Shows 2D images (old way)
+[X] Use 3D Characters  → Shows 3D models (new way!)
+
+Quick Settings for 3D:
+----------------------
+Character Model: MenuSoldier.prefab
+Animation State Name: "Idle"
+Character Position: (0, -1, 3)
+Character Rotation: (0, 180, 0)
+Character Scale: 1
+
+================================================================================
+AVAILABLE MODELS
+================================================================================
+
+Location: /Assets/TPSBR/Prefabs/Agents/Menu/
+
+MenuSoldier.prefab  ← Main character
+MenuMarine.prefab   ← Alternative
+
+Drag these into Character Model field!
+
+================================================================================
+ANIMATIONS
+================================================================================
+
+Common animations to try:
+-------------------------
+"Idle"     - Standing still
+"Walk"     - Walking
+"Run"      - Running
+"Dance"    - Dancing (if available)
+"Victory"  - Victory pose
+"Wave"     - Waving
+
+Just change "Animation State Name" field!
+
+================================================================================
+TWO CHARACTERS
+================================================================================
+
+Want to show 2 characters?
+--------------------------
+1. Assign Character Model: MenuSoldier
+2. Assign Second Character Model: MenuMarine
+3. ✅ Check "Show Second Character"
+4. Adjust positions:
+   - Character Position: (2, -1, 3)
+   - Second Character Position: (-2, -1, 3)
+5. Done! Both show up!
+
+================================================================================
+POSITION GUIDE
+================================================================================
+
+Character Position (X, Y, Z):
+-----------------------------
+X: -3 to 3   (left to right)
+Y: -2 to 0   (bottom to top)
+Z: 2 to 5    (near to far)
+
+Recommended:
+------------
+Center:  (0, -1, 3)
+Right:   (2, -1, 3)
+Left:    (-2, -1, 3)
+
+Character Rotation (X, Y, Z):
+------------------------------
+Facing camera: (0, 180, 0)
+Profile left:  (0, 135, 0)
+Profile right: (0, 225, 0)
+
+================================================================================
+SWITCHING MODES
+================================================================================
+
+Want to go back to 2D images?
+------------------------------
+1. Uncheck "Use 3D Characters"
+2. Your image settings are still there!
+3. Can switch back anytime
+
+Both systems work independently!
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problem: Character doesn't appear
+Solution: 
+- Check "Use 3D Characters" is enabled
+- Check Character Model is assigned
+- Check Position Z is between 2-5
+
+Problem: Character facing wrong way
+Solution:
+- Set Rotation Y to 180
+
+Problem: Animation doesn't play
+Solution:
+- Use "Idle" (always works)
+- Check spelling of animation name
+
+Problem: Character too small
+Solution:
+- Increase Character Scale to 1.5
+
+================================================================================
+EXAMPLES
+================================================================================
+
+Setup 1: Single Character (Centered)
+-------------------------------------
+Use 3D Characters: ✓
+Character Model: MenuSoldier
+Animation: "Idle"
+Position: (0, -1, 3)
+Rotation: (0, 180, 0)
+Scale: 1
+
+Setup 2: Two Characters
+------------------------
+Use 3D Characters: ✓
+Character Model: MenuSoldier
+Second Character Model: MenuMarine
+Show Second Character: ✓
+Animation: "Idle"
+Main Position: (2, -1, 3)
+Second Position: (-2, -1, 3)
+
+Setup 3: Large Hero Shot
+-------------------------
+Use 3D Characters: ✓
+Character Model: MenuSoldier
+Animation: "Victory"
+Position: (0, -1, 2.5)
+Rotation: (0, 180, 0)
+Scale: 1.5
+
+================================================================================
+TESTING CHECKLIST
+================================================================================
+
+[ ] Selected StartUpManager
+[ ] Checked "Use 3D Characters"
+[ ] Assigned Character Model
+[ ] Set Animation to "Idle"
+[ ] Hit Play
+[ ] Character appears ✓
+[ ] Character is animated ✓
+[ ] Character faces camera ✓
+
+All checked? You're good! ✓
+
+================================================================================
+FULL GUIDE
+================================================================================
+
+For complete documentation:
+📖 STARTUP_3D_CHARACTER_GUIDE.txt
+
+Includes:
+- All settings explained
+- Advanced customization
+- Multiple examples
+- Troubleshooting
+- Performance notes
+
+================================================================================
+THAT'S IT! 🚀
+================================================================================
+
+You now have:
+✓ Choice between 2D and 3D
+✓ Animated 3D characters
+✓ Easy toggle in Inspector
+✓ Ready to customize
+
+Just check the box and pick your character! 🎮✨
+
+================================================================================

@@ -1,0 +1,10 @@
+﻿newmtl M_Backround_WatertoLand_Mountain
+	map_Kd M_Backround_WatertoLand_Mountain_D.bmp
+	map_Ks M_Backround_WatertoLand_Mountain_S.bmp
+	bump M_Backround_WatertoLand_Mountain_N.bmp
+
+newmtl M_Backround_WatertoLand_Mountain_Big
+	map_Kd M_Backround_WatertoLand_Mountain_Big_D.bmp
+	map_Ks M_Backround_WatertoLand_Mountain_Big_S.bmp
+	bump M_Backround_WatertoLand_Mountain_Big_N.bmp
+

@@ -1,0 +1,236 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    ANIMATION SETUP GUIDE - FIX T-POSE
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLEM: Player is T-posing and levitating instead of playing animations.
+
+ROOT CAUSE:
+- The player prefab (Sci_Fi_Character_08_03) doesn't have a properly configured
+  Animator component
+- PlayableGraph requires an Animator to work
+- Animation clips from FBX files might not be set up correctly
+
+═══════════════════════════════════════════════════════════════════════════════
+
+SOLUTION: CREATE ANIMATOR CONTROLLER
+
+STEP 1: CREATE THE ANIMATOR CONTROLLER
+───────────────────────────────────────
+
+1. In Project window, navigate to: /Assets/Scripts/
+2. Right-click > Create > Animator Controller
+3. Name it: "CinematicPlayerController"
+
+4. Double-click to open the Animator window
+5. You'll see a default "Entry" state
+
+6. Create 2 states:
+   - Right-click in grid > Create State > Empty
+   - Name first one: "Idle"
+   - Right-click in grid > Create State > Empty  
+   - Name second one: "Walk"
+
+7. Set "Idle" as default:
+   - Right-click "Idle" > Set as Layer Default State
+   - It will turn orange
+
+8. Add Parameters (left side of Animator window):
+   - Click "+" > Float > Name: "MoveSpeed"
+   - Click "+" > Bool > Name: "IsMoving"
+
+9. Create Transitions:
+   A) From Idle to Walk:
+      - Right-click "Idle" > Make Transition
+      - Click on "Walk" state
+      - Select the transition arrow
+      - In Inspector: Uncheck "Has Exit Time"
+      - Click "+" under Conditions
+      - Add condition: IsMoving = true
+      
+   B) From Walk to Idle:
+      - Right-click "Walk" > Make Transition
+      - Click on "Idle" state
+      - Select the transition arrow
+      - In Inspector: Uncheck "Has Exit Time"
+      - Click "+" under Conditions
+      - Add condition: IsMoving = false
+
+10. OPTIONAL: Assign animation clips to states:
+    - Select "Idle" state
+    - In Inspector, drag an idle animation clip to "Motion" field
+    - Select "Walk" state
+    - In Inspector, drag a walk animation clip to "Motion" field
+    
+    (If you don't have clips yet, leave Motion empty - we'll handle this via code)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+STEP 2: ADD ANIMATOR TO PLAYER PREFAB
+──────────────────────────────────────
+
+OPTION A: Modify the Original Prefab
+1. Navigate to: /Assets/3rdParty/Maksim Bugrimov/Sci_Fi_Character_08/Prefabs/
+2. Select: Sci_Fi_Character_08_03.prefab
+3. Click "Open Prefab" at top of Inspector
+4. Select the ROOT GameObject (Sci_Fi_Character_08_03)
+5. In Inspector, click "Add Component"
+6. Search for: "Animator"
+7. Add it
+8. In Animator component:
+   - Controller: Drag "CinematicPlayerController" here
+   - Avatar: Should auto-detect (look for a rig Avatar in same folder)
+   - Apply Root Motion: UNCHECK this (we use CharacterController)
+   - Update Mode: Normal
+   - Culling Mode: Always Animate
+9. Click "Save" or close prefab editing
+
+OPTION B: Create a Variant (Recommended - doesn't modify original)
+1. Navigate to: /Assets/3rdParty/Maksim Bugrimov/Sci_Fi_Character_08/Prefabs/
+2. Right-click: Sci_Fi_Character_08_03.prefab
+3. Create > Prefab Variant
+4. Name it: "Sci_Fi_Character_08_03_Cinematic"
+5. Move it to: /Assets/Prefabs/ (create this folder if it doesn't exist)
+6. Double-click to open the variant
+7. Add Animator component (follow steps 5-9 from Option A above)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+STEP 3: UPDATE SEASONCIN EMATICCONTROLLER
+──────────────────────────────────────────
+
+1. Open scene: /Assets/TPSBR/Scenes/Game.unity
+2. Find "SeasonCinematicController" in Hierarchy
+3. Select it
+4. In Inspector, find "Player Prefab" field
+5. Drag your new prefab:
+   - If you did Option A: Use Sci_Fi_Character_08_03
+   - If you did Option B: Use Sci_Fi_Character_08_03_Cinematic
+
+═══════════════════════════════════════════════════════════════════════════════
+
+STEP 4: CHECK ANIMATION CLIPS
+──────────────────────────────
+
+The cinematic uses these animation FBX files:
+- LayingDownIdle: /Assets/Cinematics/LayingDownIdle.fbx
+- Getting Up: /Assets/Cinematics/Getting Up.fbx
+- Idle: /Assets/Cinematics/InjuredWalk/Injured Walking.fbx
+- Walk: /Assets/Cinematics/InjuredWalk/Injured Walk.fbx
+
+For EACH FBX file:
+1. Select the FBX in Project window
+2. In Inspector, click "Rig" tab
+3. Animation Type should be: "Humanoid" or "Generic"
+4. If "Humanoid":
+   - Avatar Definition: "Create From This Model"
+   - Click "Configure"
+   - Make sure all bones are mapped (should be green)
+   - Click "Apply" then "Done"
+
+5. Click "Animation" tab
+6. Make sure there's at least one clip listed
+7. If no clips:
+   - Check "Import Animation"
+   - Click "Apply"
+
+8. Expand the FBX in Project window (click triangle)
+9. You should see animation clip(s) inside
+10. Drag one clip to test in Scene view to verify it works
+
+═══════════════════════════════════════════════════════════════════════════════
+
+STEP 5: VERIFY AVATAR COMPATIBILITY
+────────────────────────────────────
+
+IMPORTANT: All animations must use the SAME rig/Avatar type!
+
+1. Check your player model's rig:
+   - Select: Sci_Fi_Character_08_03.prefab
+   - Inspector > "Rig" tab
+   - Note the Avatar (should see an Avatar asset)
+
+2. Check each animation FBX's rig:
+   - Must match the player model's rig type
+   - If player is "Humanoid", animations must be "Humanoid"
+   - If using different characters, make sure Avatar is compatible
+
+3. If animations are from different character:
+   - In animation FBX > Rig tab
+   - Avatar Definition: "Copy From Other Avatar"
+   - Source: Drag the player model's Avatar
+   - Click "Apply"
+
+═══════════════════════════════════════════════════════════════════════════════
+
+STEP 6: TEST THE SETUP
+───────────────────────
+
+1. Enter Play mode
+2. You should see the player laying down (not T-posing)
+3. Press P to wake up
+4. After wake up, use WASD to move
+5. Player should transition from Idle to Walk animation
+
+IF STILL T-POSING:
+- Check Console for errors
+- Make sure Animator component is present on spawned player
+- Make sure animation clips are valid (not empty/broken)
+- Verify Avatar configuration matches between model and animations
+
+═══════════════════════════════════════════════════════════════════════════════
+
+ALTERNATIVE: USE EXISTING ANIMATIONS
+─────────────────────────────────────
+
+If you don't want to deal with the Cinematics FBX files, you can use the 
+existing Mobility_Pro animations:
+
+1. In SeasonCinematicController Inspector:
+   - Laying Down Idle: Leave empty (we'll add a fallback in code)
+   - Wake Up Clip: Leave empty (use fade in instead)
+   - Idle Clip: Use MOB1_Stand_Relaxed_Idle_v2_IPC
+     Path: /Assets/3rdParty/Mobility_Pro/Animation/
+   - Walk Clip: Use MOB1_Jog_F_Loop_IPC
+     Path: /Assets/3rdParty/Mobility_Pro/Animation/
+
+2. The controller will handle the case where laying/wakeup clips are missing
+
+═══════════════════════════════════════════════════════════════════════════════
+
+QUICK FIX: USE CODE TO ADD ANIMATOR
+────────────────────────────────────
+
+If you don't want to manually set up the Animator, I've updated
+SeasonCinematicController to automatically:
+- Add an Animator component if missing
+- Create an Animator Controller at runtime
+- Handle missing animation clips gracefully
+
+Just make sure your player prefab has a valid rig (Humanoid or Generic).
+
+═══════════════════════════════════════════════════════════════════════════════
+
+TROUBLESHOOTING
+───────────────
+
+Q: Player still T-posing?
+A: Check that the Animator component is enabled and has a Controller assigned
+
+Q: Animations play but character is in wrong position?
+A: Make sure "Apply Root Motion" is UNCHECKED in Animator component
+
+Q: Character plays animation but doesn't move?
+A: The animations are working! Movement is controlled by CharacterController,
+   not by Root Motion. Use WASD keys to move.
+
+Q: "Animator has no Avatar" error?
+A: Select player prefab > Rig tab > Avatar Definition > Create From This Model
+
+Q: Animations are from wrong character/don't match?
+A: Make sure all FBX files use same rig type and Avatar as player model
+
+Q: Character slides/floats during animation?
+A: This is normal for cinematic laydown animations. Adjust spawn point height
+   or the animation clips to match ground level.
+
+═══════════════════════════════════════════════════════════════════════════════

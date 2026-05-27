@@ -1,0 +1,237 @@
+================================================================================
+QUICK UNITY SETUP - GET LOGIN WORKING IN 5 MINUTES!
+================================================================================
+
+Your Python backend is running! ✓
+Now follow these simple steps to get Unity login working:
+
+================================================================================
+STEP 1: SETUP BACKEND MANAGERS (2 minutes)
+================================================================================
+
+1. Open scene: Assets/TPSBR/Scenes/Menu.unity
+
+2. In Hierarchy, Right-click → Create Empty → Name it "BackendManagers"
+
+3. With BackendManagers selected, in Inspector:
+   - Click "Add Component"
+   - Type: "Backend Service Manager"
+   - Click to add it
+   
+4. Still in Inspector with BackendManagers selected:
+   - Click "Add Component" again
+   - Type: "Ban Check Service"
+   - Click to add it
+
+5. Check Backend Service Manager settings:
+   - Backend URL should be: http://localhost:8000
+   - If not, change it to that
+
+6. Press CTRL+S to save
+
+✓ Backend managers setup complete!
+
+================================================================================
+STEP 2: CREATE LOGIN UI (3 minutes)
+================================================================================
+
+Option A: Use Your Existing UI (Recommended if you have one)
+-----------------------------------------------------------
+If you already have a menu UI with username/password fields:
+- Skip to STEP 3
+- We'll connect your existing UI instead
+
+Option B: Create Simple Test UI (Quick test)
+-----------------------------------------------------------
+1. In Hierarchy, Right-click → UI → Canvas (if you don't have one)
+
+2. Right-click Canvas → UI → Panel → Name it "TestLoginPanel"
+
+3. Right-click TestLoginPanel → UI → Input Field - TextMeshPro
+   - Name it: "UsernameInput"
+   - Change Placeholder to: "Username"
+
+4. Right-click TestLoginPanel → UI → Input Field - TextMeshPro
+   - Name it: "PasswordInput"
+   - Change Placeholder to: "Password"
+   - Change Content Type to: "Password"
+
+5. Right-click TestLoginPanel → UI → Button - TextMeshPro
+   - Name it: "LoginButton"
+   - Change text to: "Login"
+
+6. Right-click TestLoginPanel → UI → Button - TextMeshPro
+   - Name it: "CreateAccountButton"
+   - Change text to: "Create Account"
+
+7. Right-click TestLoginPanel → UI → Text - TextMeshPro
+   - Name it: "FeedbackText"
+   - Clear the text (make it empty)
+   - Change color to Yellow or Red for visibility
+
+✓ Login UI created!
+
+================================================================================
+STEP 3: CONNECT UI TO BACKEND (1 minute)
+================================================================================
+
+1. Select "TestLoginPanel" (or your login panel) in Hierarchy
+
+2. In Inspector, click "Add Component"
+
+3. Type: "Simple Login UI"
+
+4. Click to add it
+
+5. Now drag and drop each UI element:
+   - Drag UsernameInput → to "Username Input" slot
+   - Drag PasswordInput → to "Password Input" slot
+   - Drag LoginButton → to "Login Button" slot
+   - Drag CreateAccountButton → to "Create Account Button" slot
+   - Drag FeedbackText → to "Feedback Text" slot
+   - (Optional) Drag TestLoginPanel → to "Login Panel" slot (hides panel after login)
+
+6. Press CTRL+S to save
+
+✓ UI connected to backend!
+
+================================================================================
+STEP 4: TEST IT! (30 seconds)
+================================================================================
+
+1. Make sure Python backend is running in terminal
+   (You should see: "Uvicorn running on http://0.0.0.0:8000")
+
+2. Click Play in Unity
+
+3. In Game view:
+   - Enter Username: myusername
+   - Enter Password: mypassword123
+   - Click "Create Account"
+   - Should see: "Account created!"
+
+4. Try logging in:
+   - Enter same username and password
+   - Click "Login"
+   - Should see: "Welcome, myusername!"
+
+IF YOU SEE THESE MESSAGES, IT'S WORKING! ✓✓✓
+
+================================================================================
+WHAT JUST HAPPENED?
+================================================================================
+
+✓ Unity connected to your Python backend
+✓ Account created and saved in backend Accounts/ folder
+✓ Login token stored in Unity PlayerPrefs
+✓ Token will persist even after closing game (auto-login)
+
+Try closing Unity and playing again - it should auto-login!
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Error: "Backend service not available"
+Fix: Make sure BackendManagers GameObject exists with components attached
+
+Error: "Network error" or no response
+Fix: 1. Check Python backend is running (look at terminal)
+     2. Check Backend URL is exactly: http://localhost:8000
+     3. Try using: http://127.0.0.1:8000 instead
+
+Error: "Username must be at least 3 characters"
+Fix: Use username with 3+ characters
+
+Error: "Password must be at least 9 characters"
+Fix: Use password with 9+ characters (backend requirement)
+
+Nothing happens when clicking buttons:
+Fix: Check Console (Window → General → Console) for error messages
+     Make sure all UI references are assigned in Inspector
+
+================================================================================
+NEXT STEPS - INTEGRATE WITH YOUR GAME
+================================================================================
+
+Now that login works, you need to connect it to your game flow:
+
+1. FIND YOUR GAME START CODE
+   Look for where you start the game or connect to Photon
+   Likely in: Assets/TPSBR/Scripts/UI/MenuViews/ or similar
+
+2. ADD LOGIN CHECK
+   Before starting game, check if player is logged in:
+   
+   if (!BackendServiceManager.Instance.HasStoredToken())
+   {
+       // Show login UI
+       // Don't start game yet
+       return;
+   }
+
+3. VALIDATE TOKEN
+   Before connecting to Photon:
+   
+   BackendServiceManager.Instance.ValidateToken((success, username) =>
+   {
+       if (success)
+       {
+           // Start game with this username
+           StartGame(username);
+       }
+       else
+       {
+           // Show login UI
+       }
+   });
+
+4. USE USERNAME IN GAME
+   When creating player in Photon:
+   
+   string username = BackendServiceManager.Instance.GetStoredUsername();
+   // Use this as player nickname
+
+================================================================================
+TESTING BAN SYSTEM
+================================================================================
+
+Want to test the ban system?
+
+1. Login to Unity game with a test account
+
+2. Open admin_dashboard.html in web browser
+
+3. Login with admin key: your_secret_admin_key_12345_CHANGE_THIS
+
+4. Go to Bans page → Click "Ban Player"
+
+5. Enter the test username → Enter reason → Click Ban
+
+6. Wait up to 30 seconds
+
+7. Player should be kicked from Unity game with ban message!
+
+================================================================================
+YOU'RE DONE!
+================================================================================
+
+✓ Backend running
+✓ Unity connected
+✓ Login working
+✓ Accounts being created
+
+Now just integrate with your existing game flow!
+
+For detailed integration with Photon Fusion and game systems, see:
+UNITY_INTEGRATION_GUIDE.txt
+
+For admin dashboard and banning, see:
+admin_dashboard.html
+
+For deployment to production server, see:
+README.txt
+
+Good luck with Skyfall! 🎮
+
+================================================================================

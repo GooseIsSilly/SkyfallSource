@@ -1,0 +1,229 @@
+================================================================================
+⚡ CLOUDCOINS IN LOBBY - QUICK REFERENCE
+================================================================================
+
+✅ CloudCoins now sync with backend and display in the lobby!
+
+================================================================================
+WHAT YOU GET
+================================================================================
+
+1. CloudCoins Display
+   - Shows current coin balance
+   - Located in PlayerInfoPanel
+   - Gold coin icon + number
+
+2. Auto-Sync
+   - Loads from backend on lobby open
+   - Updates when coins change anywhere
+   - Persists across sessions
+
+3. Level & XP Display
+   - Shows current level
+   - Shows XP progress bar
+   - Auto-updates on level up
+
+================================================================================
+QUICK TEST
+================================================================================
+
+1. Login to game
+2. Lobby opens → See CloudCoins display
+3. Open Console (F1)
+4. Type: PlayerDataManager.Instance.AddCoins(500)
+5. Watch coins update instantly! ✓
+
+================================================================================
+WHERE COINS ARE STORED
+================================================================================
+
+Backend JSON:
+/Accounts/YourUsername.json
+{
+    "CloudCoins": 5420,    ← This value is displayed
+    "Level": 25,
+    "XP": 750,
+    ...
+}
+
+Unity Display:
+Menu Scene → PlayerInfoPanel → CloudCoinsText
+
+================================================================================
+HOW TO GIVE/TAKE COINS
+================================================================================
+
+Give Coins:
+-----------
+PlayerDataManager.Instance.AddCoins(100);
+
+Take Coins:
+-----------
+PlayerDataManager.Instance.AddCoins(-50);
+
+Check Balance:
+--------------
+int coins = PlayerDataManager.Instance.CurrentData.CloudCoins;
+
+Purchase Check:
+---------------
+CharacterData character = ...;
+bool canAfford = PlayerDataManager.Instance.CanAfford(character);
+
+if (canAfford)
+{
+    PlayerDataManager.Instance.PurchaseCharacter(character);
+}
+
+================================================================================
+INTEGRATION EXAMPLES
+================================================================================
+
+Shop Purchase:
+--------------
+PlayerDataManager.Instance.AddCoins(-1000, (success, newTotal) => {
+    if (success) {
+        UnlockSkin("RareSkin01");
+        Debug.Log($"Remaining: {newTotal} coins");
+    }
+});
+
+Match Reward:
+-------------
+void OnMatchEnd(int placement)
+{
+    int reward = placement == 1 ? 500 : 100;
+    PlayerDataManager.Instance.AddCoins(reward);
+}
+
+Daily Bonus:
+------------
+PlayerDataManager.Instance.AddCoins(250);
+ShowPopup("+250 CloudCoins!");
+
+================================================================================
+CUSTOMIZATION
+================================================================================
+
+Change Position:
+----------------
+Select: CloudCoinsPanel in Hierarchy
+Adjust: Anchored Position X/Y
+
+Change Text Size:
+-----------------
+Select: CloudCoinsText
+Change: Font Size (default 36)
+
+Change Color:
+-------------
+Select: CloudCoinsText or CoinIcon
+Modify: Color property
+
+Add Coin Sprite:
+----------------
+Select: CoinIcon
+Drag sprite to: Image > Source Image
+
+================================================================================
+EVENTS YOU CAN USE
+================================================================================
+
+When Coins Change:
+------------------
+PlayerDataManager.Instance.OnCoinsChanged += (newAmount) => {
+    Debug.Log($"Coins updated: {newAmount}");
+};
+
+When Level Up:
+--------------
+PlayerDataManager.Instance.OnLevelChanged += (newLevel) => {
+    ShowLevelUpPopup(newLevel);
+};
+
+When Data Loads:
+----------------
+PlayerDataManager.Instance.OnDataLoaded += (data) => {
+    Debug.Log($"Loaded {data.CloudCoins} coins");
+};
+
+================================================================================
+BACKEND ENDPOINTS
+================================================================================
+
+Add Coins:
+GET /account/addcoins?Token=XXX&Amount=100
+
+Add XP:
+GET /account/addxp?Token=XXX&Amount=500
+
+Get Data:
+GET /account/getgamedata?Token=XXX
+
+Update Data:
+POST /account/updategamedata
+Body: { Token, Level, XP, CloudCoins, ... }
+
+================================================================================
+TESTING CHECKLIST
+================================================================================
+
+[ ] CloudCoins display appears in lobby
+[ ] Shows 0 on new account
+[ ] Updates when AddCoins() called
+[ ] Persists after restarting game
+[ ] Shows correct value from backend JSON
+[ ] Updates in real-time
+[ ] Level text shows correctly
+[ ] XP progress bar fills correctly
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Not showing?
+- Check CloudCoinsPanel is active
+- Check CloudCoinsText is assigned in UIFortniteLobbyView
+- Check PlayerDataManager exists in scene
+
+Shows 0?
+- Check backend is running
+- Check login successful
+- Check backend JSON has CloudCoins field
+- Run LoadPlayerData() manually
+
+Not updating?
+- Check PlayerDataManager.Instance exists
+- Check OnCoinsChanged subscribed
+- Check Console for errors
+
+================================================================================
+FILES MODIFIED
+================================================================================
+
+✓ /Assets/Scripts/UIFortniteLobbyView.cs
+  - Added CloudCoins display logic
+  - Added backend sync on open
+  - Added event subscriptions
+
+✓ /Assets/TPSBR/Scenes/Menu.unity
+  - Added CloudCoinsPanel
+  - Added CoinIcon
+  - Added CloudCoinsText
+
+📄 Documentation:
+  - LOBBY_CLOUDCOINS_SYNC.txt (Full guide)
+  - CLOUDCOINS_QUICK_GUIDE.txt (This file)
+
+================================================================================
+YOU'RE READY! 🚀
+================================================================================
+
+CloudCoins now sync between:
+✓ Backend JSON files
+✓ Unity PlayerDataManager
+✓ Lobby UI display
+
+All automatic! Just use AddCoins() and everything updates!
+
+================================================================================

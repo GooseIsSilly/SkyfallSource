@@ -1,0 +1,222 @@
+================================================================================
+⚡ AUTO-LOGIN - QUICK START (30 SECONDS)
+================================================================================
+
+GOOD NEWS: IT'S ALREADY WORKING!
+Just enable it in the Inspector!
+
+================================================================================
+INSTANT SETUP
+================================================================================
+
+Step 1: Find SimplerLoginManager
+---------------------------------
+1. Open your Menu scene
+2. Find the GameObject with SimplerLoginManager component
+3. Select it in Hierarchy
+
+Step 2: Enable Auto-Login
+--------------------------
+In Inspector:
+✓ Check "Auto Login On Start" (should already be checked!)
+
+That's it! ✓
+
+Step 3: Test
+------------
+1. Play the game
+2. Login manually (first time)
+3. Stop play mode
+4. Play again
+5. Should auto-login! No login screen! ✓
+
+================================================================================
+OPTIONAL: ADD LOADING PANEL (2 MINUTES)
+================================================================================
+
+Makes the experience smoother!
+
+Quick Setup:
+------------
+1. In your Canvas (where SimplerLoginManager is):
+   - Right-click → UI → Panel
+   - Name: "LoadingPanel"
+
+2. Add text to panel:
+   - Right-click LoadingPanel → UI → Text - TextMeshPro
+   - Text: "Logging in..."
+   - Center it
+   - Font Size: 36
+
+3. Style the panel:
+   - Set Panel color: Black, Alpha 180 (semi-transparent)
+   
+4. Assign to SimplerLoginManager:
+   - Drag LoadingPanel to "Loading Panel" field
+
+5. Done! Now shows "Logging in..." during auto-login!
+
+================================================================================
+HOW IT WORKS
+================================================================================
+
+First Login:
+------------
+You → Login manually → Token saved → Game starts
+
+Every Time After:
+-----------------
+Game starts → Token auto-validated → Logged in! → Game starts
+
+No more typing password every time! ✓
+
+================================================================================
+SETTINGS EXPLAINED
+================================================================================
+
+SimplerLoginManager Inspector:
+-------------------------------
+
+Login Panel To Hide: [Your Login Panel]
+  ↑ Auto-hides if token is valid
+
+Objects To Show After Login: [MenuUI, etc.]
+  ↑ Auto-shows when logged in
+
+Loading Panel: [Optional]
+  ↑ Shows while checking token
+  ↑ Hides when done
+
+Auto Login On Start: [✓]
+  ✓ = Try auto-login (RECOMMENDED)
+  ☐ = Always show login panel
+
+================================================================================
+TESTING CHECKLIST
+================================================================================
+
+[ ] Auto Login On Start is checked
+[ ] SimplerLoginManager component exists
+[ ] Login panel assigned
+[ ] Backend is running
+[ ] Tested: Login manually
+[ ] Tested: Close and reopen game
+[ ] Auto-login works! ✓
+
+All checked = Success! 🎉
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Not auto-logging in?
+--------------------
+→ Check "Auto Login On Start" is enabled
+→ Make sure backend is running
+→ Look at console logs for errors
+
+Shows login panel every time?
+------------------------------
+→ Backend might have restarted (dev mode)
+→ Token might have expired
+→ Just login again - will save new token
+
+Loading panel stuck?
+--------------------
+→ Backend not responding
+→ Check backend URL in BackendServiceManager
+→ Check network connection
+
+================================================================================
+ADDING LOGOUT BUTTON (OPTIONAL)
+================================================================================
+
+Want users to logout?
+---------------------
+
+1. Add button to your game menu
+2. Add this script to button:
+
+```csharp
+using UnityEngine;
+using TPSBR.Backend;
+
+public class LogoutButton : MonoBehaviour
+{
+    public void OnClick()
+    {
+        BackendServiceManager.Instance.Logout(() =>
+        {
+            // Reload scene to show login panel
+            UnityEngine.SceneManagement.SceneManager.LoadScene(
+                UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
+            );
+        });
+    }
+}
+```
+
+3. Attach to button
+4. Done! Logout works!
+
+================================================================================
+COMPARISON
+================================================================================
+
+WITHOUT Auto-Login:
+-------------------
+1. Start game
+2. Enter username ❌
+3. Enter password ❌
+4. Click login ❌
+5. Play game ✓
+(Repeat every time you open the game!)
+
+WITH Auto-Login:
+----------------
+1. Start game
+2. Play game ✓
+(Login once, never again!)
+
+Much better! 🚀
+
+================================================================================
+WHAT IF I DON'T WANT AUTO-LOGIN?
+================================================================================
+
+Just uncheck "Auto Login On Start"!
+Then it works like before - always shows login panel.
+
+================================================================================
+COMPLETE EXAMPLE HIERARCHY
+================================================================================
+
+Canvas
+├── SimplerLoginManager (THIS SCRIPT)
+├── LoginPanel
+│   ├── UsernameField
+│   ├── PasswordField
+│   └── LoginButton
+├── LoadingPanel (NEW - OPTIONAL)
+│   └── Text ("Logging in...")
+└── MenuUI (Hidden until login)
+    └── Your game UI
+
+================================================================================
+THAT'S IT! 🎮
+================================================================================
+
+Your game now has:
+✓ Auto-login on startup
+✓ Token persistence
+✓ Professional UX
+✓ One-time login
+
+Players will love it!
+
+Just check "Auto Login On Start" and you're done!
+(It's probably already checked!)
+
+Enjoy! ✨
+
+================================================================================

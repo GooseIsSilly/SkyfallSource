@@ -1,0 +1,341 @@
+================================================================================
+HOW TO USE PLAYER DATA SYNC - EXAMPLES
+================================================================================
+
+After following SYNC_GAME_DATA_GUIDE.txt, here's how to use it in your game:
+
+================================================================================
+STEP 1: ADD PlayerDataManager TO SCENE
+================================================================================
+
+1. In Menu scene (or create once, DontDestroyOnLoad)
+2. Right-click Hierarchy → Create Empty → "PlayerDataManager"
+3. Add Component → "Player Data Manager"
+4. Save scene
+
+================================================================================
+STEP 2: LOAD DATA AFTER LOGIN
+================================================================================
+
+In your login success handler or game start code:
+
+using TPSBR.Backend;
+
+void OnPlayerLoggedIn()
+{
+    // Load player data from backend
+    PlayerDataManager.Instance.LoadPlayerData((success, data) =>
+    {
+        if (success)
+        {
+            Debug.Log($"Player Level: {data.Level}");
+            Debug.Log($"CloudCoins: {data.CloudCoins}");
+            Debug.Log($"XP: {data.XP}");
+            Debug.Log($"Equipped Skin: {data.EquippedSkin}");
+            
+            // Update UI
+            UpdateLevelDisplay(data.Level);
+            UpdateCoinDisplay(data.CloudCoins);
+            LoadPlayerSkin(data.EquippedSkin);
+        }
+        else
+        {
+            Debug.LogError("Failed to load player data!");
+        }
+    });
+}
+
+================================================================================
+EXAMPLE 1: SHOW LEVEL AND COINS IN UI
+================================================================================
+
+using TPSBR.Backend;
+using TMPro;
+
+public class PlayerStatsUI : MonoBehaviour
+{
+    [SerializeField] private TextMeshProUGUI levelText;
+    [SerializeField] private TextMeshProUGUI coinsText;
+    
+    private void Start()
+    {
+        // Subscribe to data changes
+        if (PlayerDataManager.Instance != null)
+        {
+            PlayerDataManager.Instance.OnDataLoaded += UpdateDisplay;
+            PlayerDataManager.Instance.OnLevelChanged += OnLevelUp;
+            PlayerDataManager.Instance.OnCoinsChanged += UpdateCoins;
+            
+            // Load initial data
+            PlayerDataManager.Instance.LoadPlayerData((success, data) =>
+            {
+                if (success)
+                {
+                    UpdateDisplay(data);
+                }
+            });
+        }
+    }
+    
+    private void UpdateDisplay(PlayerGameData data)
+    {
+        levelText.text = $"Level {data.Level}";
+        coinsText.text = $"{data.CloudCoins}";
+    }
+    
+    private void OnLevelUp(int newLevel)
+    {
+        Debug.Log($"LEVEL UP! Now level {newLevel}");
+        // Show level up animation
+        levelText.text = $"Level {newLevel}";
+    }
+    
+    private void UpdateCoins(int newTotal)
+    {
+        coinsText.text = $"{newTotal}";
+    }
+}
+
+================================================================================
+EXAMPLE 2: AWARD COINS AFTER MATCH
+================================================================================
+
+public class MatchRewards : MonoBehaviour
+{
+    public void OnMatchComplete(int placement, int kills)
+    {
+        // Calculate rewards
+        int coinsEarned = 0;
+        
+        if (placement == 1)
+            coinsEarned = 100;
+        else if (placement <= 3)
+            coinsEarned = 50;
+        else
+            coinsEarned = 10;
+        
+        coinsEarned += kills * 5;  // 5 coins per kill
+        
+        // Award to player
+        PlayerDataManager.Instance.AddCoins(coinsEarned, (success, newTotal) =>
+        {
+            if (success)
+            {
+                Debug.Log($"Earned {coinsEarned} coins! Total: {newTotal}");
+                ShowRewardScreen(coinsEarned, newTotal);
+            }
+        });
+        
+        // Award XP too
+        int xpEarned = placement == 1 ? 500 : 100;
+        xpEarned += kills * 50;
+        
+        PlayerDataManager.Instance.AddXP(xpEarned, (success, level, xp) =>
+        {
+            if (success)
+            {
+                Debug.Log($"Earned {xpEarned} XP! Level: {level}, XP: {xp}");
+            }
+        });
+    }
+}
+
+================================================================================
+EXAMPLE 3: UNLOCK SKIN WHEN PURCHASED
+================================================================================
+
+public class SkinShop : MonoBehaviour
+{
+    public void BuySkin(string skinID, int cost)
+    {
+        // Check if player has enough coins
+        if (PlayerDataManager.Instance.CurrentData.CloudCoins < cost)
+        {
+            Debug.Log("Not enough coins!");
+            return;
+        }
+        
+        // Check if already owned
+        if (PlayerDataManager.Instance.HasSkin(skinID))
+        {
+            Debug.Log("Already own this skin!");
+            return;
+        }
+        
+        // Deduct coins
+        PlayerDataManager.Instance.AddCoins(-cost, (success, newTotal) =>
+        {
+            if (success)
+            {
+                // Unlock the skin
+                PlayerDataManager.Instance.UnlockSkin(skinID, (unlocked, message) =>
+                {
+                    if (unlocked)
+                    {
+                        Debug.Log($"Unlocked {skinID}! Coins remaining: {newTotal}");
+                        ShowUnlockAnimation(skinID);
+                    }
+                });
+            }
+        });
+    }
+}
+
+================================================================================
+EXAMPLE 4: CHECK IF PLAYER OWNS SKIN
+================================================================================
+
+public class SkinSelector : MonoBehaviour
+{
+    public void SelectSkin(string skinID)
+    {
+        if (PlayerDataManager.Instance.HasSkin(skinID))
+        {
+            // Player owns it, equip it
+            PlayerDataManager.Instance.SetEquippedSkin(skinID);
+            PlayerDataManager.Instance.SaveAllData();
+            
+            Debug.Log($"Equipped {skinID}");
+            UpdatePlayerModel(skinID);
+        }
+        else
+        {
+            // Player doesn't own it, show purchase UI
+            ShowPurchaseUI(skinID);
+        }
+    }
+}
+
+================================================================================
+EXAMPLE 5: SAVE DATA BEFORE QUITTING
+================================================================================
+
+public class GameManager : MonoBehaviour
+{
+    private void OnApplicationQuit()
+    {
+        // Save all current data before quitting
+        if (PlayerDataManager.Instance != null)
+        {
+            PlayerDataManager.Instance.SaveAllData((success) =>
+            {
+                if (success)
+                {
+                    Debug.Log("Player data saved successfully");
+                }
+            });
+        }
+    }
+}
+
+================================================================================
+EXAMPLE 6: AUTO-SYNC ON LEVEL UP
+================================================================================
+
+The AddXP function automatically handles level-ups!
+
+PlayerDataManager.Instance.AddXP(1500, (success, level, xp) =>
+{
+    if (success)
+    {
+        // If player leveled up, this will fire:
+        // PlayerDataManager.Instance.OnLevelChanged event
+        
+        Debug.Log($"Current Level: {level}");
+        Debug.Log($"XP in current level: {xp}");
+    }
+});
+
+XP needed per level: 1000 (configurable in backend Account.py)
+
+================================================================================
+COMPLETE WORKFLOW EXAMPLE
+================================================================================
+
+// 1. Player logs in
+OnLoginSuccess()
+{
+    // 2. Load their data
+    PlayerDataManager.Instance.LoadPlayerData((success, data) =>
+    {
+        if (success)
+        {
+            // 3. Update UI with their level/coins
+            UpdateUI(data.Level, data.CloudCoins);
+            
+            // 4. Load their equipped skin
+            LoadSkin(data.EquippedSkin);
+        }
+    });
+}
+
+// 5. Player finishes match
+OnMatchEnd(int kills, int placement)
+{
+    // 6. Award coins
+    int coins = CalculateCoins(kills, placement);
+    PlayerDataManager.Instance.AddCoins(coins);
+    
+    // 7. Award XP (auto-saves)
+    int xp = CalculateXP(kills, placement);
+    PlayerDataManager.Instance.AddXP(xp);
+}
+
+// 8. Player buys skin
+OnBuySkin(string skinID, int cost)
+{
+    // 9. Deduct coins and unlock
+    PlayerDataManager.Instance.AddCoins(-cost);
+    PlayerDataManager.Instance.UnlockSkin(skinID);
+}
+
+// 10. Player quits
+OnQuit()
+{
+    // 11. Save everything (auto-saved but good practice)
+    PlayerDataManager.Instance.SaveAllData();
+}
+
+All data is automatically saved to backend JSON files!
+
+================================================================================
+ACCESSING DATA ANYWHERE
+================================================================================
+
+From any script in your game:
+
+// Get current level
+int level = PlayerDataManager.Instance.CurrentData.Level;
+
+// Get current coins
+int coins = PlayerDataManager.Instance.CurrentData.CloudCoins;
+
+// Get all owned skins
+string[] skins = PlayerDataManager.Instance.CurrentData.OwnedSkins;
+
+// Get equipped skin
+string equipped = PlayerDataManager.Instance.CurrentData.EquippedSkin;
+
+// Check if owns specific skin
+bool hasRareSkin = PlayerDataManager.Instance.HasSkin("RareSkin01");
+
+================================================================================
+TESTING IN EDITOR
+================================================================================
+
+1. Play game in Unity
+2. Login with account
+3. Open Console and run:
+
+   PlayerDataManager.Instance.AddCoins(1000);
+   PlayerDataManager.Instance.AddXP(5000);
+   PlayerDataManager.Instance.UnlockSkin("TestSkin");
+
+4. Stop play mode
+5. Open backend /Accounts/YourUsername.json
+6. Values should be saved!
+
+7. Play again and login
+8. Data should be loaded automatically
+
+================================================================================

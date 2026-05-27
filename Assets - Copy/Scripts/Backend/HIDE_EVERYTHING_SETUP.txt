@@ -1,0 +1,260 @@
+================================================================================
+HIDE EVERYTHING EXCEPT LOGIN - SETUP GUIDE
+================================================================================
+
+This guide shows you how to make ONLY the login panel visible at startup,
+then show everything else after successful login.
+
+================================================================================
+STEP 1: CREATE LOGIN UI (3 minutes)
+================================================================================
+
+In Menu.unity scene:
+
+1. Find or create a Canvas in Hierarchy
+
+2. Right-click Canvas → UI → Panel
+   - Name it: "LoginPanel"
+   - Make it fullscreen
+   - Change background color to something visible (e.g., dark gray)
+
+3. Right-click LoginPanel → UI → Input Field - TextMeshPro
+   - Name: "UsernameInput"
+   - Placeholder: "Username"
+   - Position it nicely (center-top)
+
+4. Right-click LoginPanel → UI → Input Field - TextMeshPro
+   - Name: "PasswordInput"
+   - Placeholder: "Password"
+   - Content Type: "Password"
+   - Position below UsernameInput
+
+5. Right-click LoginPanel → UI → Button - TextMeshPro
+   - Name: "LoginButton"
+   - Text: "Login"
+   - Position below PasswordInput
+
+6. Right-click LoginPanel → UI → Button - TextMeshPro
+   - Name: "CreateAccountButton"
+   - Text: "Create Account"
+   - Position below LoginButton
+
+7. Right-click LoginPanel → UI → Text - TextMeshPro
+   - Name: "FeedbackText"
+   - Text: "" (empty)
+   - Color: Yellow or Red
+   - Position at bottom
+
+Your hierarchy should look like:
+Canvas
+└── LoginPanel
+    ├── UsernameInput
+    ├── PasswordInput
+    ├── LoginButton
+    ├── CreateAccountButton
+    └── FeedbackText
+
+================================================================================
+STEP 2: ATTACH SIMPLE LOGIN UI SCRIPT (1 minute)
+================================================================================
+
+1. Select "LoginPanel" in Hierarchy
+
+2. In Inspector, click "Add Component"
+
+3. Search for: "Simple Login UI"
+
+4. Add it
+
+5. Drag and drop UI elements to matching slots:
+   - Username Input → UsernameInput
+   - Password Input → PasswordInput
+   - Login Button → LoginButton
+   - Create Account Button → CreateAccountButton
+   - Feedback Text → FeedbackText
+   - Login Panel → (leave empty, not needed)
+
+6. Save (CTRL+S)
+
+================================================================================
+STEP 3: CREATE LOGIN SCENE MANAGER (2 minutes)
+================================================================================
+
+1. In Hierarchy, Right-click → Create Empty
+
+2. Name it: "LoginSceneManager"
+
+3. In Inspector, click "Add Component"
+
+4. Search for: "Login Scene Manager"
+
+5. Add it
+
+6. Configure the component:
+   - Login Panel: Drag your "LoginPanel" GameObject here
+   - Hide Everything On Start: ✓ (checked)
+   - Never Hide Objects: (leave empty, auto-detects BackendManagers, EventSystem)
+
+7. Save (CTRL+S)
+
+================================================================================
+STEP 4: TEST IT! (30 seconds)
+================================================================================
+
+1. Make sure Python backend is running
+
+2. Click Play in Unity
+
+3. You should see:
+   ✓ ONLY the LoginPanel visible
+   ✓ Everything else in the scene is HIDDEN
+   ✓ No menu buttons, no UI, nothing except login
+
+4. Create account:
+   - Username: testplayer
+   - Password: testpass123
+   - Click "Create Account"
+
+5. After successful login:
+   ✓ LoginPanel DISAPPEARS
+   ✓ All other UI/GameObjects REAPPEAR
+   ✓ Game continues normally!
+
+================================================================================
+HOW IT WORKS
+================================================================================
+
+LoginSceneManager does this automatically:
+
+On Start:
+1. Checks if player already has a valid login token
+2. If YES → Validates token → Shows everything
+3. If NO → Hides everything except LoginPanel
+
+After Login:
+1. SimpleLoginUI calls BackendServiceManager.LoginPlayer()
+2. BackendServiceManager fires OnLoginSuccess event
+3. LoginSceneManager receives event
+4. LoginSceneManager shows all hidden objects
+5. LoginSceneManager hides the LoginPanel
+6. Game continues normally!
+
+================================================================================
+ADVANCED: NEVER HIDE CERTAIN OBJECTS
+================================================================================
+
+If you have objects that should ALWAYS be visible (music player, etc.):
+
+1. Select LoginSceneManager in Hierarchy
+
+2. In Inspector, expand "Never Hide Objects" list
+
+3. Click "+" to add slots
+
+4. Drag GameObjects you want to keep visible
+
+These objects will stay visible even during login!
+
+================================================================================
+AUTO-LOGIN FEATURE
+================================================================================
+
+The system automatically checks for saved login on startup:
+
+First Time:
+- No saved token → Shows login screen
+
+After First Login:
+- Token saved to PlayerPrefs
+- Next time game starts → Validates token automatically
+- If valid → Skips login screen, shows game immediately!
+- If invalid → Shows login screen again
+
+This gives players a smooth "stay logged in" experience!
+
+================================================================================
+COMPLETE SETUP CHECKLIST
+================================================================================
+
+Menu Scene Setup:
+[✓] BackendManagers GameObject exists with components
+[✓] LoginPanel created with all UI elements
+[✓] SimpleLoginUI attached to LoginPanel
+[✓] All UI references assigned in SimpleLoginUI
+[✓] LoginSceneManager GameObject created
+[✓] Login Scene Manager component attached
+[✓] LoginPanel reference assigned in LoginSceneManager
+[✓] Hide Everything On Start is checked
+
+Testing:
+[ ] Only LoginPanel visible on start
+[ ] Can create account
+[ ] Can login
+[ ] Everything appears after login
+[ ] LoginPanel disappears after login
+[ ] Token persists (restart game, should auto-login)
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problem: Everything is still visible on start
+Solution: Make sure "Hide Everything On Start" is checked in LoginSceneManager
+         Check LoginPanel is assigned in LoginSceneManager
+         Check LoginSceneManager script is active
+
+Problem: Login panel doesn't appear
+Solution: Check LoginPanel GameObject is active
+         Check LoginPanel is assigned in LoginSceneManager component
+         Check Canvas exists in scene
+
+Problem: After login, nothing appears
+Solution: Check Console for errors
+         Make sure objects were actually hidden (check hiddenObjects count in logs)
+         Verify OnLoginSuccess event is firing (check logs)
+
+Problem: Some UI is missing after login
+Solution: Those objects were probably inactive before login started
+         Only objects that were ACTIVE and got hidden will be shown again
+
+Problem: EventSystem or other critical objects hidden
+Solution: Add them to "Never Hide Objects" list in LoginSceneManager
+         Or ensure they're named "EventSystem" or "BackendManagers" (auto-excluded)
+
+================================================================================
+SEPARATE SCENE OPTION (Alternative)
+================================================================================
+
+If you prefer a completely separate login scene instead:
+
+1. Create new scene: File → New Scene
+2. Save as: Assets/TPSBR/Scenes/Login.unity
+3. Add Canvas + LoginPanel UI
+4. Add BackendManagers
+5. Add SimpleLoginUI script
+6. On successful login, load Menu scene:
+   
+   SceneManager.LoadScene("Menu");
+
+Then in your build settings:
+- Add Login.unity as first scene
+- Add Menu.unity as second scene
+
+Players start at Login scene, then transition to Menu scene.
+
+But the "hide everything" approach is simpler and faster!
+
+================================================================================
+YOU'RE DONE!
+================================================================================
+
+Now you have a clean login screen that:
+✓ Shows ONLY login UI on startup
+✓ Hides ALL game UI/menus
+✓ Shows everything after successful login
+✓ Auto-logins returning players
+✓ Validates tokens automatically
+
+Perfect for a professional game experience! 🎮
+
+================================================================================

@@ -1,0 +1,26 @@
+═══════════════════════════════════════════════════════════════
+ 🔴 FIX NullReferenceException Error NOW (10 seconds)
+═══════════════════════════════════════════════════════════════
+
+ERROR:
+  NullReferenceException in UIList.UpdateItems
+
+FIX:
+  1. Open Hierarchy window
+  2. Find: MenuUI/UIChangeNicknameView/UIShopView
+  3. Right-click → Delete
+  4. Save scene (Ctrl+S)
+
+DONE! Error is gone! ✅
+
+═══════════════════════════════════════════════════════════════
+
+WHY?
+  - This GameObject is incomplete (missing UIShopItem prefab)
+  - It's in the wrong place in hierarchy
+  - We need to create proper prefabs instead
+
+NEXT:
+  See /Assets/Scripts/MAKE_SHOP_WORK_NOW.md to create shop properly
+
+═══════════════════════════════════════════════════════════════
