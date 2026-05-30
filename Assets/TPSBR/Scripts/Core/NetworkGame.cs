@@ -70,11 +70,15 @@ namespace TPSBR
             {
 				if (isMigration)
 				{
-					// GameplayMode is already present in the network snapshot – locate it instead of spawning.
+					// GameplayMode was re-spawned from the snapshot in HostMigrationResume, but
+					// its Spawned() callback (which assigns Context.GameplayMode) fires on the
+					// first simulation tick — not synchronously. Cache what we have; if it is
+					// still null, Activate() will resolve it once the coroutine confirms
+					// Context.GameplayMode is non-null.
 					_gameplayMode = Context.GameplayMode;
 					if (_gameplayMode == null)
 					{
-						Debug.LogError("[NetworkGame] GameplayMode not found in snapshot after host migration.");
+						Debug.Log("[NetworkGame] GameplayMode not yet in context after host migration; will resolve in Activate().");
 					}
 				}
 				else
@@ -123,6 +127,19 @@ namespace TPSBR
 				}
 
 				return;
+			}
+
+			// The coroutine waits until Context.GameplayMode is non-null before calling
+			// Activate(), so it is safe to resolve _gameplayMode here if it was still
+			// null when Initialize() ran (Spawned() had not yet fired at that point).
+			if (isMigration && _gameplayMode == null)
+			{
+				_gameplayMode = Context.GameplayMode;
+				if (_gameplayMode == null)
+				{
+					Debug.LogError("[NetworkGame] GameplayMode still not in context during Activate() after host migration.");
+					return;
+				}
 			}
 
 			if (_levelGenerator != null && _levelGenerator.enabled == true)

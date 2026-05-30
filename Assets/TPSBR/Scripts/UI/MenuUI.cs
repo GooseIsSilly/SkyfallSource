@@ -81,7 +81,7 @@ namespace TPSBR.UI
 
 			if (Global.Networking.ErrorStatus.HasValue() == true)
 			{
-				Open<UIMultiplayerView>();
+				Open<UIFortniteLobbyView>();
 				var errorDialog = Open<UIErrorDialogView>();
 
 				errorDialog.Title.text = "Connection Issue";

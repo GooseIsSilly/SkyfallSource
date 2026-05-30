@@ -21,6 +21,10 @@ namespace TPSBR
         [SerializeField] private GameObject _poiMarkerPrefab;
         [SerializeField] private Transform _poiMarkersContainer;
 
+        [Header("POI Marker Settings")]
+        [Tooltip("Font size used for every POI label on the map.")]
+        [SerializeField] private float _poiMarkerFontSize = 20f;
+
         [Header("Plane Direction")]
         [Tooltip("RectTransform used as the plane icon on the full-screen map. Should be an arrow/plane sprite.")]
         [SerializeField] private RectTransform _planeMarker;
@@ -112,6 +116,7 @@ namespace TPSBR
                     {
                         markerText.text = poi.POIName;
                         markerText.color = poi.POIColor;
+                        markerText.fontSize = Mathf.RoundToInt(_poiMarkerFontSize);
                     }
                     else
                     {
@@ -120,6 +125,7 @@ namespace TPSBR
                         {
                             markerTMP.text = poi.POIName;
                             markerTMP.color = poi.POIColor;
+                            markerTMP.fontSize = _poiMarkerFontSize;
                         }
                     }
 

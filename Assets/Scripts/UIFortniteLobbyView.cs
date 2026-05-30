@@ -38,6 +38,7 @@ namespace TPSBR.UI
         [SerializeField] private string _defaultMapScenePath = "TPSBR/Scenes/Game";
         
         private bool _isSearchingForGame;
+        private bool _isConnectingForPlay;
         private float _searchStartTime;
         private List<SessionInfo> _availableSessions = new List<SessionInfo>();
         private UIMatchmakerView _matchmakerView;
@@ -266,6 +267,7 @@ namespace TPSBR.UI
             
             _availableSessions.Clear();
             _isSearchingForGame = false;
+            _isConnectingForPlay = true;
             
             if (_playButtonText != null)
             {
@@ -427,8 +429,9 @@ namespace TPSBR.UI
         {
             Debug.Log("[UIFortniteLobbyView] Joined lobby successfully");
             
-            if (_playButtonText != null && _playButtonText.text == "CONNECTING...")
+            if (_isConnectingForPlay)
             {
+                _isConnectingForPlay = false;
                 Debug.Log("[UIFortniteLobbyView] Lobby connected! Starting search...");
                 StartQuickPlay();
             }
@@ -437,6 +440,8 @@ namespace TPSBR.UI
         private void OnLobbyJoinFailed(string region)
         {
             Debug.LogWarning($"[UIFortniteLobbyView] Failed to join lobby in region: {region}");
+            
+            _isConnectingForPlay = false;
             
             if (_playButtonText != null)
             {
@@ -495,8 +500,7 @@ namespace TPSBR.UI
 
             Debug.Log($"[UIFortniteLobbyView] Region changed to: {regions[nextIndex].DisplayName}");
 
-            // Refresh lobby for new region
-            if (_playButtonText != null) _playButtonText.text = "CONNECTING...";
+            // Refresh the lobby connection for the new region without triggering the play flow.
             Context.Matchmaking.JoinLobby(true);
         }
 

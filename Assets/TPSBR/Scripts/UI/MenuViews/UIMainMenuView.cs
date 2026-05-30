@@ -188,10 +188,10 @@ namespace TPSBR.UI
                 _quickPlayInProgress = false;
             }
 
-            // Only leave the lobby if we are NOT transitioning into the multiplayer view,
+            // Only leave the lobby if we are NOT transitioning into the fortnite lobby view,
             // which manages its own lobby lifecycle independently.
-            var multiplayerView = SceneUI.Get<UIMultiplayerView>();
-            if (multiplayerView == null || multiplayerView.IsOpen == false)
+            var fortniteLobbyView = SceneUI.Get<UIFortniteLobbyView>();
+            if (fortniteLobbyView == null || fortniteLobbyView.IsOpen == false)
             {
                 Context.Matchmaking.LeaveLobby();
             }
@@ -217,7 +217,7 @@ namespace TPSBR.UI
 
         private void OnPlayButton()
         {
-            Open<UIMultiplayerView>();
+            Open<UIFortniteLobbyView>();
         }
 
         private void OnPlayButtonOLD_DISABLED()
