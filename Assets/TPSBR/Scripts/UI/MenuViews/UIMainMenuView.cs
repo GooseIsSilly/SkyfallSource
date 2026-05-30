@@ -73,12 +73,23 @@ namespace TPSBR.UI
 
             Debug.Log("[UIMainMenuView] OnInitialize - Setting up button listeners");
 
-            _settingsButton.onClick.AddListener(OnSettingsButton);
-            _playButton.onClick.AddListener(OnPlayButton);
-            _creditsButton.onClick.AddListener(OnCreditsButton);
-            _changeNicknameButton.onClick.AddListener(OnChangeNicknameButton);
-            _quitButton.onClick.AddListener(OnQuitButton);
-            _playerButton.onClick.AddListener(OnPlayerButton);
+            if (_settingsButton != null)
+                _settingsButton.onClick.AddListener(OnSettingsButton);
+            
+            if (_playButton != null)
+                _playButton.onClick.AddListener(OnPlayButton);
+            
+            if (_creditsButton != null)
+                _creditsButton.onClick.AddListener(OnCreditsButton);
+            
+            if (_changeNicknameButton != null)
+                _changeNicknameButton.onClick.AddListener(OnChangeNicknameButton);
+            
+            if (_quitButton != null)
+                _quitButton.onClick.AddListener(OnQuitButton);
+            
+            if (_playerButton != null)
+                _playerButton.onClick.AddListener(OnPlayerButton);
 
             if (_shopButton != null)
                 _shopButton.onClick.AddListener(OnShopButton);
@@ -95,24 +106,35 @@ namespace TPSBR.UI
                 PrepareRegionDropdown();
             }
 
-            _applicationVersion.text = $"Version {Application.version}";
+            if (_applicationVersion != null)
+                _applicationVersion.text = $"Version {Application.version}";
         }
 
         protected override void OnDeinitialize()
         {
-            _settingsButton.onClick.RemoveListener(OnSettingsButton);
-            _playButton.onClick.RemoveListener(OnPlayButton);
-            _creditsButton.onClick.RemoveListener(OnCreditsButton);
-            _changeNicknameButton.onClick.RemoveListener(OnChangeNicknameButton);
-            _quitButton.onClick.RemoveListener(OnQuitButton);
-            _playerButton.onClick.RemoveListener(OnPlayerButton);
+            if (_settingsButton != null)
+                _settingsButton.onClick.RemoveListener(OnSettingsButton);
+
+            if (_playButton != null)
+                _playButton.onClick.RemoveListener(OnPlayButton);
+
+            if (_creditsButton != null)
+                _creditsButton.onClick.RemoveListener(OnCreditsButton);
+
+            if (_changeNicknameButton != null)
+                _changeNicknameButton.onClick.RemoveListener(OnChangeNicknameButton);
+
+            if (_quitButton != null)
+                _quitButton.onClick.RemoveListener(OnQuitButton);
+
+            if (_playerButton != null)
+                _playerButton.onClick.RemoveListener(OnPlayerButton);
 
             if (_shopButton != null)
                 _shopButton.onClick.RemoveListener(OnShopButton);
 
             if (_questsButton != null)
                 _questsButton.onClick.RemoveListener(OnQuestsButton);
-
 
             if (_replaysButton != null)
                 _replaysButton.onClick.RemoveListener(OnReplaysButton);
