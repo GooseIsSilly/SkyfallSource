@@ -498,9 +498,18 @@ namespace TPSBR.UI
             Context.RuntimeSettings.Region = regions[nextIndex].Region;
             UpdateRegionDisplay();
 
+            // Cancel any in-progress play or search flow so OnLobbyJoined below
+            // does not accidentally start a quick-play search in the new region.
+            _isConnectingForPlay = false;
+            _isSearchingForGame  = false;
+            _availableSessions.Clear();
+
+            if (_playButtonText != null)
+                _playButtonText.text = "PLAY";
+
             Debug.Log($"[UIFortniteLobbyView] Region changed to: {regions[nextIndex].DisplayName}");
 
-            // Refresh the lobby connection for the new region without triggering the play flow.
+            // Reconnect to the lobby for the new region.
             Context.Matchmaking.JoinLobby(true);
         }
 
