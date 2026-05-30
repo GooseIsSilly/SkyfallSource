@@ -118,6 +118,13 @@ namespace TPSBR
 			UnityID           = newPlayer.UnityID;
 		}
 
+		/// <summary>
+		/// Returns the networked user ID directly from network state.
+		/// Use this when <see cref="UserID"/> may not yet be synced via <see cref="UpdateLocalState"/>,
+		/// such as immediately after <see cref="NetworkObject.CopyStateFrom"/> in a host migration resume.
+		/// </summary>
+		public string GetNetworkedUserID() => NetworkedUserID.Value;
+
 		// PlayerInterestManager INTERFACE
 
 		protected override void OnSpawned()

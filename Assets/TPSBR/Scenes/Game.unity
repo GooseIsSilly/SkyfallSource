@@ -83088,6 +83088,8 @@ MonoBehaviour:
   minFOV: 20
   maxFOV: 80
   fovChangeSpeed: 10
+  lockPlayerInputKey: 26
+  autoLockOnActivate: 0
   recordingKey: 102
   targetFrameRate: 24
   recordingFolder: TrailerFootage
@@ -100611,7 +100613,6 @@ GameObject:
   - component: {fileID: 1537023787}
   - component: {fileID: 1537023786}
   - component: {fileID: 1537023785}
-  - component: {fileID: 1537023788}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -100694,24 +100695,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1994583226}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1537023788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1537023784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1882203980d5b4943aa19ee9f7769b31, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _targetEvent: {fileID: 11400000, guid: 81ab6dc55cd28c040b6538fe4ea3a7a0, type: 2}
-  _islandTransform: {fileID: 1537023787}
-  _terrainToFlip: {fileID: 0}
-  _useCustomSettings: 0
-  _customFlipDuration: 60
-  _customFlipRotation: {x: 180, y: 0, z: 0}
 --- !u!1 &1537166224 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5692530350695833085, guid: 41beaecc796295d45a3c68b2fd854588, type: 3}
