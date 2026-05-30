@@ -55,29 +55,47 @@ namespace TPSBR
 		private StatsRecorder                 _statsRecorder;
 		private LogRecorder                   _logRecorder;
 		private GameplayMode                  _gameplayMode;
+		private SessionRequest                _sessionRequest;
 		private bool                          _levelGenerated;
 		private bool                          _isActive;
 
 		// PUBLIC METHODS
 
-		public void Initialize(EGameplayType gameplayType)
+		/// <summary>Initializes the network game for a fresh start or a host migration resume.</summary>
+		public void Initialize(SessionRequest request)
 		{
+			bool isMigration = request.HostMigrationToken != null;
+
             if (HasStateAuthority == true)
             {
-                var prefab = _modePrefabs.Find(t => t != null && t.Type == gameplayType);
+				if (isMigration)
+				{
+					// GameplayMode is already present in the network snapshot – locate it instead of spawning.
+					_gameplayMode = Context.GameplayMode;
+					if (_gameplayMode == null)
+					{
+						Debug.LogError("[NetworkGame] GameplayMode not found in snapshot after host migration.");
+					}
+				}
+				else
+				{
+					var prefab = _modePrefabs.Find(t => t != null && t.Type == request.GameplayType);
 
-                if (prefab == null)
-                {
-                    Debug.LogError($"[NetworkGame] No gameplay mode prefab found for type: {gameplayType}. Please check that mode prefabs are assigned in the NetworkGame component.");
-                    return;
-                }
+					if (prefab == null)
+					{
+						Debug.LogError($"[NetworkGame] No gameplay mode prefab found for type: {request.GameplayType}. Please check that mode prefabs are assigned in the NetworkGame component.");
+						return;
+					}
 
-                _gameplayMode = Runner.Spawn(prefab);
+					_gameplayMode = Runner.Spawn(prefab);
+				}
             }
 
+            _localPlayer    = Runner.LocalPlayer;
+			_sessionRequest = request;
 
-            _localPlayer = Runner.LocalPlayer;
-
+			_fusionCallbacks.HostMigration         -= OnHostMigration;
+			_fusionCallbacks.HostMigration         += OnHostMigration;
 			_fusionCallbacks.DisconnectedFromServer -= OnDisconnectedFromServer;
 			_fusionCallbacks.DisconnectedFromServer += OnDisconnectedFromServer;
 
@@ -91,6 +109,8 @@ namespace TPSBR
 		public void Activate()
 		{
 			_isActive = true;
+
+			bool isMigration = _sessionRequest.HostMigrationToken != null;
 
 			if (HasStateAuthority == false)
 			{
@@ -107,11 +127,22 @@ namespace TPSBR
 
 			if (_levelGenerator != null && _levelGenerator.enabled == true)
 			{
-				_levelGeneratorSeed = _fixedSeed == 0 ? Random.Range(999, 999999999) : _fixedSeed;
-				GenerateLevel(_levelGeneratorSeed);
+				if (isMigration)
+				{
+					// Level objects are already in the snapshot; prevent a re-spawn by marking as generated.
+					_levelGenerated = true;
+				}
+				else
+				{
+					_levelGeneratorSeed = _fixedSeed == 0 ? Random.Range(999, 999999999) : _fixedSeed;
+					GenerateLevel(_levelGeneratorSeed);
+				}
 			}
 
-			_gameplayMode.Activate();
+			if (_gameplayMode != null)
+			{
+				_gameplayMode.Activate();
+			}
 
 			foreach (var playerRef in Runner.ActivePlayers)
 			{
@@ -402,6 +433,42 @@ namespace TPSBR
 #endif
 		}
 
+		/// <summary>
+		/// Moves all existing player objects from the Fusion snapshot into the disconnected player pool and
+		/// removes their input authorities. Called by <see cref="TPSBR.Networking"/> on the new host immediately
+		/// after host migration so that reconnecting clients are matched to their original player objects via
+		/// the UserID-based reconnection flow in <see cref="FixedUpdateNetwork"/>.
+		/// </summary>
+		public void PrepareForMigrationResume(NetworkRunner runner)
+		{
+			_allPlayers.Clear();
+			runner.GetAllBehaviours<Player>(_allPlayers);
+
+			int movedCount = 0;
+			foreach (var player in _allPlayers)
+			{
+				if (player == null || player.Object == null)
+					continue;
+
+				if (player.UserID.HasValue() == false)
+					continue;
+
+				_disconnectedPlayers[player.UserID] = player;
+				player.Object.RemoveInputAuthority();
+				movedCount++;
+			}
+
+			_allPlayers.Clear();
+
+			if (runner.SessionInfo != null)
+			{
+				runner.SessionInfo.IsOpen    = true;
+				runner.SessionInfo.IsVisible = true;
+			}
+
+			Debug.LogWarning($"[Host Migration] PrepareForMigrationResume: {movedCount} player(s) queued for reconnection.");
+		}
+
 		private void GenerateLevel(int seed)
 		{
 			if (_isActive == false || _levelGenerator == null || _levelGenerated == true || seed == 0)
@@ -477,6 +544,20 @@ namespace TPSBR
 		}
 
 		// NETWORK CALLBACKS
+
+		private void OnHostMigration(NetworkRunner runner, HostMigrationToken token)
+		{
+			Debug.LogWarning($"[Host Migration] Received. This peer will become: {token.GameMode}");
+
+			// Build a new session request that reuses all existing parameters but adds the migration token.
+			// Networking.StartGame will shut down the current session and reconnect with the token,
+			// which causes Fusion to restore the simulation state from the last host snapshot.
+			var request                = _sessionRequest;
+			request.GameMode           = token.GameMode;
+			request.HostMigrationToken = token;
+
+			Global.Networking.StartGame(request);
+		}
 
 		private void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
 		{

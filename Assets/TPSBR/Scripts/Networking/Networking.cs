@@ -18,18 +18,21 @@ namespace TPSBR
 {
 	public struct SessionRequest
 	{
-		public string        UserID;
-		public GameMode      GameMode;
-		public string        DisplayName;
-		public string        SessionName;
-		public string        ScenePath;
-		public EGameplayType GameplayType;
-		public int           MaxPlayers;
-		public int           ExtraPeers;
-		public string        CustomLobby;
-		public string        Region;
-		public string        IPAddress;
-		public ushort        Port;
+		public string             UserID;
+		public GameMode           GameMode;
+		public string             DisplayName;
+		public string             SessionName;
+		public string             ScenePath;
+		public EGameplayType      GameplayType;
+		public int                MaxPlayers;
+		public int                ExtraPeers;
+		public string             CustomLobby;
+		public string             Region;
+		public string             IPAddress;
+		public ushort             Port;
+
+		/// <summary>Token provided by Fusion's OnHostMigration. When non-null, the session restarts via host migration.</summary>
+		public HostMigrationToken HostMigrationToken;
 	}
 
 	// This Networking class is complex due to handling of reconnection of extra peers that we used for initial batch testing.
@@ -321,12 +324,22 @@ namespace TPSBR
 			StartGameArgs startGameArgs = new StartGameArgs();
 			startGameArgs.GameMode                    = peer.GameMode;
 			startGameArgs.SessionName                 = peer.Request.SessionName;
-			startGameArgs.Scene                       = peer.Scene;
 			startGameArgs.OnGameStarted               = OnGamePeerInitialized;
 			startGameArgs.ObjectProvider              = pool;
 			startGameArgs.CustomLobbyName             = peer.Request.CustomLobby;
 			startGameArgs.SceneManager                = peer.SceneManager;
 			startGameArgs.EnableClientSessionCreation = false;
+
+			if (peer.Request.HostMigrationToken != null)
+			{
+				// Migrating: provide the token so Fusion resumes from the last snapshot.
+				// Do not set Scene - the token already encodes the correct scene reference.
+				startGameArgs.HostMigrationToken = peer.Request.HostMigrationToken;
+			}
+			else
+			{
+				startGameArgs.Scene = peer.Scene;
+			}
 
 			if (peer.Request.Region.HasValue() == true)
 			{
@@ -536,7 +549,15 @@ namespace TPSBR
 			StatusDescription = "Waiting for gameplay load";
 
 			Log($"NetworkGame.Initialize() - Peer {peer.ID}");
-			networkGame.Initialize(peer.Request.GameplayType);
+			networkGame.Initialize(peer.Request);
+
+			// For host migration: move existing snapshot players into the reconnection pool
+			// BEFORE Activate() so SpawnPlayer can properly match reconnecting clients.
+			if (peer.Request.HostMigrationToken != null && runner.IsServer)
+			{
+				Log($"NetworkGame.PrepareForMigrationResume() - Peer {peer.ID}");
+				networkGame.PrepareForMigrationResume(runner);
+			}
 
 			while (scene.Context.GameplayMode == null)
 			{
