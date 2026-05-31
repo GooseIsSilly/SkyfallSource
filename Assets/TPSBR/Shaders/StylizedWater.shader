@@ -95,15 +95,27 @@ Shader "Custom/StylizedWater"
             {
                 UNITY_SETUP_INSTANCE_ID(input);
 
-                float2 screenUV = input.screenPos.xy / input.screenPos.w;
+                float2 screenUV = input.screenPos.xy / max(0.0001, input.screenPos.w);
                 float depth = SampleSceneDepth(screenUV);
                 float sceneEyeDepth = LinearEyeDepth(depth, _ZBufferParams);
                 float surfaceEyeDepth = input.screenPos.w;
                 float depthDifference = sceneEyeDepth - surfaceEyeDepth;
 
+                // For Orthographic Cameras (like the Map Screenshot Tool)
+                // depthDifference can be 0 or negative because sceneEyeDepth/surfaceEyeDepth 
+                // calculations change in ortho mode. We add a fallback:
+                #if defined(UNITY_REVERSED_Z)
+                    if (sceneEyeDepth < 0.001) depthDifference = 1000.0; 
+                #endif
+
                 // Color Gradient
-                float depthFactor = saturate(depthDifference / _DepthDistance);
+                float depthFactor = saturate(depthDifference / max(0.001, _DepthDistance));
                 half4 waterColor = lerp(_ShallowColor, _DeepColor, depthFactor);
+
+                // If we are in Ortho and sceneEyeDepth is not valid, fallback to deep color
+                if (unity_OrthoParams.w > 0.5 && depthDifference < 0.0) {
+                    waterColor = _DeepColor;
+                }
 
                 // Waves / Noise
                 float2 uv = input.positionWS.xz * _WaveScale + _Time.y * _WaveSpeed.xy;

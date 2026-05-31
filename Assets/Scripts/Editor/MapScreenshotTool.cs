@@ -1,15 +1,17 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering;
 
 namespace TPSBR
 {
     public class MapScreenshotTool : EditorWindow
     {
         private int _screenshotSize = 2048;
-        private float _cameraHeight = 100f;
-        private Vector3 _mapCenter = Vector3.zero;
-        private float _cameraSize = 50f;
+        private float _cameraHeight = 5000f; // High default to clear mountains
+        private Vector3 _mapCenter = new Vector3(0, 0, 0);
+        private float _cameraSize = 5000f; // Wide default to see the whole map
 
         [MenuItem("Tools/Map Screenshot Tool")]
         public static void ShowWindow()
@@ -24,16 +26,14 @@ namespace TPSBR
 
             EditorGUILayout.HelpBox(
                 "This tool creates a perfect top-down screenshot of your map!\n\n" +
-                "1. Set the camera position and size\n" +
-                "2. Click 'Take Screenshot'\n" +
-                "3. Screenshot saved to Assets/Textures/MapImage.png",
+                "NOTE: If water is missing, ensure your Camera Height is high enough to be ABOVE your mountains, and your Map Center Y is at the water level (usually 0-5).",
                 MessageType.Info
             );
 
             GUILayout.Space(10);
 
             _mapCenter = EditorGUILayout.Vector3Field("Map Center", _mapCenter);
-            _cameraHeight = EditorGUILayout.FloatField("Camera Height", _cameraHeight);
+            _cameraHeight = EditorGUILayout.FloatField("Camera Offset Height", _cameraHeight);
             _cameraSize = EditorGUILayout.FloatField("Camera Size (Zoom)", _cameraSize);
             
             GUILayout.Space(5);
@@ -83,19 +83,45 @@ namespace TPSBR
             GameObject tempCameraObj = new GameObject("TempScreenshotCamera");
             Camera tempCamera = tempCameraObj.AddComponent<Camera>();
             
-            tempCamera.transform.position = new Vector3(_mapCenter.x, _cameraHeight, _mapCenter.z);
+            // Add URP specific data
+            var cameraData = tempCameraObj.AddComponent<UniversalAdditionalCameraData>();
+            cameraData.renderShadows = false;
+            cameraData.requiresColorTexture = true;
+            cameraData.requiresDepthTexture = true;
+            cameraData.renderPostProcessing = false;
+
+            // Use Map Center Y as the baseline for the camera offset
+            Vector3 targetPos = new Vector3(_mapCenter.x, _mapCenter.y + _cameraHeight, _mapCenter.z);
+            tempCamera.transform.position = targetPos;
             tempCamera.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+            
+            // Toggle between Ortho and Perspective to see if Perspective works better for depth
             tempCamera.orthographic = true;
             tempCamera.orthographicSize = _cameraSize;
+            
             tempCamera.clearFlags = CameraClearFlags.SolidColor;
-            tempCamera.backgroundColor = new Color(0.2f, 0.25f, 0.2f);
-            tempCamera.cullingMask = ~(1 << LayerMask.NameToLayer("UI"));
+            tempCamera.backgroundColor = Color.black; 
+            tempCamera.cullingMask = -1; // Render all layers
+            
+            tempCamera.nearClipPlane = 0.1f;
+            tempCamera.farClipPlane = _cameraHeight + 20000f; 
+            tempCamera.depthTextureMode = DepthTextureMode.Depth;
 
-            RenderTexture rt = new RenderTexture(_screenshotSize, _screenshotSize, 24);
+            Debug.Log($"Map Screenshot: Cam at {targetPos}, View Size {_cameraSize}, Target Y {_mapCenter.y}");
+
+            RenderTexture rt = new RenderTexture(_screenshotSize, _screenshotSize, 24, RenderTextureFormat.ARGB32);
             tempCamera.targetTexture = rt;
             
             Texture2D screenshot = new Texture2D(_screenshotSize, _screenshotSize, TextureFormat.RGB24, false);
+            
+            // Temporarily disable fog
+            bool oldFog = RenderSettings.fog;
+            RenderSettings.fog = false;
+            
+            // Standard render call
             tempCamera.Render();
+            
+            RenderSettings.fog = oldFog;
             
             RenderTexture.active = rt;
             screenshot.ReadPixels(new Rect(0, 0, _screenshotSize, _screenshotSize), 0, 0);
@@ -103,8 +129,15 @@ namespace TPSBR
             
             RenderTexture.active = null;
             tempCamera.targetTexture = null;
-            DestroyImmediate(rt);
-            DestroyImmediate(tempCameraObj);
+            
+            // Cleanup
+            if (Application.isPlaying) {
+                Destroy(tempCameraObj);
+                Destroy(rt);
+            } else {
+                DestroyImmediate(tempCameraObj);
+                DestroyImmediate(rt);
+            }
 
             string directory = "Assets/Textures";
             if (!Directory.Exists(directory))
@@ -116,7 +149,11 @@ namespace TPSBR
             byte[] bytes = screenshot.EncodeToPNG();
             File.WriteAllBytes(path, bytes);
             
-            DestroyImmediate(screenshot);
+            if (Application.isPlaying) {
+                Destroy(screenshot);
+            } else {
+                DestroyImmediate(screenshot);
+            }
             
             AssetDatabase.Refresh();
             

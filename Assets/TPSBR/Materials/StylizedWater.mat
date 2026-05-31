@@ -32,13 +32,13 @@ Material:
     - _DepthDistance: 30
     - _FoamHardness: 0.36
     - _FoamWidth: 1.09
-    - _Smoothness: 0.8
+    - _Smoothness: 1
     - _WaveHeight: 2
-    - _WaveScale: 2
+    - _WaveScale: 5
     m_Colors:
     - _DeepColor: {r: 0.17756401, g: 0.6952659, b: 0.84276724, a: 0.95}
     - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShallowColor: {r: 0.1, g: 0.8, b: 1, a: 0.7}
-    - _WaveSpeed: {r: 0.1, g: 0.1, b: 0, a: 0}
+    - _WaveSpeed: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
