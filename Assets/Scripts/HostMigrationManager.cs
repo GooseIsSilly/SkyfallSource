@@ -18,6 +18,10 @@ namespace TPSBR
             {
                 Debug.Log($"{LOG_PREFIX} Runner shutting down for host migration.");
             }
+            else
+            {
+                Debug.LogWarning($"{LOG_PREFIX} Runner shutdown with reason: {reason}. (Not a host migration.)");
+            }
         }
     }
 }

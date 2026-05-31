@@ -1,587 +1,599 @@
 namespace TPSBR
 {
-	using System;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using Fusion;
-	using Fusion.Plugin;
-	using Fusion.Sockets;
-	using Fusion.Addons.Physics;
+    using System;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using Fusion;
+    using Fusion.Plugin;
+    using Fusion.Sockets;
+    using Fusion.Addons.Physics;
 
-	using LogType = UnityEngine.LogType;
-	using Random  = UnityEngine.Random;
+    using LogType = UnityEngine.LogType;
+    using Random = UnityEngine.Random;
+    using System.Diagnostics;
+    using Debug = UnityEngine.Debug;
 
-	public sealed class NetworkGame : ContextBehaviour, IPlayerJoined, IPlayerLeft
-	{
-		// PUBLIC MEMBERS
+    public sealed class NetworkGame : ContextBehaviour, IPlayerJoined, IPlayerLeft
+    {
+        // PUBLIC MEMBERS
 
-		public LevelGenerator LevelGenerator => _levelGenerator;
+        public LevelGenerator LevelGenerator => _levelGenerator;
 
-		public List<Player> ActivePlayers     = new List<Player>();
-		public int          ActivePlayerCount = 0;
+        public List<Player> ActivePlayers = new List<Player>();
+        public int ActivePlayerCount = 0;
 
-		// PRIVATE MEMBERS
+        // PRIVATE MEMBERS
 
-		[SerializeField]
-		private Player _playerPrefab;
-		[SerializeField]
-		private GameplayMode[] _modePrefabs;
+        [SerializeField]
+        private Player _playerPrefab;
+        [SerializeField]
+        private GameplayMode[] _modePrefabs;
 
-		[Header("Level Generation")]
-		[SerializeField]
-		private LevelGenerator _levelGenerator;
-		[SerializeField]
-		private int _fixedSeed = 0;
-		[SerializeField]
-		private int _levelSize = 30;
-		[SerializeField]
-		private int _areaCount = 5;
-		[SerializeField]
-		private int _maxItemBoxes = 0;
+        [Header("Level Generation")]
+        [SerializeField]
+        private LevelGenerator _levelGenerator;
+        [SerializeField]
+        private int _fixedSeed = 0;
+        [SerializeField]
+        private int _levelSize = 30;
+        [SerializeField]
+        private int _areaCount = 5;
+        [SerializeField]
+        private int _maxItemBoxes = 0;
 
-		[Space]
-		[SerializeField]
-		private ShrinkingArea _shrinkingArea;
+        [Space]
+        [SerializeField]
+        private ShrinkingArea _shrinkingArea;
 
-		[Networked]
-		private int _levelGeneratorSeed { get; set; }
+        [Networked]
+        private int _levelGeneratorSeed { get; set; }
 
-		private PlayerRef                     _localPlayer;
-		private Dictionary<PlayerRef, Player> _pendingPlayers      = new Dictionary<PlayerRef, Player>();
-		private Dictionary<string, Player>    _disconnectedPlayers = new Dictionary<string, Player>();
-		private FusionCallbacksHandler        _fusionCallbacks     = new FusionCallbacksHandler();
-		private List<Player>                  _spawnedPlayers      = new List<Player>(byte.MaxValue);
-		private List<Player>                  _allPlayers          = new List<Player>(byte.MaxValue);
-		private StatsRecorder                 _statsRecorder;
-		private LogRecorder                   _logRecorder;
-		private GameplayMode                  _gameplayMode;
-		private SessionRequest                _sessionRequest;
-		private bool                          _levelGenerated;
-		private bool                          _isActive;
+        private PlayerRef _localPlayer;
+        private Dictionary<PlayerRef, Player> _pendingPlayers = new Dictionary<PlayerRef, Player>();
+        private Dictionary<string, Player> _disconnectedPlayers = new Dictionary<string, Player>();
+        private FusionCallbacksHandler _fusionCallbacks = new FusionCallbacksHandler();
+        private List<Player> _spawnedPlayers = new List<Player>(byte.MaxValue);
+        private List<Player> _allPlayers = new List<Player>(byte.MaxValue);
+        private StatsRecorder _statsRecorder;
+        private LogRecorder _logRecorder;
+        private GameplayMode _gameplayMode;
+        private SessionRequest _sessionRequest;
+        private bool _levelGenerated;
+        private bool _isActive;
 
-		// PUBLIC METHODS
+        // PUBLIC METHODS
 
-		/// <summary>Initializes the network game for a fresh start or a host migration resume.</summary>
-		public void Initialize(SessionRequest request)
-		{
-			bool isMigration = request.HostMigrationToken != null;
+        /// <summary>Initializes the network game for a fresh start or a host migration resume.</summary>
+        public void Initialize(SessionRequest request)
+        {
+            bool isMigration = request.HostMigrationToken != null;
 
             if (HasStateAuthority == true)
             {
-				if (isMigration)
-				{
-					// GameplayMode was re-spawned from the snapshot in HostMigrationResume, but
-					// its Spawned() callback (which assigns Context.GameplayMode) fires on the
-					// first simulation tick — not synchronously. Cache what we have; if it is
-					// still null, Activate() will resolve it once the coroutine confirms
-					// Context.GameplayMode is non-null.
-					_gameplayMode = Context.GameplayMode;
-					if (_gameplayMode == null)
-					{
-						Debug.Log("[NetworkGame] GameplayMode not yet in context after host migration; will resolve in Activate().");
-					}
-				}
-				else
-				{
-					var prefab = _modePrefabs.Find(t => t != null && t.Type == request.GameplayType);
+                if (isMigration)
+                {
+                    // GameplayMode was re-spawned from the snapshot in HostMigrationResume, but
+                    // its Spawned() callback (which assigns Context.GameplayMode) fires on the
+                    // first simulation tick — not synchronously. Cache what we have; if it is
+                    // still null, Activate() will resolve it once the coroutine confirms
+                    // Context.GameplayMode is non-null.
+                    _gameplayMode = Context.GameplayMode;
+                    if (_gameplayMode == null)
+                    {
+                        Debug.Log("[NetworkGame] GameplayMode not yet in context after host migration; will resolve in Activate().");
+                    }
+                }
+                else
+                {
+                    var prefab = _modePrefabs.Find(t => t != null && t.Type == request.GameplayType);
 
-					if (prefab == null)
-					{
-						Debug.LogError($"[NetworkGame] No gameplay mode prefab found for type: {request.GameplayType}. Please check that mode prefabs are assigned in the NetworkGame component.");
-						return;
-					}
+                    if (prefab == null)
+                    {
+                        Debug.LogError($"[NetworkGame] No gameplay mode prefab found for type: {request.GameplayType}. Please check that mode prefabs are assigned in the NetworkGame component.");
+                        return;
+                    }
 
-					_gameplayMode = Runner.Spawn(prefab);
-				}
+                    _gameplayMode = Runner.Spawn(prefab);
+                }
             }
 
-            _localPlayer    = Runner.LocalPlayer;
-			_sessionRequest = request;
+            _localPlayer = Runner.LocalPlayer;
+            _sessionRequest = request;
 
-			_fusionCallbacks.HostMigration         -= OnHostMigration;
-			_fusionCallbacks.HostMigration         += OnHostMigration;
-			_fusionCallbacks.DisconnectedFromServer -= OnDisconnectedFromServer;
-			_fusionCallbacks.DisconnectedFromServer += OnDisconnectedFromServer;
+            _fusionCallbacks.HostMigration -= OnHostMigration;
+            _fusionCallbacks.HostMigration += OnHostMigration;
+            _fusionCallbacks.DisconnectedFromServer -= OnDisconnectedFromServer;
+            _fusionCallbacks.DisconnectedFromServer += OnDisconnectedFromServer;
 
-			Runner.RemoveCallbacks(_fusionCallbacks);
-			Runner.AddCallbacks(_fusionCallbacks);
+            Runner.RemoveCallbacks(_fusionCallbacks);
+            Runner.AddCallbacks(_fusionCallbacks);
 
-			ActivePlayers.Clear();
-			ActivePlayerCount = 0;
-		}
+            ActivePlayers.Clear();
+            ActivePlayerCount = 0;
+        }
 
-		public void Activate()
-		{
-			_isActive = true;
+        public void Activate()
+        {
+            _isActive = true;
 
-			bool isMigration = _sessionRequest.HostMigrationToken != null;
+            bool isMigration = _sessionRequest.HostMigrationToken != null;
 
-			if (HasStateAuthority == false)
-			{
-				GenerateLevel(_levelGeneratorSeed);
+            if (HasStateAuthority == false)
+            {
+                GenerateLevel(_levelGeneratorSeed);
 
-				if (ApplicationSettings.IsStrippedBatch == true)
-				{
-					Runner.GetComponent<RunnerSimulatePhysics3D>().enabled = false;
-					Runner.LagCompensation.enabled = false;
-				}
+                if (ApplicationSettings.IsStrippedBatch == true)
+                {
+                    Runner.GetComponent<RunnerSimulatePhysics3D>().enabled = false;
+                    Runner.LagCompensation.enabled = false;
+                }
 
-				return;
-			}
+                return;
+            }
 
-			// The coroutine waits until Context.GameplayMode is non-null before calling
-			// Activate(), so it is safe to resolve _gameplayMode here if it was still
-			// null when Initialize() ran (Spawned() had not yet fired at that point).
-			if (isMigration && _gameplayMode == null)
-			{
-				_gameplayMode = Context.GameplayMode;
-				if (_gameplayMode == null)
-				{
-					Debug.LogError("[NetworkGame] GameplayMode still not in context during Activate() after host migration.");
-					return;
-				}
-			}
+            // The coroutine waits until Context.GameplayMode is non-null before calling
+            // Activate(), so it is safe to resolve _gameplayMode here if it was still
+            // null when Initialize() ran (Spawned() had not yet fired at that point).
+            if (isMigration && _gameplayMode == null)
+            {
+                _gameplayMode = Context.GameplayMode;
+                if (_gameplayMode == null)
+                {
+                    Debug.LogError("[NetworkGame] GameplayMode still not in context during Activate() after host migration.");
+                    return;
+                }
+            }
 
-			if (_levelGenerator != null && _levelGenerator.enabled == true)
-			{
-				if (isMigration)
-				{
-					// Level objects are already in the snapshot; prevent a re-spawn by marking as generated.
-					_levelGenerated = true;
-				}
-				else
-				{
-					_levelGeneratorSeed = _fixedSeed == 0 ? Random.Range(999, 999999999) : _fixedSeed;
-					GenerateLevel(_levelGeneratorSeed);
-				}
-			}
+            if (_levelGenerator != null && _levelGenerator.enabled == true)
+            {
+                if (isMigration)
+                {
+                    // Level objects are already in the snapshot; prevent a re-spawn by marking as generated.
+                    _levelGenerated = true;
+                }
+                else
+                {
+                    _levelGeneratorSeed = _fixedSeed == 0 ? Random.Range(999, 999999999) : _fixedSeed;
+                    GenerateLevel(_levelGeneratorSeed);
+                }
+            }
 
-			if (_gameplayMode != null)
-			{
-				_gameplayMode.Activate();
-			}
+            if (_gameplayMode != null)
+            {
+                _gameplayMode.Activate();
+            }
 
-			foreach (var playerRef in Runner.ActivePlayers)
-			{
-				SpawnPlayer(playerRef);
-			}
-		}
+            foreach (var playerRef in Runner.ActivePlayers)
+            {
+                SpawnPlayer(playerRef);
+            }
+        }
 
-		public Player GetPlayer(PlayerRef playerRef)
-		{
-			if (playerRef.IsRealPlayer == false)
-				return default;
-			if (Object == null)
-				return default;
+        public Player GetPlayer(PlayerRef playerRef)
+        {
+            if (playerRef.IsRealPlayer == false)
+                return default;
+            if (Object == null)
+                return default;
 
-			_spawnedPlayers.Clear();
-			Runner.GetAllBehaviours<Player>(_spawnedPlayers);
+            _spawnedPlayers.Clear();
+            Runner.GetAllBehaviours<Player>(_spawnedPlayers);
 
-			for (int i = 0, count = _spawnedPlayers.Count; i < count; ++i)
-			{
-				Player player = _spawnedPlayers[i];
-				if (player.Object.InputAuthority == playerRef)
-					return player;
-			}
+            for (int i = 0, count = _spawnedPlayers.Count; i < count; ++i)
+            {
+                Player player = _spawnedPlayers[i];
+                if (player.Object.InputAuthority == playerRef)
+                    return player;
+            }
 
-			return default;
-		}
+            return default;
+        }
 
-		// NetworkBehaviour INTERFACE
+        // NetworkBehaviour INTERFACE
 
-		public override void Spawned()
-		{
-			if (HasStateAuthority == false)
-			{
-				if (_levelGenerated == false && _levelGeneratorSeed != default)
-				{
-					GenerateLevel(_levelGeneratorSeed);
-				}
-			}
+        public override void Spawned()
+        {
+            if (HasStateAuthority == false)
+            {
+                if (_levelGenerated == false && _levelGeneratorSeed != default)
+                {
+                    GenerateLevel(_levelGeneratorSeed);
+                }
+            }
 
-			Runner.SetIsSimulated(Object, true);
-		}
+            Runner.SetIsSimulated(Object, true);
+        }
 
-		public override void FixedUpdateNetwork()
-		{
-			bool hasStateAuthority = HasStateAuthority;
+        public override void FixedUpdateNetwork()
+        {
+            bool hasStateAuthority = HasStateAuthority;
 
-			_allPlayers.Clear();
-			Runner.GetAllBehaviours<Player>(_allPlayers);
+            _allPlayers.Clear();
+            Runner.GetAllBehaviours<Player>(_allPlayers);
 
-			for (int i = _allPlayers.Count - 1; i >= 0; --i)
-			{
-				Player player = _allPlayers[i];
+            for (int i = _allPlayers.Count - 1; i >= 0; --i)
+            {
+                Player player = _allPlayers[i];
 
-				PlayerRef inputAuthority = player.Object.InputAuthority;
-				if (inputAuthority.IsRealPlayer == true)
-				{
-					if (hasStateAuthority == true && Runner.IsPlayerValid(inputAuthority) == false)
-					{
-						_allPlayers.RemoveAt(i);
-						OnPlayerLeft(player);
-					}
-				}
-				else
-				{
-					_allPlayers.RemoveAt(i);
-				}
-			}
+                PlayerRef inputAuthority = player.Object.InputAuthority;
+                if (inputAuthority.IsRealPlayer == true)
+                {
+                    if (hasStateAuthority == true && Runner.IsPlayerValid(inputAuthority) == false)
+                    {
+                        _allPlayers.RemoveAt(i);
+                        OnPlayerLeft(player);
+                    }
+                }
+                else
+                {
+                    _allPlayers.RemoveAt(i);
+                }
+            }
 
-			ActivePlayers.Clear();
-			ActivePlayerCount = 0;
+            ActivePlayers.Clear();
+            ActivePlayerCount = 0;
 
-			foreach (Player player in _allPlayers)
-			{
-				if (player.UserID.HasValue() == false)
-					continue;
+            foreach (Player player in _allPlayers)
+            {
+                if (player.UserID.HasValue() == false)
+                    continue;
 
-				ActivePlayers.Add(player);
+                ActivePlayers.Add(player);
 
-				var statistics = player.Statistics;
-				if (statistics.IsValid == false)
-					continue;
+                var statistics = player.Statistics;
+                if (statistics.IsValid == false)
+                    continue;
 
-				if (statistics.IsEliminated == false)
-				{
-					++ActivePlayerCount;
-				}
-			}
+                if (statistics.IsEliminated == false)
+                {
+                    ++ActivePlayerCount;
+                }
+            }
 
-			if (HasStateAuthority == false)
-			{
-				if (_levelGenerated == false && _levelGeneratorSeed != default && Runner.IsForward == true)
-				{
-					GenerateLevel(_levelGeneratorSeed);
-				}
+            if (HasStateAuthority == false)
+            {
+                if (_levelGenerated == false && _levelGeneratorSeed != default && Runner.IsForward == true)
+                {
+                    GenerateLevel(_levelGeneratorSeed);
+                }
 
-				return;
-			}
+                return;
+            }
 
-			if (_pendingPlayers.Count == 0)
-				return;
+            if (_pendingPlayers.Count == 0)
+                return;
 
-			var playersToRemove = ListPool.Get<PlayerRef>(128);
+            var playersToRemove = ListPool.Get<PlayerRef>(128);
 
-			foreach (var playerPair in _pendingPlayers)
-			{
-				var playerRef = playerPair.Key;
-				var player = playerPair.Value;
+            foreach (var playerPair in _pendingPlayers)
+            {
+                var playerRef = playerPair.Key;
+                var player = playerPair.Value;
 
-				if (player.IsInitialized == false)
-					continue;
+                if (player.IsInitialized == false)
+                    continue;
 
-				playersToRemove.Add(playerRef);
+                playersToRemove.Add(playerRef);
 
-				if (_disconnectedPlayers.TryGetValue(player.UserID, out Player disconnectedPlayer) == true)
-				{
-					_disconnectedPlayers.Remove(player.UserID);
+                if (_disconnectedPlayers.TryGetValue(player.UserID, out Player disconnectedPlayer) == true)
+                {
+                    _disconnectedPlayers.Remove(player.UserID);
 
-					int activePlayerIndex = ActivePlayers.IndexOf(player);
-					if (activePlayerIndex >= 0)
-					{
-						ActivePlayers[activePlayerIndex] = disconnectedPlayer;
-					}
+                    int activePlayerIndex = ActivePlayers.IndexOf(player);
+                    if (activePlayerIndex >= 0)
+                    {
+                        ActivePlayers[activePlayerIndex] = disconnectedPlayer;
+                    }
 
-					disconnectedPlayer.OnReconnect(player);
+                    disconnectedPlayer.OnReconnect(player);
 
-					// Remove original player, this is returning disconnected player
-					player.Object.RemoveInputAuthority();
-					Runner.Despawn(player.Object);
+                    // Remove original player, this is returning disconnected player
+                    player.Object.RemoveInputAuthority();
+                    Runner.Despawn(player.Object);
 
-					player = disconnectedPlayer;
-					player.Object.AssignInputAuthority(playerRef);
-					player.RefreshPlayerProperties();
-					Runner.SetPlayerAlwaysInterested(playerRef, player.Object, true);
-				}
+                    player = disconnectedPlayer;
+                    player.Object.AssignInputAuthority(playerRef);
+                    player.RefreshPlayerProperties();
+                    Runner.SetPlayerAlwaysInterested(playerRef, player.Object, true);
+                }
 
-				player.Refresh();
-				Runner.SetPlayerObject(playerRef, player.Object);
-
-#if UNITY_EDITOR
-				player.gameObject.name = $"Player {player.Nickname}";
-#endif
-
-				_gameplayMode.PlayerJoined(player);
-			}
-
-			for (int i = 0; i < playersToRemove.Count; i++)
-			{
-				_pendingPlayers.Remove(playersToRemove[i]);
-			}
-
-			ListPool.Return(playersToRemove);
-		}
-
-		// IPlayerJoined/IPlayerLeft INTERFACES
-
-		void IPlayerJoined.PlayerJoined(PlayerRef playerRef)
-		{
-			if (Runner.IsServer == false)
-				return;
-			if (_isActive == false)
-				return;
-
-			SpawnPlayer(playerRef);
-		}
-
-		void IPlayerLeft.PlayerLeft(PlayerRef playerRef)
-		{
-			if (playerRef.IsRealPlayer == false)
-				return;
-			if (Runner.IsServer == false)
-				return;
-			if (_isActive == false)
-				return;
-
-			OnPlayerLeft(GetPlayer(playerRef));
-		}
-
-		private void OnPlayerLeft(Player player)
-		{
-			if (player == null)
-				return;
-
-			ActivePlayers.Remove(player);
-
-			if (player.UserID.HasValue() == true)
-			{
-				_disconnectedPlayers[player.UserID] = player;
-
-				_gameplayMode.PlayerLeft(player);
-
-				player.Object.RemoveInputAuthority();
+                player.Refresh();
+                Runner.SetPlayerObject(playerRef, player.Object);
 
 #if UNITY_EDITOR
-				player.gameObject.name = $"{player.gameObject.name} (Disconnected)";
+                player.gameObject.name = $"Player {player.Nickname}";
 #endif
-			}
-			else
-			{
-				_gameplayMode.PlayerLeft(player);
 
-				// Player wasn't initilized properly, safe to despawn
-				Runner.Despawn(player.Object);
-			}
-		}
+                _gameplayMode.PlayerJoined(player);
+            }
 
-		// MonoBehaviour INTERFACE
+            for (int i = 0; i < playersToRemove.Count; i++)
+            {
+                _pendingPlayers.Remove(playersToRemove[i]);
+            }
 
-		private void Update()
-		{
-			if (ApplicationSettings.RecordSession == false)
-				return;
-			if (Object == null)
-				return;
+            ListPool.Return(playersToRemove);
+        }
 
-			if (_statsRecorder == null)
-			{
-				string fileID = $"{System.DateTime.Now:yyyy-MM-dd-HH-mm-ss}";
+        // IPlayerJoined/IPlayerLeft INTERFACES
 
-				string statsFileName = $"FusionBR_{fileID}_Stats.log";
-				string logFileName   = $"FusionBR_{fileID}_Log.log";
+        void IPlayerJoined.PlayerJoined(PlayerRef playerRef)
+        {
+            if (Runner.IsServer == false)
+                return;
+            if (_isActive == false)
+                return;
 
-				_statsRecorder = new StatsRecorder();
-				_statsRecorder.Initialize(ApplicationUtility.GetFilePath(statsFileName), fileID, "Time", "Players", "DeltaTime");
+            SpawnPlayer(playerRef);
+        }
 
-				_logRecorder = new LogRecorder();
-				_logRecorder.Initialize(ApplicationUtility.GetFilePath(logFileName));
-				_logRecorder.Write(fileID);
+        void IPlayerLeft.PlayerLeft(PlayerRef playerRef)
+        {
+            if (playerRef.IsRealPlayer == false)
+                return;
+            if (Runner.IsServer == false)
+                return;
+            if (_isActive == false)
+                return;
 
-				Application.logMessageReceived -= OnLogMessage;
-				Application.logMessageReceived += OnLogMessage;
+            OnPlayerLeft(GetPlayer(playerRef));
+        }
 
-				PrintInfo();
-			}
+        private void OnPlayerLeft(Player player)
+        {
+            if (player == null)
+                return;
 
-			string time      = Time.realtimeSinceStartup.ToString(System.Globalization.CultureInfo.InvariantCulture);
-			string players   = ActivePlayerCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
-			string deltaTime = (Time.deltaTime * 1000.0f).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            ActivePlayers.Remove(player);
 
-			_statsRecorder.Write(time, players, deltaTime);
-		}
+            if (player.UserID.HasValue() == true)
+            {
+                _disconnectedPlayers[player.UserID] = player;
 
-		private void OnLogMessage(string condition, string stackTrace, LogType type)
-		{
-			if (_logRecorder == null)
-				return;
+                _gameplayMode.PlayerLeft(player);
 
-			_logRecorder.Write(condition);
-
-			if (type == LogType.Exception)
-			{
-				_logRecorder.Write(stackTrace);
-			}
-		}
-
-		private void OnDestroy()
-		{
-			if (_statsRecorder != null)
-			{
-				_statsRecorder.Deinitialize();
-				_statsRecorder = null;
-			}
-
-			if (_logRecorder != null)
-			{
-				_logRecorder.Deinitialize();
-				_logRecorder = null;
-			}
-		}
-
-		// PRIVATE METHODS
-
-		private void SpawnPlayer(PlayerRef playerRef)
-		{
-			if (GetPlayer(playerRef) != null || _pendingPlayers.ContainsKey(playerRef) == true)
-			{
-				Log.Error($"Player for {playerRef} is already spawned!");
-				return;
-			}
-
-			var player = Runner.Spawn(_playerPrefab, inputAuthority: playerRef);
-
-			Runner.SetPlayerAlwaysInterested(playerRef, player.Object, true);
-
-			_pendingPlayers[playerRef] = player;
+                player.Object.RemoveInputAuthority();
 
 #if UNITY_EDITOR
-			player.gameObject.name = $"Player Unknown (Pending)";
+                player.gameObject.name = $"{player.gameObject.name} (Disconnected)";
 #endif
-		}
+            }
+            else
+            {
+                _gameplayMode.PlayerLeft(player);
 
-		/// <summary>
-		/// Moves all existing player objects from the Fusion snapshot into the disconnected player pool and
-		/// removes their input authorities. Called by <see cref="TPSBR.Networking"/> on the new host immediately
-		/// after host migration so that reconnecting clients are matched to their original player objects via
-		/// the UserID-based reconnection flow in <see cref="FixedUpdateNetwork"/>.
-		/// </summary>
-		public void PrepareForMigrationResume(NetworkRunner runner)
-		{
-			_allPlayers.Clear();
-			runner.GetAllBehaviours<Player>(_allPlayers);
+                // Player wasn't initilized properly, safe to despawn
+                Runner.Despawn(player.Object);
+            }
+        }
 
-			int movedCount = 0;
-			foreach (var player in _allPlayers)
-			{
-				if (player == null || player.Object == null)
-					continue;
+        // MonoBehaviour INTERFACE
 
-				if (player.UserID.HasValue() == false)
-					continue;
+        private void Update()
+        {
+            if (ApplicationSettings.RecordSession == false)
+                return;
+            if (Object == null)
+                return;
 
-				_disconnectedPlayers[player.UserID] = player;
-				player.Object.RemoveInputAuthority();
-				movedCount++;
-			}
+            if (_statsRecorder == null)
+            {
+                string fileID = $"{System.DateTime.Now:yyyy-MM-dd-HH-mm-ss}";
 
-			_allPlayers.Clear();
+                string statsFileName = $"FusionBR_{fileID}_Stats.log";
+                string logFileName = $"FusionBR_{fileID}_Log.log";
 
-			if (runner.SessionInfo != null)
-			{
-				runner.SessionInfo.IsOpen    = true;
-				runner.SessionInfo.IsVisible = true;
-			}
+                _statsRecorder = new StatsRecorder();
+                _statsRecorder.Initialize(ApplicationUtility.GetFilePath(statsFileName), fileID, "Time", "Players", "DeltaTime");
 
-			Debug.LogWarning($"[Host Migration] PrepareForMigrationResume: {movedCount} player(s) queued for reconnection.");
-		}
+                _logRecorder = new LogRecorder();
+                _logRecorder.Initialize(ApplicationUtility.GetFilePath(logFileName));
+                _logRecorder.Write(fileID);
 
-		private void GenerateLevel(int seed)
-		{
-			if (_isActive == false || _levelGenerator == null || _levelGenerated == true || seed == 0)
-				return;
+                Application.logMessageReceived -= OnLogMessage;
+                Application.logMessageReceived += OnLogMessage;
 
-			_levelGenerated = true;
+                PrintInfo();
+            }
 
-			_levelGenerator.Generate(seed, _levelSize, _areaCount);
+            string time = Time.realtimeSinceStartup.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            string players = ActivePlayerCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            string deltaTime = (Time.deltaTime * 1000.0f).ToString(System.Globalization.CultureInfo.InvariantCulture);
 
-			Context.Map.OverrideParameters(_levelGenerator.Center, _levelGenerator.Dimensions);
+            _statsRecorder.Write(time, players, deltaTime);
+        }
 
-			_shrinkingArea.OverrideParameters(_levelGenerator.Center, _levelGenerator.Dimensions.x * 0.5f, _levelGenerator.Dimensions.x * 0.5f, 50f);
+        private void OnLogMessage(string condition, string stackTrace, LogType type)
+        {
+            if (_logRecorder == null)
+                return;
 
-			int areaOffset = Random.Range(0, _areaCount);
-			for (int i = 0; i < _areaCount; i++)
-			{
-				int areaID = (i + areaOffset) % _areaCount;
+            _logRecorder.Write(condition);
 
-				Vector2 shrinkEnd = _levelGenerator.Areas[areaID].Center * _levelGenerator.BlockSize;
-				if (_shrinkingArea.SetEndCenter(shrinkEnd, i == _areaCount - 1) == true)
-					break;
-			}
+            if (type == LogType.Exception)
+            {
+                _logRecorder.Write(stackTrace);
+            }
+        }
 
-			Debug.Log($"Level generated, center: {_levelGenerator.Center}, dimensions: {_levelGenerator.Dimensions}");
+        private void OnDestroy()
+        {
+            if (_statsRecorder != null)
+            {
+                _statsRecorder.Deinitialize();
+                _statsRecorder = null;
+            }
 
-			if (HasStateAuthority == false)
-				return;
+            if (_logRecorder != null)
+            {
+                _logRecorder.Deinitialize();
+                _logRecorder = null;
+            }
+        }
 
-			Debug.Log($"Spawning {_levelGenerator.ObjectsToSpawn.Count} level generated objects");
+        // PRIVATE METHODS
 
-			for (int i = 0; i < _levelGenerator.ObjectsToSpawn.Count; i++)
-			{
-				var spawnData = _levelGenerator.ObjectsToSpawn[i];
-				var spawnedObject = Runner.Spawn(spawnData.Prefab, spawnData.Position, spawnData.Rotation);
+        private void SpawnPlayer(PlayerRef playerRef)
+        {
+            if (GetPlayer(playerRef) != null || _pendingPlayers.ContainsKey(playerRef) == true)
+            {
+                Log.Error($"Player for {playerRef} is already spawned!");
+                return;
+            }
 
-				if (spawnData.IsConnector == true)
-				{
-					var connector = spawnedObject.GetComponent<IBlockConnector>();
+            var player = Runner.Spawn(_playerPrefab, inputAuthority: playerRef);
 
-					connector.SetMaterial(spawnData.AreaID, spawnData.Material);
-					connector.SetHeight(spawnData.Height);
-				}
-			}
+            Runner.SetPlayerAlwaysInterested(playerRef, player.Object, true);
 
-			if (_maxItemBoxes > 0)
-			{
-				while (_levelGenerator.ItemBoxesToSpawn.Count > _maxItemBoxes)
-				{
-					_levelGenerator.ItemBoxesToSpawn.RemoveBySwap(Random.Range(0, _levelGenerator.ItemBoxesToSpawn.Count));
-				}
-			}
+            _pendingPlayers[playerRef] = player;
 
-			Debug.Log($"Spawning {_levelGenerator.ItemBoxesToSpawn.Count} item boxes");
+#if UNITY_EDITOR
+            player.gameObject.name = $"Player Unknown (Pending)";
+#endif
+        }
 
-			for (int i = 0; i < _levelGenerator.ItemBoxesToSpawn.Count; i++)
-			{
-				var spawnData = _levelGenerator.ItemBoxesToSpawn[i];
-				var spawnedObject = Runner.Spawn(spawnData.Prefab, spawnData.Position, spawnData.Rotation);
-			}
-		}
+        /// <summary>
+        /// Moves all existing player objects from the Fusion snapshot into the disconnected player pool and
+        /// removes their input authorities. Called by <see cref="TPSBR.Networking"/> on the new host immediately
+        /// after host migration so that reconnecting clients are matched to their original player objects via
+        /// the UserID-based reconnection flow in <see cref="FixedUpdateNetwork"/>.
+        /// </summary>
+        public void PrepareForMigrationResume(NetworkRunner runner)
+        {
+            _allPlayers.Clear();
+            runner.GetAllBehaviours<Player>(_allPlayers);
 
-		private void PrintInfo()
-		{
-			Debug.Log($"ApplicationUtility.DataPath: {ApplicationUtility.DataPath}");
-			Debug.Log($"Environment.CommandLine: {Environment.CommandLine}");
-			Debug.Log($"SystemInfo.deviceModel: {SystemInfo.deviceModel}");
-			Debug.Log($"SystemInfo.deviceName: {SystemInfo.deviceName}");
-			Debug.Log($"SystemInfo.deviceType: {SystemInfo.deviceType}");
-			Debug.Log($"SystemInfo.processorCount: {SystemInfo.processorCount}");
-			Debug.Log($"SystemInfo.processorFrequency: {SystemInfo.processorFrequency}");
-			Debug.Log($"SystemInfo.processorType: {SystemInfo.processorType}");
-			Debug.Log($"SystemInfo.systemMemorySize: {SystemInfo.systemMemorySize}");
-		}
+            int movedCount = 0;
+            int skippedCount = 0;
 
-		// NETWORK CALLBACKS
+            foreach (var player in _allPlayers)
+            {
+                if (player == null || player.Object == null)
+                {
+                    skippedCount++;
+                    continue;
+                }
 
-		private void OnHostMigration(NetworkRunner runner, HostMigrationToken token)
-		{
-			Debug.LogWarning($"[Host Migration] Received. This peer will become: {token.GameMode}");
+                if (player.UserID.HasValue() == true)
+                {
+                    _disconnectedPlayers[player.UserID] = player;
+                    player.Object.RemoveInputAuthority();
+                    movedCount++;
+                }
+                else
+                {
+                    player.Object.RemoveInputAuthority();
+                    skippedCount++;
+                    Debug.LogWarning($"[Host Migration] Player '{player.gameObject.name}' has no UserID — input authority cleared; will be despawned if client does not reconnect.");
+                }
+            }
 
-			// Build a new session request that reuses all existing parameters but adds the migration token.
-			// Networking.StartGame will shut down the current session and reconnect with the token,
-			// which causes Fusion to restore the simulation state from the last host snapshot.
-			var request                = _sessionRequest;
-			request.GameMode           = token.GameMode;
-			request.HostMigrationToken = token;
+            _allPlayers.Clear();
 
-			Global.Networking.StartGame(request);
-		}
+            if (runner.SessionInfo != null)
+            {
+                runner.SessionInfo.IsOpen = true;
+                runner.SessionInfo.IsVisible = true;
+            }
 
-		private void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
-		{
-			if (runner != null)
-			{
-				runner.SetLocalPlayer(_localPlayer);
-			}
-		}
-	}
+            Debug.LogWarning($"[Host Migration] PrepareForMigrationResume: {movedCount} player(s) queued for reconnection, {skippedCount} no-UserID player(s) cleared.");
+        }
+
+        private void GenerateLevel(int seed)
+        {
+            if (_isActive == false || _levelGenerator == null || _levelGenerated == true || seed == 0)
+                return;
+
+            _levelGenerated = true;
+
+            _levelGenerator.Generate(seed, _levelSize, _areaCount);
+
+            Context.Map.OverrideParameters(_levelGenerator.Center, _levelGenerator.Dimensions);
+
+            _shrinkingArea.OverrideParameters(_levelGenerator.Center, _levelGenerator.Dimensions.x * 0.5f, _levelGenerator.Dimensions.x * 0.5f, 50f);
+
+            int areaOffset = Random.Range(0, _areaCount);
+            for (int i = 0; i < _areaCount; i++)
+            {
+                int areaID = (i + areaOffset) % _areaCount;
+
+                Vector2 shrinkEnd = _levelGenerator.Areas[areaID].Center * _levelGenerator.BlockSize;
+                if (_shrinkingArea.SetEndCenter(shrinkEnd, i == _areaCount - 1) == true)
+                    break;
+            }
+
+            Debug.Log($"Level generated, center: {_levelGenerator.Center}, dimensions: {_levelGenerator.Dimensions}");
+
+            if (HasStateAuthority == false)
+                return;
+
+            Debug.Log($"Spawning {_levelGenerator.ObjectsToSpawn.Count} level generated objects");
+
+            for (int i = 0; i < _levelGenerator.ObjectsToSpawn.Count; i++)
+            {
+                var spawnData = _levelGenerator.ObjectsToSpawn[i];
+                var spawnedObject = Runner.Spawn(spawnData.Prefab, spawnData.Position, spawnData.Rotation);
+
+                if (spawnData.IsConnector == true)
+                {
+                    var connector = spawnedObject.GetComponent<IBlockConnector>();
+
+                    connector.SetMaterial(spawnData.AreaID, spawnData.Material);
+                    connector.SetHeight(spawnData.Height);
+                }
+            }
+
+            if (_maxItemBoxes > 0)
+            {
+                while (_levelGenerator.ItemBoxesToSpawn.Count > _maxItemBoxes)
+                {
+                    _levelGenerator.ItemBoxesToSpawn.RemoveBySwap(Random.Range(0, _levelGenerator.ItemBoxesToSpawn.Count));
+                }
+            }
+
+            Debug.Log($"Spawning {_levelGenerator.ItemBoxesToSpawn.Count} item boxes");
+
+            for (int i = 0; i < _levelGenerator.ItemBoxesToSpawn.Count; i++)
+            {
+                var spawnData = _levelGenerator.ItemBoxesToSpawn[i];
+                var spawnedObject = Runner.Spawn(spawnData.Prefab, spawnData.Position, spawnData.Rotation);
+            }
+        }
+
+        private void PrintInfo()
+        {
+            Debug.Log($"ApplicationUtility.DataPath: {ApplicationUtility.DataPath}");
+            Debug.Log($"Environment.CommandLine: {Environment.CommandLine}");
+            Debug.Log($"SystemInfo.deviceModel: {SystemInfo.deviceModel}");
+            Debug.Log($"SystemInfo.deviceName: {SystemInfo.deviceName}");
+            Debug.Log($"SystemInfo.deviceType: {SystemInfo.deviceType}");
+            Debug.Log($"SystemInfo.processorCount: {SystemInfo.processorCount}");
+            Debug.Log($"SystemInfo.processorFrequency: {SystemInfo.processorFrequency}");
+            Debug.Log($"SystemInfo.processorType: {SystemInfo.processorType}");
+            Debug.Log($"SystemInfo.systemMemorySize: {SystemInfo.systemMemorySize}");
+        }
+
+        // NETWORK CALLBACKS
+
+        private void OnHostMigration(NetworkRunner runner, HostMigrationToken token)
+        {
+            Debug.LogWarning($"[Host Migration] Received token. Becoming {token.GameMode}");
+
+            var request = _sessionRequest;
+            request.GameMode = GameMode.Host;
+            request.HostMigrationToken = token;
+
+            _sessionRequest.HostMigrationToken = null;
+
+            Global.Networking.StartGame(request);
+        }
+
+        private void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
+        {
+            if (runner != null)
+            {
+                runner.SetLocalPlayer(_localPlayer);
+            }
+        }
+    }
 }
