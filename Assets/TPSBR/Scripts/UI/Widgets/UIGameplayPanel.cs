@@ -29,10 +29,17 @@ namespace TPSBR.UI
 		{
 			base.OnVisible();
 
-			_mode.text = Context.GameplayMode.GameplayName;
+			if (_mode != null)
+			{
+				_mode.text = Context.GameplayMode.GameplayName;
+			}
+
 			_isElimination = Context.GameplayMode is EliminationGameplayMode;
 
-			_rightCaption.text = _isElimination == true ? "Lives" : "Score";
+			if (_rightCaption != null)
+			{
+				_rightCaption.text = _isElimination == true ? "Lives" : "Score";
+			}
 		}
 
 		protected override void OnTick()
@@ -51,19 +58,22 @@ namespace TPSBR.UI
 				Refresh();
 			}
 
-			int remainingSeconds = Mathf.CeilToInt(Context.GameplayMode.RemainingTime);
-			if (remainingSeconds > 0)
+			if (_time != null)
 			{
-				if (_lastSeconds != remainingSeconds)
+				int remainingSeconds = Mathf.CeilToInt(Context.GameplayMode.RemainingTime);
+				if (remainingSeconds > 0)
 				{
-					_time.text = $"{remainingSeconds / 60}:{remainingSeconds % 60 :00}";
+					if (_lastSeconds != remainingSeconds)
+					{
+						_time.text = $"{remainingSeconds / 60}:{remainingSeconds % 60 :00}";
 
-					_lastSeconds = remainingSeconds;
+						_lastSeconds = remainingSeconds;
+					}
 				}
-			}
-			else
-			{
-				_time.text = "∞";
+				else
+				{
+					_time.text = "∞";
+				}
 			}
 		}
 
@@ -74,8 +84,15 @@ namespace TPSBR.UI
 			var localPlayer = Context.NetworkGame.GetPlayer(Context.LocalPlayerRef);
 			var statistics = localPlayer != null ? localPlayer.Statistics : default;
 
-			_leftText.text = statistics.Position > 0 ? $"#{statistics.Position}" : "~";
-			_rightText.text = _isElimination == true ? statistics.ExtraLives.ToString() : statistics.Score.ToString();
+			if (_leftText != null)
+			{
+				_leftText.text = statistics.Position > 0 ? $"#{statistics.Position}" : "~";
+			}
+
+			if (_rightText != null)
+			{
+				_rightText.text = _isElimination == true ? statistics.ExtraLives.ToString() : statistics.Score.ToString();
+			}
 		}
 	}
 }

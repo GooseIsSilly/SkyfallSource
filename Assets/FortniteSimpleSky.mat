@@ -90,10 +90,10 @@ Material:
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _CloudCoverage: 0.5
-    - _CloudScale: 2
-    - _CloudSoftness: 0.3
-    - _CloudSpeed: 0.05
+    - _CloudCoverage: 0.8
+    - _CloudScale: 0.9
+    - _CloudSoftness: 0.32
+    - _CloudSpeed: 0.09
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
@@ -104,9 +104,9 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _GradientPower: 1.5
-    - _HorizonOffset: 0
-    - _HorizonSmoothness: 0.5
+    - _GradientPower: 1
+    - _HorizonOffset: 0.27
+    - _HorizonSmoothness: 1.96
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -134,7 +134,7 @@ Material:
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SunColor: {r: 1, g: 0.95, b: 0.8, a: 1}
     - _SunDirection: {r: 0.3, g: 0.6, b: 0.5, a: 0}
-    - _TopColor: {r: 0.4, g: 0.7, b: 1, a: 1}
+    - _TopColor: {r: 0, g: 0.67243624, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &1394480498235897126
