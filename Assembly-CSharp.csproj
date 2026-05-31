@@ -713,6 +713,7 @@
     <None Include="Assets\Scripts\Backend\QUICK_CHECKLIST.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile-2-Pass.shader" />
     <None Include="Assets\Photon\FusionAddons\InterestManagement\release_history.txt" />
+    <None Include="Assets\SurrounDead Garden\Documentation\README.txt" />
     <None Include="Assets\3rdParty\KriptoFX\MuzzleFlashes\Shaders\Particles.shader" />
     <None Include="Assets\Scripts\Backend\SHOP_BACKEND_SYNC.txt" />
     <None Include="Assets\Scripts\ANIMATION_QUICKFIX.txt" />
@@ -729,6 +730,7 @@
     <None Include="Assets\Scripts\Backend\PERSISTENT_LOGIN_SUMMARY.txt" />
     <None Include="Assets\Scripts\Backend\QUICK_START_PYTHON.txt" />
     <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Roboto-Bold - AFL.txt" />
+    <None Include="Assets\SurrounDead Encampment\Documentation\ChangeLog.txt" />
     <None Include="Assets\NewSurfaceShader.shader" />
     <None Include="Assets\Vefects\Stylized Fire VFX URP\Demo\Resources\Shaders\SH_Vefects_URP_VFX_Opaque_Fr_01.shader" />
     <None Include="Assets\Scripts\CINEMATIC_FLOW_DIAGRAM.txt" />
@@ -739,9 +741,11 @@
     <None Include="Assets\MarpaStudio\Info\Thank you.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
     <None Include="Assets\Scripts\QUICK_FIX_CHECKLIST.txt" />
+    <None Include="Assets\SurrounDead Bunker\Documentation\README.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
     <None Include="Assets\Photon\Fusion\Assemblies\Fusion.Log.dll" />
     <None Include="Assets\Scripts\Backend\COMPLETE_ANSWERS.txt" />
+    <None Include="Assets\SurrounDead Encampment\Documentation\README.txt" />
     <None Include="Assets\Scripts\Backend\COMPLETE_WSGI_FILE.txt" />
     <None Include="Assets\TPSBR\Scripts\STARTUP_3D_CHARACTER_GUIDE.txt" />
     <None Include="Assets\Scripts\Backend\PYTHONANYWHERE_SETUP.txt" />
@@ -777,6 +781,7 @@
     <None Include="Assets\Photon\Fusion\Assemblies\Fusion.Log.xml" />
     <None Include="Assets\Scripts\Backend\CHARACTER_DATA_USAGE.txt" />
     <None Include="Assets\Scripts\Backend\SETUP_UNITY_LOGIN.txt" />
+    <None Include="Assets\SurrounDead\Documentation\ChangeLog.txt" />
     <None Include="Assets\3rdParty\KriptoFX\MuzzleFlashes\Shaders\FPS_UberDecal.shader" />
     <None Include="Assets\Scripts\Backend\NICKNAME_SYNC_SUMMARY.txt" />
     <None Include="Assets\Photon\Fusion\release_history.txt" />
@@ -785,6 +790,7 @@
     <None Include="Assets\Photon\Fusion\Plugins\NanoSockets\NanoSockets\Dynamic\NanoSockets.dll" />
     <None Include="Assets\3rdParty\Hovl Studio\Render Pipelines support\Documentation.txt" />
     <None Include="Assets\Photon\Fusion\Assemblies\Fusion.Runtime.dll" />
+    <None Include="Assets\SurrounDead Bundle\Instructions_SurrounDead - Bundle.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
     <None Include="Assets\Cabin\Terrain\Sky by Heiko Irrgang\LICENSE.txt" />
     <None Include="Assets\Vefects\Stylized Fire VFX URP\_ Extra\Shaders\SH_Vefects_Extra_Billboard_01.shader" />
@@ -823,6 +829,7 @@
     <None Include="Assets\Scripts\Backend\COMPLETE_Account.txt" />
     <None Include="Assets\Vefects\Stylized Fire VFX URP\Demo\Resources\Shaders\SH_Vefects_URP_VFX_Character_Showoff.shader" />
     <None Include="Assets\Photon\Fusion\Assemblies\Fusion.Common.xml" />
+    <None Include="Assets\SurrounDead\Documentation\README.txt" />
     <None Include="Assets\Scripts\Backend\AUTO_LOGIN_QUICK_START.txt" />
     <None Include="Assets\Scripts\DELETE_THIS_FILE_TO_FIX_ERRORS.txt" />
     <None Include="Assets\Vefects\Stylized Fire VFX URP\VFX\Shared\Shaders\SH_Vefects_VFX_Stylized_Fire_01.shader" />
@@ -839,8 +846,10 @@
     <None Include="Assets\Shaders\DangerZoneOverlay.shader" />
     <None Include="Assets\Scripts\Backend\BAN_MESSAGE_UPDATE.txt" />
     <None Include="Assets\3rdParty\KriptoFX\MuzzleFlashes\Shaders\FPSDistortionWaterParticles.shader" />
+    <None Include="Assets\SurrounDead Garden\Documentation\ChangeLog.txt" />
     <None Include="Assets\TPSBR\Scripts\ROCKET_SELF_DAMAGE_DEBUG.txt" />
     <None Include="Assets\3rdParty\Water\Shaders\WaterFX.shader" />
+    <None Include="Assets\SurrounDead Bunker\Documentation\ChangeLog.txt" />
     <None Include="Assets\TPSBR\Scripts\ROCKET_QUICK_UPDATE.txt" />
     <None Include="Assets\Scripts\Backend\CHARACTER_DATA_INTEGRATION.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
