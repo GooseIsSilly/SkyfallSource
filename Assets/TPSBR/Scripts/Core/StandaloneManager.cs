@@ -54,7 +54,14 @@ namespace TPSBR
 			var playerData = Global.PlayerService.PlayerData;
 			var scenePath = SceneManager.GetActiveScene().path;
 
-			scenePath = scenePath.Substring("Assets/".Length, scenePath.Length - "Assets/".Length - ".unity".Length);
+			if (string.IsNullOrEmpty(scenePath) == false && scenePath.StartsWith("Assets/"))
+			{
+				scenePath = scenePath.Substring("Assets/".Length, scenePath.Length - "Assets/".Length - ".unity".Length);
+			}
+			else
+			{
+				scenePath = SceneManager.GetActiveScene().name;
+			}
 
 			PhotonAppSettings.Global.AppSettings.FixedRegion = configuration.Region;
 

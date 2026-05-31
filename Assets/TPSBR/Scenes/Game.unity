@@ -94098,11 +94098,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 0.1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1434108721
 MeshRenderer:
@@ -94166,8 +94166,8 @@ Transform:
   m_GameObject: {fileID: 1434108719}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1952.5652, y: 2, z: 313.9897}
-  m_LocalScale: {x: 500000, y: 1, z: 500000}
+  m_LocalPosition: {x: 1952.5652, y: 4, z: 313.9897}
+  m_LocalScale: {x: 50000, y: 1, z: 50000}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -107947,9 +107947,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e81d7aba9c2a7e479d60b74835744ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _detailDistance: 1000000
-  _treeBillboardStart: 5000000
-  _treeDistance: 1000000
+  _detailDistance: 100000
+  _treeBillboardStart: 500000
+  _treeDistance: 100000
   _detailDensity: 1
   _lodBias: 10
   _applyToAllTerrains: 1

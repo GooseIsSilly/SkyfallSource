@@ -9,7 +9,7 @@ Shader "Custom/StylizedWater"
 
         [Header(Foam)]
         _FoamColor("Foam Color", Color) = (1, 1, 1, 1)
-        _FoamWidth("Foam Width", Range(0, 5)) = 0.5
+        _FoamWidth("Foam Width", Range(0.001, 5)) = 0.5
         _FoamHardness("Foam Hardness", Range(0, 1)) = 0.5
 
         [Header(Waves)]
@@ -41,6 +41,8 @@ Shader "Custom/StylizedWater"
             #pragma fragment frag
             #pragma multi_compile_fog
             #pragma multi_compile_instancing
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE
+            #pragma multi_compile _ _SHADOWS_SOFT
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -60,6 +62,7 @@ Shader "Custom/StylizedWater"
                 float3 positionWS : TEXCOORD1;
                 float2 uv : TEXCOORD0;
                 float4 screenPos : TEXCOORD3;
+                float fogFactor : TEXCOORD4;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
                 UNITY_VERTEX_OUTPUT_STEREO
             };
@@ -77,7 +80,8 @@ Shader "Custom/StylizedWater"
                 half _Smoothness;
             CBUFFER_END
 
-            sampler2D _SurfaceNoise;
+            TEXTURE2D(_SurfaceNoise);
+            SAMPLER(sampler_SurfaceNoise);
 
             Varyings vert(Attributes input)
             {
@@ -88,7 +92,7 @@ Shader "Custom/StylizedWater"
 
                 float3 worldPos = TransformObjectToWorld(input.positionOS.xyz);
                 
-                // Simple physical waves
+                // Physical waves
                 float wave = sin(worldPos.x * _WaveScale * 10.0 + _Time.y * _WaveSpeed.x) * 
                              cos(worldPos.z * _WaveScale * 10.0 + _Time.y * _WaveSpeed.y);
                 worldPos.y += wave * _WaveHeight;
@@ -97,6 +101,7 @@ Shader "Custom/StylizedWater"
                 output.positionCS = TransformWorldToHClip(worldPos);
                 output.uv = input.uv;
                 output.screenPos = ComputeScreenPos(output.positionCS);
+                output.fogFactor = ComputeFogFactor(output.positionCS.z);
 
                 return output;
             }
@@ -104,28 +109,37 @@ Shader "Custom/StylizedWater"
             half4 frag(Varyings input) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(input);
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-                float2 screenUV = input.screenPos.xy / input.screenPos.w;
+                float2 screenUV = input.screenPos.xy / max(0.0001, input.screenPos.w);
+                
+                // Safe depth sampling
                 float depth = SampleSceneDepth(screenUV);
                 float sceneEyeDepth = LinearEyeDepth(depth, _ZBufferParams);
                 float surfaceEyeDepth = input.screenPos.w;
-                float depthDifference = sceneEyeDepth - surfaceEyeDepth;
+                float depthDifference = max(0.0, sceneEyeDepth - surfaceEyeDepth);
 
                 // Color Gradient
-                float depthFactor = saturate(depthDifference / _DepthDistance);
+                float depthFactor = saturate(depthDifference / max(0.001, _DepthDistance));
                 half4 waterColor = lerp(_ShallowColor, _DeepColor, depthFactor);
 
                 // Surface Ripples
                 float2 uv1 = input.positionWS.xz * _WaveScale + _Time.y * _WaveSpeed.xy * 0.5;
                 float2 uv2 = input.positionWS.xz * _WaveScale * 1.2 - _Time.y * _WaveSpeed.xy * 0.3;
-                half noise = (tex2D(_SurfaceNoise, uv1).r + tex2D(_SurfaceNoise, uv2).r) * 0.5;
-                waterColor.rgb += noise * 0.1;
+                
+                half noise1 = SAMPLE_TEXTURE2D(_SurfaceNoise, sampler_SurfaceNoise, uv1).r;
+                half noise2 = SAMPLE_TEXTURE2D(_SurfaceNoise, sampler_SurfaceNoise, uv2).r;
+                half noise = (noise1 + noise2) * 0.5;
+                waterColor.rgb += noise * 0.05;
 
                 // Foam
-                float foamEdge = saturate(depthDifference / _FoamWidth);
+                float foamEdge = saturate(depthDifference / max(0.001, _FoamWidth));
                 float foam = 1.0 - smoothstep(_FoamHardness, 1.0, foamEdge);
                 waterColor.rgb = lerp(waterColor.rgb, _FoamColor.rgb, foam * _FoamColor.a);
                 waterColor.a = lerp(waterColor.a, 1.0, foam);
+
+                // Apply Fog
+                waterColor.rgb = MixFog(waterColor.rgb, input.fogFactor);
 
                 return waterColor;
             }
