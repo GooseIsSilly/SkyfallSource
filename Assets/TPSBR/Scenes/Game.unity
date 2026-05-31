@@ -106041,6 +106041,7 @@ MonoBehaviour:
   _playerMarker: {fileID: 1604451782}
   _poiMarkerPrefab: {fileID: 3881244153399111250, guid: 8e2b321f270ce7442904f15668fee258, type: 3}
   _poiMarkersContainer: {fileID: 1661023786}
+  _poiMarkerFontSize: 20
   _planeMarker: {fileID: 9175063}
   _planeTrail: {fileID: 94032410}
   _showZones: 1
