@@ -40,8 +40,6 @@ namespace TPSBR.UI
         private bool _isSearchingForGame;
         private bool _isConnectingForPlay;
         private float _searchStartTime;
-        private float _connectingStartTime;
-        private const float ConnectingTimeoutSeconds = 20f;
         private List<SessionInfo> _availableSessions = new List<SessionInfo>();
         private UIMatchmakerView _matchmakerView;
         // Set to true to re-enable Manhunt in the quick-play rotation.
@@ -56,13 +54,8 @@ namespace TPSBR.UI
         {
             base.OnInitialize();
             
-            Debug.Log("[UIFortniteLobbyView] OnInitialize called");
-            
             if (_playButton != null)
-            {
                 _playButton.onClick.AddListener(OnPlayButtonClicked);
-                DisableNavigation(_playButton);
-            }
             
             if (_gamemodeButton != null)
                 _gamemodeButton.onClick.AddListener(OnGamemodeButtonClicked);
@@ -83,20 +76,9 @@ namespace TPSBR.UI
                 _settingsButton.onClick.AddListener(OnSettingsButtonClicked);
             
             if (_regionButton != null)
-            {
                 _regionButton.onClick.AddListener(OnRegionButtonClicked);
-                DisableNavigation(_regionButton);
-            }
             
             UpdateGamemodeDisplay();
-        }
-
-        private void DisableNavigation(UIButton button)
-        {
-            if (button == null) return;
-            var nav = button.navigation;
-            nav.mode = UnityEngine.UI.Navigation.Mode.None;
-            button.navigation = nav;
         }
         
         protected override void OnDeinitialize()
@@ -132,22 +114,6 @@ namespace TPSBR.UI
         {
             base.OnOpen();
             
-            Debug.Log("[UIFortniteLobbyView] OnOpen called");
-            
-            // Reset state to avoid getting stuck from previous sessions
-            _isConnectingForPlay = false;
-            _isSearchingForGame = false;
-            _availableSessions.Clear();
-
-            // Re-ensure navigation is disabled
-            DisableNavigation(_playButton);
-            DisableNavigation(_regionButton);
-
-            if (_playButtonText != null)
-            {
-                _playButtonText.text = "PLAY";
-            }
-            
             UpdatePlayerInfo();
             LoadPlayerDataFromBackend();
             
@@ -169,13 +135,7 @@ namespace TPSBR.UI
                 PlayerDataManager.Instance.OnDataLoaded += OnPlayerDataLoaded;
             }
             
-            // Re-join the lobby for the new region to refresh available sessions.
-            if (Context.Matchmaking.IsJoiningToLobby == false)
-            {
-                Debug.Log("[UIFortniteLobbyView] Joining lobby on open...");
-                Context.Matchmaking.JoinLobby(true);
-            }
-
+            Context.Matchmaking.JoinLobby(false);
             UpdateRegionDisplay();
         }
         
@@ -210,16 +170,6 @@ namespace TPSBR.UI
                     _isSearchingForGame = false;
                     ShowCreateGameUI();
                 }
-            }
-
-            // Safety net: if the lobby join hangs (e.g. SDK-level Shutdown stalls),
-            // LobbyJoined/LobbyJoinFailed will never fire and the button stays stuck.
-            if (_isConnectingForPlay && Time.realtimeSinceStartup - _connectingStartTime > ConnectingTimeoutSeconds)
-            {
-                Debug.LogWarning("[UIFortniteLobbyView] Connecting timed out - resetting state");
-                _isConnectingForPlay = false;
-                if (_playButtonText != null)
-                    _playButtonText.text = "PLAY";
             }
         }
         
@@ -314,51 +264,18 @@ namespace TPSBR.UI
                 
                 return;
             }
-
-            if (_isSearchingForGame)
-            {
-                _isSearchingForGame = false;
-                if (_playButtonText != null) _playButtonText.text = "PLAY";
-                Debug.Log("[UIFortniteLobbyView] Search cancelled");
-                return;
-            }
-
-            if (_isConnectingForPlay)
-            {
-                Debug.Log("[UIFortniteLobbyView] Already connecting for play, ignoring click");
-                return;
-            }
-
-            // If we are already connected to a lobby, we can try to start searching immediately
-            // unless we want to force a refresh of the session list.
-            // For quick play, we usually want the most up-to-date list, so JoinLobby(true) is safer.
-            // But if we're already connected, we could skip the re-join if we trust the current list.
             
             _availableSessions.Clear();
             _isSearchingForGame = false;
             _isConnectingForPlay = true;
-            _connectingStartTime = Time.realtimeSinceStartup;
             
             if (_playButtonText != null)
             {
                 _playButtonText.text = "CONNECTING...";
             }
-
-            if (Context.Matchmaking.IsConnectedToLobby && !Context.Matchmaking.IsJoiningToLobby)
-            {
-                Debug.Log("[UIFortniteLobbyView] Already connected to lobby, starting search immediately.");
-                _isConnectingForPlay = false;
-                StartQuickPlay();
-            }
-            else if (!Context.Matchmaking.IsJoiningToLobby)
-            {
-                Debug.Log("[UIFortniteLobbyView] Rejoining lobby to refresh session list...");
-                Context.Matchmaking.JoinLobby(true);
-            }
-            else
-            {
-                Debug.Log("[UIFortniteLobbyView] Lobby join already in progress; quick play will begin once it completes.");
-            }
+            
+            Debug.Log("[UIFortniteLobbyView] Rejoining lobby to refresh session list...");
+            Context.Matchmaking.JoinLobby(true);
         }
         
         private void StartQuickPlay()
@@ -500,19 +417,12 @@ namespace TPSBR.UI
         {
             Debug.Log("[UIFortniteLobbyView] No sessions found - Opening Create Game UI");
             
-            _isConnectingForPlay = false;
-            _isSearchingForGame = false;
-
             if (_playButtonText != null)
             {
                 _playButtonText.text = "PLAY";
             }
             
-            var createView = Open<UICreateSessionView>();
-            if (createView != null)
-            {
-                createView.BackView = this;
-            }
+            Open<UICreateSessionView>();
         }
         
         private void OnLobbyJoined()
@@ -581,19 +491,6 @@ namespace TPSBR.UI
             var regions = Context.Settings.Network.Regions;
             if (regions == null || regions.Length == 0) return;
 
-            Debug.Log("[UIFortniteLobbyView] Region button clicked");
-
-            // Reset any play connection state first to ensure we don't accidentally
-            // start searching in the new region if a lobby join completes.
-            _isConnectingForPlay = false;
-            _isSearchingForGame = false;
-            _availableSessions.Clear();
-
-            if (_playButtonText != null)
-            {
-                _playButtonText.text = "PLAY";
-            }
-
             string currentRegion = Context.RuntimeSettings.Region;
             int currentIndex = System.Array.FindIndex(regions, r => r.Region == currentRegion);
             int nextIndex = (currentIndex + 1) % regions.Length;
@@ -601,12 +498,18 @@ namespace TPSBR.UI
             Context.RuntimeSettings.Region = regions[nextIndex].Region;
             UpdateRegionDisplay();
 
+            // Cancel any in-progress play or search flow so OnLobbyJoined below
+            // does not accidentally start a quick-play search in the new region.
+            _isConnectingForPlay = false;
+            _isSearchingForGame  = false;
+            _availableSessions.Clear();
+
+            if (_playButtonText != null)
+                _playButtonText.text = "PLAY";
+
             Debug.Log($"[UIFortniteLobbyView] Region changed to: {regions[nextIndex].DisplayName}");
 
-            // Always force a new lobby join when changing regions.
-            // If we are already joining, we still want to call JoinLobby(true)
-            // with the NEW region setting.
-            Debug.Log("[UIFortniteLobbyView] Re-joining lobby for the new region...");
+            // Reconnect to the lobby for the new region.
             Context.Matchmaking.JoinLobby(true);
         }
 
