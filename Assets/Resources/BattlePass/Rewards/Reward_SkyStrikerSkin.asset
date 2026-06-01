@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc76c869a6c354049abf51a31d9aeec9, type: 3}
   m_Name: Reward_SkyStrikerSkin
   m_EditorClassIdentifier: 
-  RewardID: bp_skin_skystriker
   DisplayName: Sky Striker
   Description: An elite tactical skin forged in the heat of battle.
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: ca41076ae83778b4091c413aa5247de4, type: 3}
   Type: 0
   CloudCoinAmount: 0
   Rarity: 3

@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc76c869a6c354049abf51a31d9aeec9, type: 3}
   m_Name: Reward_NeonSpray
   m_EditorClassIdentifier: 
-  RewardID: bp_spray_neon
   DisplayName: Neon Graffiti
   Description: Leave your mark with a vivid neon tag.
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: 7a46ed3b24555bc45b200b5f322a7f3a, type: 3}
   Type: 3
   CloudCoinAmount: 0
   Rarity: 1

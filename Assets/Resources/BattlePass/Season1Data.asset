@@ -49,3 +49,21 @@ MonoBehaviour:
   - Tier: 10
     FreeReward: {fileID: 11400000, guid: 8640c6438885ddd43a89da0670967ded, type: 2}
     PremiumReward: {fileID: 11400000, guid: 7c7216c8809b01448a389d4d38b7c65f, type: 2}
+  - Tier: 10
+    FreeReward: {fileID: 11400000, guid: 8640c6438885ddd43a89da0670967ded, type: 2}
+    PremiumReward: {fileID: 11400000, guid: 7c7216c8809b01448a389d4d38b7c65f, type: 2}
+  - Tier: 10
+    FreeReward: {fileID: 11400000, guid: 8640c6438885ddd43a89da0670967ded, type: 2}
+    PremiumReward: {fileID: 11400000, guid: 7c7216c8809b01448a389d4d38b7c65f, type: 2}
+  - Tier: 10
+    FreeReward: {fileID: 11400000, guid: 8640c6438885ddd43a89da0670967ded, type: 2}
+    PremiumReward: {fileID: 11400000, guid: 7c7216c8809b01448a389d4d38b7c65f, type: 2}
+  - Tier: 10
+    FreeReward: {fileID: 11400000, guid: 8640c6438885ddd43a89da0670967ded, type: 2}
+    PremiumReward: {fileID: 11400000, guid: 7c7216c8809b01448a389d4d38b7c65f, type: 2}
+  - Tier: 10
+    FreeReward: {fileID: 11400000, guid: 8640c6438885ddd43a89da0670967ded, type: 2}
+    PremiumReward: {fileID: 11400000, guid: 7c7216c8809b01448a389d4d38b7c65f, type: 2}
+  - Tier: 10
+    FreeReward: {fileID: 11400000, guid: 8640c6438885ddd43a89da0670967ded, type: 2}
+    PremiumReward: {fileID: 11400000, guid: 7c7216c8809b01448a389d4d38b7c65f, type: 2}
