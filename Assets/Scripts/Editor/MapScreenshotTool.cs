@@ -89,6 +89,7 @@ namespace TPSBR
             cameraData.requiresColorTexture = true;
             cameraData.requiresDepthTexture = true;
             cameraData.renderPostProcessing = false;
+            cameraData.renderType = CameraRenderType.Base; // Ensure it's a base camera for URP rendering
 
             // Use Map Center Y as the baseline for the camera offset
             Vector3 targetPos = new Vector3(_mapCenter.x, _mapCenter.y + _cameraHeight, _mapCenter.z);
@@ -100,14 +101,16 @@ namespace TPSBR
             tempCamera.orthographicSize = _cameraSize;
             
             tempCamera.clearFlags = CameraClearFlags.SolidColor;
-            tempCamera.backgroundColor = Color.black; 
+            tempCamera.backgroundColor = new Color(0.1f, 0.1f, 0.12f, 1f); // Dark charcoal background
             tempCamera.cullingMask = -1; // Render all layers
             
-            tempCamera.nearClipPlane = 0.1f;
-            tempCamera.farClipPlane = _cameraHeight + 20000f; 
+            // Use a large but stable far clip plane. 1e+11 was causing depth buffer precision loss (white screen).
+            tempCamera.nearClipPlane = 1f;
+            tempCamera.farClipPlane = 100000f; 
             tempCamera.depthTextureMode = DepthTextureMode.Depth;
 
-            Debug.Log($"Map Screenshot: Cam at {targetPos}, View Size {_cameraSize}, Target Y {_mapCenter.y}");
+            // Log detailed info for debugging
+            Debug.Log($"[Map Screenshot] Camera at Y: {targetPos.y}, Ortho Size: {_cameraSize}, Far Clip: {tempCamera.farClipPlane}");
 
             RenderTexture rt = new RenderTexture(_screenshotSize, _screenshotSize, 24, RenderTextureFormat.ARGB32);
             tempCamera.targetTexture = rt;

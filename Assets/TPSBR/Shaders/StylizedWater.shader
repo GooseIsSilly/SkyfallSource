@@ -97,23 +97,30 @@ Shader "Custom/StylizedWater"
 
                 float2 screenUV = input.screenPos.xy / max(0.0001, input.screenPos.w);
                 float depth = SampleSceneDepth(screenUV);
-                float sceneEyeDepth = LinearEyeDepth(depth, _ZBufferParams);
-                float surfaceEyeDepth = input.screenPos.w;
-                float depthDifference = sceneEyeDepth - surfaceEyeDepth;
+                
+                float sceneEyeDepth, surfaceEyeDepth;
 
-                // For Orthographic Cameras (like the Map Screenshot Tool)
-                // depthDifference can be 0 or negative because sceneEyeDepth/surfaceEyeDepth 
-                // calculations change in ortho mode. We add a fallback:
-                #if defined(UNITY_REVERSED_Z)
-                    if (sceneEyeDepth < 0.001) depthDifference = 1000.0; 
-                #endif
+                if (unity_OrthoParams.w > 0.5) {
+                    // Correct depth calculation for Orthographic projection
+                    #if UNITY_REVERSED_Z
+                        depth = 1.0 - depth;
+                    #endif
+                    sceneEyeDepth = depth * (_ProjectionParams.z - _ProjectionParams.y) + _ProjectionParams.y;
+                    surfaceEyeDepth = input.screenPos.z; // In Ortho, w is 1, z is distance
+                } else {
+                    // Standard Perspective depth
+                    sceneEyeDepth = LinearEyeDepth(depth, _ZBufferParams);
+                    surfaceEyeDepth = input.screenPos.w;
+                }
+
+                float depthDifference = max(0.0, sceneEyeDepth - surfaceEyeDepth);
 
                 // Color Gradient
                 float depthFactor = saturate(depthDifference / max(0.001, _DepthDistance));
                 half4 waterColor = lerp(_ShallowColor, _DeepColor, depthFactor);
 
-                // If we are in Ortho and sceneEyeDepth is not valid, fallback to deep color
-                if (unity_OrthoParams.w > 0.5 && depthDifference < 0.0) {
+                // Map Tool Fallback: If depth is invalid (sampling clear color), use Deep Color
+                if (unity_OrthoParams.w > 0.5 && depthDifference < 0.001) {
                     waterColor = _DeepColor;
                 }
 
@@ -122,11 +129,14 @@ Shader "Custom/StylizedWater"
                 half noise = tex2D(_SurfaceNoise, uv).r;
                 waterColor.rgb += noise * 0.05;
 
-                // Foam
-                float foamEdge = saturate(depthDifference / _FoamWidth);
+                // Foam (Reduced in Ortho to prevent white-outs)
+                float foamEdge = saturate(depthDifference / max(0.001, _FoamWidth));
                 float foam = 1.0 - smoothstep(_FoamHardness, 1.0, foamEdge);
-                waterColor.rgb = lerp(waterColor.rgb, _FoamColor.rgb, foam * _FoamColor.a);
-                waterColor.a = lerp(waterColor.a, 1.0, foam);
+                
+                // Dim foam in ortho mode to prevent the "White Map" issue
+                float foamIntensity = unity_OrthoParams.w > 0.5 ? 0.2 : 1.0;
+                waterColor.rgb = lerp(waterColor.rgb, _FoamColor.rgb, foam * _FoamColor.a * foamIntensity);
+                waterColor.a = lerp(waterColor.a, 1.0, foam * foamIntensity);
 
                 return waterColor;
             }
