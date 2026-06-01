@@ -105,7 +105,7 @@ namespace TPSBR.UI
 				Port         = DedicatedServerSettings.Port,
 				GameplayType = (EGameplayType) (_gameplay.value + 1),
 				MaxPlayers   = System.Int32.Parse(_maxPlayers.text),
-				ScenePath    = _mapSetups[_maps.Selection].ScenePath,
+				ScenePath    = _mapSetups[_maps.Selection].ScenePath
 			};
 ;
 			Context.Matchmaking.CreateSession(request);

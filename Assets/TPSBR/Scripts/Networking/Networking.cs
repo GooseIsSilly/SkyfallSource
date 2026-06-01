@@ -332,28 +332,53 @@ namespace TPSBR
 
             if (peer.Request.HostMigrationToken != null)
             {
+                // Migrating: provide the token so Fusion resumes from the last snapshot.
+                // Do not set Scene - the token already encodes the correct scene reference.
                 startGameArgs.HostMigrationToken = peer.Request.HostMigrationToken;
-                startGameArgs.GameMode = GameMode.Host;
-                peer.GameMode = GameMode.Host;
 
+                // HostMigrationResume MUST be set — without it Fusion will not restore any
+                // snapshot objects (no GameplayMode, no Players, no level pieces).
+                // The scene is guaranteed loaded before this callback fires, so we can
+                // safely set pool.Context here — ensuring every spawned object's Spawned()
+                // callback receives a valid SceneContext (not null).
                 startGameArgs.HostMigrationResume = (migrationRunner) =>
                 {
-                    int sceneObjCount = 0;
+                    // GameplayScene is guaranteed ready when this callback fires.
+                    // Do NOT spin-wait here — this is a synchronous callback on the main
+                    // thread; blocking it prevents Fusion (and Unity) from making progress,
+                    // causing a deadlock that kills the migration entirely.
+                    var gameplayScene = peer.SceneManager.GameplayScene;
+                    if (gameplayScene != null)
+                    {
+                        gameplayScene.PrepareContext();
+                        var ctx = gameplayScene.Context;
+                        ctx.IsVisible = peer.ID == 0;
+                        ctx.HasInput = peer.ID == 0;
+                        ctx.Runner = migrationRunner;
+                        ctx.PeerUserID = peer.UserID;
+                        pool.Context = ctx;
+                    }
+                    else
+                    {
+                        Debug.LogError("[Host Migration] GameplayScene not available inside HostMigrationResume; IContextBehaviour.Context will be null on snapshot objects.");
+                    }
+
+                    // Restore [Networked] state on scene objects (NetworkGame, ShrinkingArea, etc.)
+                    // that are already present in the scene and don't go through the pool.
                     foreach (var sceneObj in migrationRunner.GetResumeSnapshotNetworkSceneObjects())
                     {
                         sceneObj.Item1.CopyStateFrom(sceneObj.Item2);
-                        sceneObjCount++;
                     }
 
-                    int dynObjCount = 0;
+                    // Re-spawn dynamic network objects from the snapshot (GameplayMode, Players, level pieces).
+                    // pool.Context is already set above so IContextBehaviour.Context is correctly assigned.
                     foreach (var resumeNO in migrationRunner.GetResumeSnapshotNetworkObjects())
                     {
                         migrationRunner.Spawn(resumeNO, resumeNO.transform.position, resumeNO.transform.rotation,
                             onBeforeSpawned: (r, newNO) => newNO.CopyStateFrom(resumeNO));
-                        dynObjCount++;
                     }
 
-                    Debug.LogWarning($"[Host Migration] HostMigrationResume: {sceneObjCount} scene + {dynObjCount} dynamic object(s) restored.");
+                    Debug.LogWarning("[Host Migration] HostMigrationResume: snapshot objects restored.");
                 };
             }
             else
@@ -577,7 +602,6 @@ namespace TPSBR
             {
                 Log($"NetworkGame.PrepareForMigrationResume() - Peer {peer.ID}");
                 networkGame.PrepareForMigrationResume(runner);
-                peer.Request.HostMigrationToken = null;
             }
 
             while (scene.Context.GameplayMode == null)

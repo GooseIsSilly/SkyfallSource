@@ -22,6 +22,14 @@ namespace TPSBR
         public List<Player> ActivePlayers = new List<Player>();
         public int ActivePlayerCount = 0;
 
+        /// <summary>
+        /// True from PrepareForMigrationResume() until Activate() completes on the new host.
+        /// GameplayMode subclasses must skip CheckWinCondition while this is set to prevent a
+        /// false 1-player win trigger caused by the departing host's player being removed before
+        /// migration is complete.
+        /// </summary>
+        public bool IsMigrating { get; private set; }
+
         // PRIVATE MEMBERS
 
         [SerializeField]
@@ -115,6 +123,10 @@ namespace TPSBR
         public void Activate()
         {
             _isActive = true;
+
+            // Migration is fully complete once Activate() runs — the new host is live,
+            // all snapshot objects are restored, and win-condition checks are safe again.
+            IsMigrating = false;
 
             bool isMigration = _sessionRequest.HostMigrationToken != null;
 
@@ -460,6 +472,10 @@ namespace TPSBR
         /// </summary>
         public void PrepareForMigrationResume(NetworkRunner runner)
         {
+            // Block win-condition checks until Activate() completes. Without this the departing
+            // host's player being removed can drop alivePlayers to 1 and falsely end the match.
+            IsMigrating = true;
+
             _allPlayers.Clear();
             runner.GetAllBehaviours<Player>(_allPlayers);
 
