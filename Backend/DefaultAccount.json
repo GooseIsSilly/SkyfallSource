@@ -1,0 +1,20 @@
+{
+    "AccountName": "",
+    "Pass": "",
+    "Level": 1,
+    "XP": 0,
+    "CloudCoins": 0,
+    "OwnedSkins": [],
+    "EquippedSkin": "DefaultSkin",
+    "BanStatus": {
+        "IsBanned": false,
+        "BanReason": "",
+        "BannedAt": "",
+        "BannedBy": "",
+        "ExpiresAt": null
+    },
+    "ReportData": {
+        "LastReportTime": "",
+        "ReportCount": 0
+    }
+}

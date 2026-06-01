@@ -1,0 +1,47 @@
+{
+	"ID":"",
+	"Pass":"",
+	"AccountName":"",
+
+	"Level":1,
+	"XPIntoLevel":0,
+	"AccountLevel":1,
+	
+	"BattlePassPossessed":false,
+	"BattlePassTier":1,
+	"BattleStarsCount":0,
+	
+	"VBucksCount":0,
+	
+	"Locker":{
+		"Skins":[],
+		"Backpacks":[],
+		"Gliders":[],
+		"Pickaxes":[],
+		"Contrails":[],
+		"LoadingScreens":[],
+		"Emotes":[],
+		
+		"Skin":"",
+		"Backpack":"",
+		"Glider":"",
+		"Pickaxe":"",
+		"Contrail":"",
+		"LoadingScreen":"",
+		"Emote1":"",
+		"Emote2":"",
+		"Emote3":"",
+		"Emote4":"",
+		"Emote5":"",
+		"Emote6":""
+	},
+	
+	"ChallengeProgress":[],
+	
+	"RewardsToBeClaimed":[],
+	
+	"PreviousMatches":[],
+	
+	"Stats":{}
+
+}
