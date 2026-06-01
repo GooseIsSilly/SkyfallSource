@@ -76,12 +76,12 @@ namespace TPSBR
 			Global.Networking.StartGame(request);
 		}
 
-		public void JoinSession(string sessionName)
+		public void JoinSession(string sessionName, GameMode gameMode = GameMode.Client)
 		{
 			Global.Networking.StartGame(new SessionRequest()
 			{
 				UserID =  Context.PlayerData.UserID,
-				GameMode = GameMode.Client,
+				GameMode = gameMode,
 				SessionName = sessionName,
 				CustomLobby = _lobbyName,
 				Region = _currentRegion,

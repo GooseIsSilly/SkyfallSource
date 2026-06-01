@@ -58,130 +58,130 @@
     <Analyzer Include="C:\Program Files\Unity 6000.0.62f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity 6000.0.62f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="C:\Program Files\Unity 6000.0.62f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
-    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@f6e02210e263\Unity.Entities\SourceGenerators\AspectGenerator.dll" />
-    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@f6e02210e263\Unity.Entities\SourceGenerators\JobEntityGenerator.dll" />
-    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@f6e02210e263\Unity.Entities\SourceGenerators\SystemGenerator.dll" />
-    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@f6e02210e263\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.dll" />
-    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@f6e02210e263\Unity.Entities\SourceGenerators\SystemGenerator.LambdaJobs.dll" />
-    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@f6e02210e263\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.QueryBuilder.dll" />
-    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@f6e02210e263\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.dll" />
-    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@f6e02210e263\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.Query.dll" />
-    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@f6e02210e263\Unity.Entities\SourceGenerators\SystemGenerator.Common.dll" />
-    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@f6e02210e263\Unity.Entities\SourceGenerators\Common.dll" />
-    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@f6e02210e263\Unity.Entities\SourceGenerators\SystemGenerator.EntityQueryBulkOperations.dll" />
-    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@f6e02210e263\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.CodeFixes.dll" />
-    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\NetCodeSourceGenerator.dll" />
-    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\NetCodeAnalyzers.dll" />
+    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@95352e4aa61e\Unity.Entities\SourceGenerators\AspectGenerator.dll" />
+    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@95352e4aa61e\Unity.Entities\SourceGenerators\JobEntityGenerator.dll" />
+    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@95352e4aa61e\Unity.Entities\SourceGenerators\SystemGenerator.dll" />
+    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@95352e4aa61e\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.dll" />
+    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@95352e4aa61e\Unity.Entities\SourceGenerators\SystemGenerator.LambdaJobs.dll" />
+    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@95352e4aa61e\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.QueryBuilder.dll" />
+    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@95352e4aa61e\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.dll" />
+    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@95352e4aa61e\Unity.Entities\SourceGenerators\SystemGenerator.SystemAPI.Query.dll" />
+    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@95352e4aa61e\Unity.Entities\SourceGenerators\SystemGenerator.Common.dll" />
+    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@95352e4aa61e\Unity.Entities\SourceGenerators\Common.dll" />
+    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@95352e4aa61e\Unity.Entities\SourceGenerators\SystemGenerator.EntityQueryBulkOperations.dll" />
+    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.entities@95352e4aa61e\Unity.Entities\SourceGenerators\Unity.Entities.Analyzer.CodeFixes.dll" />
+    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\NetCodeSourceGenerator.dll" />
+    <Analyzer Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\NetCodeAnalyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFloatUnquantized.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueUInt.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueDoubleUnquantized.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueBool.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFloat2.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\GhostComponentSerializer.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueUShort.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFloat4Unquantized.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\FixedList\GhostFixedListCommandHelper.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueQuaternion.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFloat3.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFloat3Unquantized.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFloat2Unquantized.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\FixedList\GhostFixedListContainer.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\InputSynchronization.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFixedString64Bytes.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueEntity.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFixedString4096Bytes.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueSByte.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFixedString32Bytes.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueDouble.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\FixedList\GhostFixedListElement.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\FixedList\GhostFixedListSnapshotHelpers.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFixedString512Bytes.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueULong.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\FixedList\GhostSnapshotFixedList.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\CommandDataSerializer.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueNetworkEndpoint.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueShort.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\GhostComponentSerializerRegistrationSystem.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueByte.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueLong.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueQuaternionUnquantized.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueInt.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\RpcCommandSerializer.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFixedString128Bytes.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFloat.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueNetworkTick.NetCodeSourceGenerator.additionalfile" />
-    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@5d39c9b3860a\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFloat4.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFloatUnquantized.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueUInt.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueDoubleUnquantized.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueBool.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFloat2.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\GhostComponentSerializer.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueUShort.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFloat4Unquantized.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\FixedList\GhostFixedListCommandHelper.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueQuaternion.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFloat3.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFloat3Unquantized.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFloat2Unquantized.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\FixedList\GhostFixedListContainer.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\InputSynchronization.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFixedString64Bytes.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueEntity.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFixedString4096Bytes.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueSByte.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFixedString32Bytes.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueDouble.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\FixedList\GhostFixedListElement.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\FixedList\GhostFixedListSnapshotHelpers.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFixedString512Bytes.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueULong.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\FixedList\GhostSnapshotFixedList.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\CommandDataSerializer.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueNetworkEndpoint.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueShort.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\GhostComponentSerializerRegistrationSystem.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueByte.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueLong.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueQuaternionUnquantized.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueInt.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\RpcCommandSerializer.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFixedString128Bytes.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFloat.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueNetworkTick.NetCodeSourceGenerator.additionalfile" />
+    <AdditionalFiles Include="C:\Users\camev\Documents\SkyfallSource\SkyfallSource\Library\PackageCache\com.unity.netcode@c5c09913fd21\Runtime\SourceGenerators\Templates\DefaultTypes\GhostSnapshotValueFloat4.NetCodeSourceGenerator.additionalfile" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Editor\ShopSystemSetupHelper.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Editor\AllowHttpDialog.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Editor\UIToggleEditor.cs" />
     <Compile Include="Assets\Photon\FusionAddons\AnimationController\Editor\AnimationStateEditor.cs" />
-    <Compile Include="Assets\Scripts\Editor\FixGameplayModePrefabs.cs" />
-    <Compile Include="Assets\Editor\ForceFixShopNow.cs" />
     <Compile Include="Assets\Scripts\Editor\FixNetworkGameCode.cs" />
     <Compile Include="Assets\Editor\CompleteShopFix.cs" />
+    <Compile Include="Assets\Photon\FusionAddons\KCC\Editor\KCCProcessorReferenceDrawer.cs" />
+    <Compile Include="Assets\TPSBR\Scripts\Editor\RecoilPatternEditor.cs" />
+    <Compile Include="Assets\Editor\CharacterDataEditor.cs" />
+    <Compile Include="Assets\Scripts\Editor\MapScreenshotTool.cs" />
+    <Compile Include="Assets\Scripts\Editor\FixBattleRoyaleType.cs" />
+    <Compile Include="Assets\Scripts\Editor\FortniteLobbySetupWizard.cs" />
+    <Compile Include="Assets\Editor\AssignShopDatabase.cs" />
+    <Compile Include="Assets\Scripts\Editor\FixReplayGalleryHierarchy.cs" />
+    <Compile Include="Assets\Photon\FusionAddons\KCC\Editor\KCCEditor.cs" />
+    <Compile Include="Assets\Scripts\Editor\QuestUIGenerator.cs" />
+    <Compile Include="Assets\Editor\FixPlayerDataConstructor.cs" />
+    <Compile Include="Assets\Editor\ClearPlayerData.cs" />
+    <Compile Include="Assets\Scripts\Editor\CircleSpriteGenerator.cs" />
+    <Compile Include="Assets\Photon\FusionAddons\InterestManagement\Editor\ZoneInterestProviderEditor.cs" />
+    <Compile Include="Assets\Scripts\Editor\FixGameplayModeCode.cs" />
+    <Compile Include="Assets\Scripts\LiveEvent\Editor\LiveEventDataEditorEST.cs" />
+    <Compile Include="Assets\Scripts\LiveEvent\Editor\LiveEventSetupHelper.cs" />
+    <Compile Include="Assets\Photon\FusionAddons\InterestManagement\Editor\GlobalInterestManagerEditor.cs" />
+    <Compile Include="Assets\Photon\FusionAddons\KCC\Editor\KCCProxyBehaviorDrawer.cs" />
+    <Compile Include="Assets\Editor\CreateModernShop.cs" />
+    <Compile Include="Assets\Scripts\Editor\QuestSystemSetupWizard.cs" />
+    <Compile Include="Assets\Scripts\Editor\FixGameplayModePrefabsV2.cs" />
+    <Compile Include="Assets\Scripts\Editor\MapMeasurementHelper.cs" />
+    <Compile Include="Assets\Editor\SimpleShopFixer.cs" />
+    <Compile Include="Assets\Editor\ShopSystemSetupHelper.cs" />
+    <Compile Include="Assets\Scripts\Editor\FixGameplayModePrefabs.cs" />
+    <Compile Include="Assets\Editor\ForceFixShopNow.cs" />
     <Compile Include="Assets\Scripts\LiveEvent\Editor\AnimationClipCreator.cs" />
     <Compile Include="Assets\Editor\ApplyShopFixNow.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Utilities\Editor\ProjectUtility.cs" />
     <Compile Include="Assets\Photon\FusionAddons\InterestManagement\Editor\PlayerInterestManagerEditor.cs" />
-    <Compile Include="Assets\Photon\FusionAddons\KCC\Editor\KCCProcessorReferenceDrawer.cs" />
-    <Compile Include="Assets\TPSBR\Scripts\Editor\RecoilPatternEditor.cs" />
     <Compile Include="Assets\Editor\FinalCompleteShopFix.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Editor\UISliderEditor.cs" />
     <Compile Include="Assets\Photon\FusionAddons\AnimationController\Editor\AnimationControllerEditor.cs" />
-    <Compile Include="Assets\Editor\CharacterDataEditor.cs" />
-    <Compile Include="Assets\Scripts\Editor\MapScreenshotTool.cs" />
     <Compile Include="Assets\Scripts\Editor\QuickFixGameplayMode.cs" />
-    <Compile Include="Assets\Scripts\Editor\FixBattleRoyaleType.cs" />
-    <Compile Include="Assets\Scripts\Editor\FortniteLobbySetupWizard.cs" />
-    <Compile Include="Assets\Editor\AssignShopDatabase.cs" />
     <Compile Include="Assets\Photon\FusionAddons\KCC\Editor\KCCLayerDrawer.cs" />
     <Compile Include="Assets\Scripts\LiveEvent\Editor\SeasonEndSetupHelper.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Editor\UIButtonEditor.cs" />
     <Compile Include="Assets\Photon\FusionAddons\KCC\Editor\DisabledInPlayModeDrawer.cs" />
     <Compile Include="Assets\Photon\FusionAddons\InterestManagement\Editor\PlayerInterestViewEditor.cs" />
     <Compile Include="Assets\Editor\ShopUICreator.cs" />
-    <Compile Include="Assets\Editor\ReplaceWithShopList.cs" />
     <Compile Include="Assets\Photon\FusionAddons\AnimationController\Editor\ProxyBehaviorDrawer.cs" />
+    <Compile Include="Assets\Editor\ReplaceWithShopList.cs" />
     <Compile Include="Assets\Photon\FusionAddons\AnimationController\Editor\AnimationLayerEditor.cs" />
-    <Compile Include="Assets\Scripts\Editor\FixReplayGalleryHierarchy.cs" />
-    <Compile Include="Assets\Photon\FusionAddons\KCC\Editor\KCCEditor.cs" />
     <Compile Include="Assets\Scripts\Editor\FixReplayViewerViewportAlpha.cs" />
-    <Compile Include="Assets\Scripts\Editor\QuestUIGenerator.cs" />
-    <Compile Include="Assets\Editor\FixPlayerDataConstructor.cs" />
     <Compile Include="Assets\Scripts\Editor\FixGameplayModePrefabsV3.cs" />
-    <Compile Include="Assets\Editor\ClearPlayerData.cs" />
     <Compile Include="Assets\Editor\UpdateModernShopCloseButton.cs" />
-    <Compile Include="Assets\Scripts\Editor\CircleSpriteGenerator.cs" />
     <Compile Include="Assets\Editor\FixModernShopVisibility.cs" />
     <Compile Include="Assets\Editor\ShopDatabaseInspector.cs" />
     <Compile Include="Assets\Photon\FusionAddons\KCC\Editor\StatsRecorderEditor.cs" />
-    <Compile Include="Assets\Photon\FusionAddons\InterestManagement\Editor\ZoneInterestProviderEditor.cs" />
     <Compile Include="Assets\Editor\DirectShopFix.cs" />
     <Compile Include="Assets\Scripts\LiveEvent\Editor\LiveEventSetupWindow.cs" />
     <Compile Include="Assets\Editor\FixShopSetup.cs" />
     <Compile Include="Assets\Photon\FusionAddons\InterestManagement\Editor\Utilities\InterestEditorUtility.cs" />
-    <Compile Include="Assets\Scripts\Editor\FixGameplayModeCode.cs" />
-    <Compile Include="Assets\Scripts\LiveEvent\Editor\LiveEventDataEditorEST.cs" />
     <Compile Include="Assets\Scripts\LiveEvent\Editor\SeasonEndResetMenu.cs" />
     <Compile Include="Assets\Photon\FusionAddons\KCC\Editor\KCCAuthorityBehaviorDrawer.cs" />
     <Compile Include="Assets\3rdParty\KriptoFX\MuzzleFlashes\Shaders\Editor\FPS_UberDecalGUI.cs" />
-    <Compile Include="Assets\Scripts\LiveEvent\Editor\LiveEventSetupHelper.cs" />
-    <Compile Include="Assets\Photon\FusionAddons\InterestManagement\Editor\GlobalInterestManagerEditor.cs" />
-    <Compile Include="Assets\Photon\FusionAddons\KCC\Editor\KCCProxyBehaviorDrawer.cs" />
     <Compile Include="Assets\3rdParty\Hovl Studio\Render Pipelines support\Editor\ShaderChanger.cs" />
     <Compile Include="Assets\Editor\CharacterDataInspector.cs" />
     <Compile Include="Assets\Editor\ManualShopGuide.cs" />
-    <Compile Include="Assets\Editor\CreateModernShop.cs" />
-    <Compile Include="Assets\Scripts\Editor\QuestSystemSetupWizard.cs" />
-    <Compile Include="Assets\Scripts\Editor\FixGameplayModePrefabsV2.cs" />
-    <Compile Include="Assets\Scripts\Editor\MapMeasurementHelper.cs" />
     <Compile Include="Assets\Scripts\Editor\MapZoneSetupHelper.cs" />
     <Compile Include="Assets\Photon\FusionAddons\InterestManagement\Editor\InterestProviderEditor.cs" />
-    <Compile Include="Assets\Editor\SimpleShopFixer.cs" />
     <Compile Include="Assets\Scripts\Editor\FixFortniteButtonComponents.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -686,15 +686,15 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="websocket-sharp">
-      <HintPath>Library\PackageCache\com.unity.services.wire@2d36cce58c62\Plugins\websocket-sharp.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.services.wire@aba8a6fb1fe2\Plugins\websocket-sharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Cecil.Awesome">
-      <HintPath>Library\PackageCache\com.unity.entities@f6e02210e263\Unity.Entities.CodeGen\Unity.Cecil.Awesome.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.entities@95352e4aa61e\Unity.Entities.CodeGen\Unity.Cecil.Awesome.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Collections.LowLevel.ILSupport">
-      <HintPath>Library\PackageCache\com.unity.collections@aea9d3bd5e19\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.collections@31e963071226\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="nunit.framework">
@@ -746,7 +746,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.IO.Hashing">
-      <HintPath>Library\PackageCache\com.unity.collections@aea9d3bd5e19\Unity.Collections.Tests\System.IO.Hashing\System.IO.Hashing.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.collections@31e963071226\Unity.Collections.Tests\System.IO.Hashing\System.IO.Hashing.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Fusion.Runtime">
@@ -770,11 +770,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@74deb55db2a0\Runtime\Newtonsoft.Json.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@4dfd81071c64\Runtime\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Mono.Cecil">
-      <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil@d78732e851eb\Mono.Cecil.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil@ecb9724e46ff\Mono.Cecil.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Fusion.Realtime">
@@ -782,7 +782,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
-      <HintPath>Library\PackageCache\com.unity.collections@aea9d3bd5e19\Unity.Collections.Tests\System.Runtime.CompilerServices.Unsafe\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <HintPath>Library\PackageCache\com.unity.collections@31e963071226\Unity.Collections.Tests\System.Runtime.CompilerServices.Unsafe\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
@@ -1313,16 +1313,16 @@
       <HintPath>Library\ScriptAssemblies\UnityEditor.TestRunner.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.Services.Vivox.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Services.Vivox.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.AI.Navigation">
       <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Networking.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Networking.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Unity.Services.Matchmaker">
-      <HintPath>Library\ScriptAssemblies\Unity.Services.Matchmaker.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.ShaderGraph.Editor">
@@ -1355,6 +1355,10 @@
     </Reference>
     <Reference Include="Unity.RenderPipelines.GPUDriven.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.GPUDriven.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Multiplayer.Widgets.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Multiplayer.Widgets.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Services.Authentication.PlayerAccounts">
@@ -1405,6 +1409,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.NetCode.EntitiesInternalAccess">
+      <HintPath>Library\ScriptAssemblies\Unity.NetCode.EntitiesInternalAccess.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine.Purchasing.SecurityStub">
       <HintPath>Library\ScriptAssemblies\UnityEngine.Purchasing.SecurityStub.dll</HintPath>
       <Private>False</Private>
@@ -1441,6 +1449,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.Mathematics.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.Entities.Graphics.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Entities.Graphics.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Multiplayer.PlayMode.Editor.Bridge">
       <HintPath>Library\ScriptAssemblies\Unity.Multiplayer.PlayMode.Editor.Bridge.dll</HintPath>
       <Private>False</Private>
@@ -1457,12 +1469,24 @@
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.Services.Vivox">
+      <HintPath>Library\ScriptAssemblies\Unity.Services.Vivox.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.NetCode.Profiler.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.NetCode.Profiler.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Services.Core.Analytics">
       <HintPath>Library\ScriptAssemblies\Unity.Services.Core.Analytics.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Toolchain.Macos-x86_64-Linux-x86_64">
       <HintPath>Library\ScriptAssemblies\Unity.Toolchain.Macos-x86_64-Linux-x86_64.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Multiplayer.Widgets.Core">
+      <HintPath>Library\ScriptAssemblies\Unity.Multiplayer.Widgets.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Settings.Editor">
@@ -1477,12 +1501,24 @@
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.Services.Multiplayer.Editor.Shared">
+      <HintPath>Library\ScriptAssemblies\Unity.Services.Multiplayer.Editor.Shared.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.2D.Sprite.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.AI.Navigation.Editor.ConversionSystem">
       <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Editor.ConversionSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Entities.Graphics">
+      <HintPath>Library\ScriptAssemblies\Unity.Entities.Graphics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Multiplay.Authoring.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Services.Multiplay.Authoring.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Mathematics.Extensions.Hybrid">
@@ -1501,8 +1537,16 @@
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.Multiplayer.Widgets.Session">
+      <HintPath>Library\ScriptAssemblies\Unity.Multiplayer.Widgets.Session.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEditor.SpatialTracking">
       <HintPath>Library\ScriptAssemblies\UnityEditor.SpatialTracking.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.QoS">
+      <HintPath>Library\ScriptAssemblies\Unity.Services.QoS.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.SysrootPackage.Editor">
@@ -1551,6 +1595,10 @@
     </Reference>
     <Reference Include="UnityEngine.Purchasing">
       <HintPath>Library\ScriptAssemblies\UnityEngine.Purchasing.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Multiplayer">
+      <HintPath>Library\ScriptAssemblies\Unity.Services.Multiplayer.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
@@ -1625,12 +1673,12 @@
       <HintPath>Library\ScriptAssemblies\UnityEditor.XR.LegacyInputHelpers.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.Services.Multiplay">
-      <HintPath>Library\ScriptAssemblies\Unity.Services.Multiplay.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.ScriptableBuildPipeline">
       <HintPath>Library\ScriptAssemblies\Unity.ScriptableBuildPipeline.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Multiplay">
+      <HintPath>Library\ScriptAssemblies\Unity.Services.Multiplay.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Collections">
@@ -1659,6 +1707,10 @@
     </Reference>
     <Reference Include="Unity.Transforms">
       <HintPath>Library\ScriptAssemblies\Unity.Transforms.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Multiplayer.Widgets.Vivox">
+      <HintPath>Library\ScriptAssemblies\Unity.Multiplayer.Widgets.Vivox.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Scenes">
@@ -1715,6 +1767,10 @@
     </Reference>
     <Reference Include="Unity.Services.Core.Environments">
       <HintPath>Library\ScriptAssemblies\Unity.Services.Core.Environments.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Multiplayer.Editor.Matchmaker.Authoring">
+      <HintPath>Library\ScriptAssemblies\Unity.Services.Multiplayer.Editor.Matchmaker.Authoring.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Sysroot.Linux_x86_64">

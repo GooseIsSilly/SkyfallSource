@@ -114,10 +114,9 @@ namespace TPSBR
 			_queueName = Global.Settings.Network.GetCustomOrDefaultQueueName();
 
 			// If there are matchmaking hints, we'll take them
-			MatchmakingResults initMmResults = null;
-			if (Global.MultiplayManager != null && Global.MultiplayManager.MatchmakingResults != null)
+			var initMmResults = Global.MultiplayManager != null ? Global.MultiplayManager.MatchmakingResults : null;
+			if (initMmResults != null)
 			{
-				initMmResults = Global.MultiplayManager.MatchmakingResults;
 				_queueName = initMmResults.QueueName;
 			}
 

@@ -116,23 +116,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Plugins\Outline\Scripts\OutlineConstants.cs" />
-    <Compile Include="Assets\Plugins\Demigiant\DOTween\Modules\DOTweenModuleUtils.cs" />
     <Compile Include="Assets\Plugins\Demigiant\DOTween\Modules\DOTweenModuleAudio.cs" />
     <Compile Include="Assets\Plugins\Outline\Scripts\OutlineSettingsObject.cs" />
-    <Compile Include="Assets\Plugins\Demigiant\DOTween\Modules\DOTweenModulePhysics2D.cs" />
     <Compile Include="Assets\Standard Assets\Environment\Water\Water\Scripts\Water.cs" />
     <Compile Include="Assets\Plugins\Outline\Scripts\OutlineBehaviour.cs" />
     <Compile Include="Assets\Plugins\Outline\Scripts\OutlinePass.cs" />
-    <Compile Include="Assets\Plugins\Outline\Scripts\OutlineResources.cs" />
     <Compile Include="Assets\Plugins\Demigiant\DOTween\Modules\DOTweenModulePhysics.cs" />
     <Compile Include="Assets\Plugins\Outline\Scripts\OutlineSettings.cs" />
     <Compile Include="Assets\Plugins\Outline\Scripts\IgnoreOutline.cs" />
     <Compile Include="Assets\Plugins\Demigiant\DOTween\Modules\DOTweenModuleSprite.cs" />
     <Compile Include="Assets\Plugins\Demigiant\DOTween\Modules\DOTweenModuleUI.cs" />
-    <Compile Include="Assets\Plugins\Demigiant\DOTween\Modules\DOTweenModuleUnityVersion.cs" />
     <Compile Include="Assets\Plugins\Outline\Scripts\IOutlineSettings.cs" />
-    <Compile Include="Assets\Plugins\Outline\Scripts\OutlineObject.cs" />
     <Compile Include="Assets\Plugins\Outline\Scripts\OutlineFeature.cs" />
+    <Compile Include="Assets\Plugins\Demigiant\DOTween\Modules\DOTweenModuleUtils.cs" />
+    <Compile Include="Assets\Plugins\Demigiant\DOTween\Modules\DOTweenModulePhysics2D.cs" />
+    <Compile Include="Assets\Plugins\Outline\Scripts\OutlineResources.cs" />
+    <Compile Include="Assets\Plugins\Demigiant\DOTween\Modules\DOTweenModuleUnityVersion.cs" />
+    <Compile Include="Assets\Plugins\Outline\Scripts\OutlineObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\Outline\Shaders\Render.shader" />
@@ -1507,12 +1507,12 @@
       <HintPath>Library\ScriptAssemblies\UnityEditor.XR.LegacyInputHelpers.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.Services.Multiplay">
-      <HintPath>Library\ScriptAssemblies\Unity.Services.Multiplay.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.ScriptableBuildPipeline">
       <HintPath>Library\ScriptAssemblies\Unity.ScriptableBuildPipeline.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Services.Multiplay">
+      <HintPath>Library\ScriptAssemblies\Unity.Services.Multiplay.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Collections">

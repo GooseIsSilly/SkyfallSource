@@ -255,7 +255,7 @@ namespace TPSBR.UI
 
 		private void OnMatchFound(MultiplayAssignment assignment)
 		{
-			Context.Matchmaking.JoinSession("mm-" + assignment.MatchId);
+			Context.Matchmaking.JoinSession("mm-" + assignment.MatchId, GameMode.AutoHostOrClient);
 			if (_matchmakerView != null)
 			{
 				_matchmakerView.Close();
