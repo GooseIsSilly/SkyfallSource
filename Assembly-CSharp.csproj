@@ -331,6 +331,7 @@
     <Compile Include="Assets\Photon\FusionAddons\KCC\Processors\Core\NetworkKCCProcessor.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Gameplay\Weapons\FirearmWeapon.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Gameplay\LevelGeneration\LevelBlock.cs" />
+    <Compile Include="Assets\Scripts\Backend\DedicatedMatchmaker.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Gameplay\Agent\Character\States\MoveState.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Miscellaneous\StaticNetworkTransform.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Core\NetworkGame.cs" />
@@ -408,6 +409,7 @@
     <Compile Include="Assets\TPSBR\Scripts\Gameplay\Targets\AutoAimTarget.cs" />
     <Compile Include="Assets\TPSBR\Scripts\UI\Core\UIView.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Extensions\SceneExtensions.cs" />
+    <Compile Include="Assets\Scripts\BattlePass\BattlePassUIManager.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Extensions\ByteExtensions.cs" />
     <Compile Include="Assets\Scripts\SprintSystem.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Gameplay\Effects\Explosion.cs" />
@@ -588,6 +590,7 @@
     <Compile Include="Assets\Scripts\TeamSystem\PhotonFriendsInitializer.cs" />
     <Compile Include="Assets\TPSBR\Scripts\UI\Widgets\UIScoreboard.cs" />
     <Compile Include="Assets\TPSBR\Scripts\UI\MenuViews\UICreditsView.cs" />
+    <Compile Include="Assets\Scripts\Backend\DedicatedServerManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
     <Compile Include="Assets\TPSBR\Scripts\UI\Widgets\UIPlayer.cs" />

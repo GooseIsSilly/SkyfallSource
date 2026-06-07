@@ -69,8 +69,8 @@ MonoBehaviour:
     y: 0
     width: 604
     height: 933
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 276, y: 76}
+  m_MaxSize: {x: 4001, y: 4026}
   m_ActualView: {fileID: 13}
   m_Panes:
   - {fileID: 13}
@@ -301,7 +301,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 680
+    y: 625
     width: 1955
     height: 306
   m_SerializedDataModeController:
@@ -345,21 +345,21 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 540}
     m_SelectedIDs: c8610400
     m_LastClickedID: 287176
-    m_ExpandedIDs: 000000000ca503000c5e0400c8610400d261040000ca9a3bffffff7f
+    m_ExpandedIDs: 00000000deda0200
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Scene Barn UFO
-      m_OriginalName: Scene Barn UFO
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 287202
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_TrimLeadingAndTrailingWhitespace: 0
       m_ClientGUIView: {fileID: 5}
@@ -374,7 +374,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000000ca50300
+    m_ExpandedIDs: 00000000deda0200
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -453,8 +453,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Inspector\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1956
-    y: 79
+    x: 1957
+    y: 24
     width: 603
     height: 907
   m_SerializedDataModeController:
@@ -503,7 +503,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 79
+    y: 24
     width: 485
     height: 575
   m_SerializedDataModeController:
@@ -519,9 +519,9 @@ MonoBehaviour:
     m_OverlaysVisible: 1
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 3638}
-      m_SelectedIDs: 724bf3ff
-      m_LastClickedID: -832654
+      scrollPos: {x: 0, y: 0}
+      m_SelectedIDs: 
+      m_LastClickedID: 0
       m_ExpandedIDs: 7242f6ff3064f6ffa870f6ff247bf6ffa287f6ffa899f6ff4050f7ff9874f7ff5492f7ffbab4f7ff22d7f7ffaae1f7ff1eeef7ff961df8ff6852f8ff2a62f8ff7487f8ffd8a9f8fff476faffb42dfbff341cfcffb440fcffa214feff3231feff0ce6030078b8050010ec0600a60b0700fa100700
       m_RenameOverlay:
         m_UserAcceptedRename: 0
@@ -1176,11 +1176,11 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: -0.13031852, y: 0.62484515, z: -0.10674324, w: -0.7626837}
     speed: 2
-    m_Value: {x: -0.12763081, y: 0.61942416, z: -0.10294867, w: -0.76774067}
+    m_Value: {x: -0.13031852, y: 0.62484515, z: -0.10674324, w: -0.76268375}
   m_Size:
     m_Target: 1.3905274
     speed: 2
-    m_Value: 1.390532
+    m_Value: 1.3905274
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -1235,8 +1235,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Game\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 486
-    y: 79
+    x: 487
+    y: 24
     width: 1468
     height: 575
   m_SerializedDataModeController:
