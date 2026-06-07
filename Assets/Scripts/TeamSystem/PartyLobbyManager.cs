@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using SocketIOClient;
+// using SocketIOClient;
 using TPSBR.Backend;
 
 namespace TPSBR
@@ -22,7 +22,7 @@ namespace TPSBR
         private string _localUserID;
         private string _localNickname;
 
-        private SocketIOUnity _socket;
+        // private SocketIOUnity _socket;
         private bool _isConnected;
 
         private const string SOCKET_URL = "http://localhost:3551";
@@ -69,6 +69,7 @@ namespace TPSBR
 
         private void ConnectToServer()
         {
+            /*
             if (_socket != null)
             {
                 _socket.Disconnect();
@@ -161,37 +162,46 @@ namespace TPSBR
             });
 
             _socket.Connect();
+            */
         }
 
         public void CreateParty()
         {
+            /*
             if (_socket != null && _isConnected)
             {
                 _socket.Emit("leaveParty", new { message = "leave" });
             }
+            */
         }
 
         public bool InviteFriend(string friendNickname)
         {
+            /*
             if (_socket == null || !_isConnected) return false;
 
             _socket.Emit("inviteToParty", new { message = friendNickname });
             Debug.Log($"[PartyLobbyManager] Invited {friendNickname} to party");
+            */
             return true;
         }
 
         public void AcceptInvite(string targetPartyID)
         {
+            /*
             if (_socket == null || !_isConnected) return;
 
             _socket.Emit("joinParty", new { message = targetPartyID });
+            */
         }
 
         public void LeaveParty()
         {
+            /*
             if (_socket == null || !_isConnected) return;
 
             _socket.Emit("leaveParty", new { message = "leave" });
+            */
         }
 
         public void StartMatchmaking()
@@ -203,6 +213,7 @@ namespace TPSBR
                 return;
             }
 
+            /*
             if (_socket != null && _isConnected)
             {
                 _socket.Emit("partyTravelToLaunchZone", new { message = "start" });
@@ -212,6 +223,7 @@ namespace TPSBR
             {
                 Debug.LogWarning("[PartyLobbyManager] Cannot start matchmaking: Not connected to Socket.IO server");
             }
+            */
         }
 
         public bool AddFriend(string userID, string nickname)
@@ -303,10 +315,12 @@ namespace TPSBR
                 Instance = null;
             }
 
+            /*
             if (_socket != null)
             {
                 _socket.Disconnect();
             }
+            */
         }
     }
 }

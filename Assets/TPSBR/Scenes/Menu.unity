@@ -4026,6 +4026,8 @@ GameObject:
   - component: {fileID: 619003392}
   - component: {fileID: 619003391}
   - component: {fileID: 619003390}
+  - component: {fileID: 619003394}
+  - component: {fileID: 619003393}
   m_Layer: 0
   m_Name: BackendManagers
   m_TagString: Untagged
@@ -4080,6 +4082,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &619003393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619003389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 700e58484252f054786ca40db4d7165a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &619003394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 619003389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 972d940467cd0db46b3183cf20625e51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _port: 7777
+  _map: Game
+  _serverId: 
+  _serverKey: 
 --- !u!1 &636619378
 GameObject:
   m_ObjectHideFlags: 0

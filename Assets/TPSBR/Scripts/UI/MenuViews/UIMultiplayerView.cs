@@ -233,6 +233,14 @@ namespace TPSBR.UI
 
 		private async void OnQuickPlayButton()
 		{
+            // Dedicated matchmaking redirect
+            var dedicatedMatchmaker = FindObjectOfType<DedicatedMatchmaker>();
+            if (dedicatedMatchmaker != null)
+            {
+                dedicatedMatchmaker.StartMatchmaking();
+                return;
+            }
+
 			if (Context.PlayerData.UnityID.HasValue() == true)
 			{
 				_errorText.text = string.Empty;

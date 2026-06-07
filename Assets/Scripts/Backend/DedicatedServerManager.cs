@@ -18,6 +18,8 @@ namespace TPSBR
         [SerializeField] private string _serverId = "";
         [SerializeField] private string _serverKey = "";
 
+        private bool _matchCompleteNotified = false;
+
         public int Port => _port;
         public string Map => _map;
         public string ServerId => _serverId;
@@ -69,6 +71,9 @@ namespace TPSBR
 
         private void Update()
         {
+            if (_matchCompleteNotified)
+                return;
+
             if (Runner != null && Runner.IsServer)
             {
                 CheckAlivePlayers();
@@ -81,22 +86,23 @@ namespace TPSBR
                 return;
 
             int aliveCount = 0;
+            int totalPlayers = 0;
+
             foreach (var player in Context.NetworkGame.ActivePlayers)
             {
+                totalPlayers++;
                 if (player.Statistics.IsAlive)
                 {
                     aliveCount++;
                 }
             }
 
-            // When only 1 player is left (the winner), notify backend
-            if (aliveCount <= 1 && Context.NetworkGame.ActivePlayers.Count > 1)
+            // Only notify if the match had players and now only 1 (or 0) is alive
+            if (totalPlayers > 1 && aliveCount <= 1)
             {
                 Debug.Log($"[DedicatedServerManager] Match over! Alive players: {aliveCount}. Notifying backend.");
+                _matchCompleteNotified = true;
                 NotifyMatchComplete();
-                
-                // Set state to finished to avoid multiple notifications
-                // The actual win logic might be in GameplayMode, we just hook here for backend
             }
         }
 
