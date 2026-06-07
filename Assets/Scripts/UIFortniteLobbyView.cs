@@ -45,7 +45,6 @@ namespace TPSBR.UI
         private float _searchStartTime;
         private List<SessionInfo> _availableSessions = new List<SessionInfo>();
         private UIMatchmakerView _matchmakerView;
-        // Set to true to re-enable Manhunt in the quick-play rotation.
         private const bool MANHUNT_ENABLED = false;
 
         private int _currentGamemodeIndex = 0;
@@ -130,7 +129,12 @@ namespace TPSBR.UI
             Context.Matchmaking.LobbyJoined += OnLobbyJoined;
             Context.Matchmaking.LobbyJoinFailed += OnLobbyJoinFailed;
 
-            // Subscribe to coin changes
+            if (PartyLobbyManager.Instance != null)
+            {
+                PartyLobbyManager.Instance.OnMatchFound += OnMatchFound;
+                PartyLobbyManager.Instance.OnPartyUpdated += OnPartyUpdated;
+            }
+
             if (PlayerDataManager.Instance != null)
             {
                 PlayerDataManager.Instance.OnCoinsChanged += OnCoinsChanged;
@@ -148,7 +152,12 @@ namespace TPSBR.UI
             Context.Matchmaking.LobbyJoined -= OnLobbyJoined;
             Context.Matchmaking.LobbyJoinFailed -= OnLobbyJoinFailed;
 
-            // Unsubscribe from coin changes
+            if (PartyLobbyManager.Instance != null)
+            {
+                PartyLobbyManager.Instance.OnMatchFound -= OnMatchFound;
+                PartyLobbyManager.Instance.OnPartyUpdated -= OnPartyUpdated;
+            }
+
             if (PlayerDataManager.Instance != null)
             {
                 PlayerDataManager.Instance.OnCoinsChanged -= OnCoinsChanged;
@@ -176,12 +185,59 @@ namespace TPSBR.UI
             }
         }
 
+        private void OnMatchFound(string owner)
+        {
+            Debug.Log($"[UIFortniteLobbyView] Match found! Traveling with owner: {owner}");
+            
+            if (_playButtonText != null)
+                _playButtonText.text = "JOINING...";
+
+            if (Context.Matchmaking != null)
+            {
+                Context.Matchmaking.JoinSession(owner);
+            }
+        }
+
+        private void OnPartyUpdated(TeamData party)
+        {
+            if (party != null && !PartyLobbyManager.Instance.IsPartyLeader())
+            {
+                if (_playButtonText != null && !_isSearchingForGame)
+                {
+                    _playButtonText.text = "NOT READY";
+                }
+            }
+        }
+
+        private void OnPlayButtonClicked()
+        {
+            Debug.Log("[UIFortniteLobbyView] Play button clicked - Starting Quick Play Matchmaking");
+
+            if (SeasonEndController.Instance != null && SeasonEndController.Instance.IsInDowntime)
+            {
+                Debug.LogWarning("[UIFortniteLobbyView] Cannot start game - Season downtime is active!");
+                if (_playButtonText != null) _playButtonText.text = "SEASON DOWNTIME";
+                return;
+            }
+
+            _availableSessions.Clear();
+            _isSearchingForGame = false;
+            _isConnectingForPlay = true;
+
+            if (_playButtonText != null)
+                _playButtonText.text = "CONNECTING...";
+
+            // Use the built-in Fusion matchmaking flow
+            if (Context.Matchmaking != null)
+            {
+                Context.Matchmaking.JoinLobby(true);
+            }
+        }
+
         private void UpdatePlayerInfo()
         {
             if (_playerNameText != null)
-            {
                 _playerNameText.text = Context.PlayerData.Nickname;
-            }
         }
 
         private void LoadPlayerDataFromBackend()
@@ -210,21 +266,16 @@ namespace TPSBR.UI
         private void UpdateCloudCoinsDisplay(int coins)
         {
             if (_cloudCoinsText != null)
-            {
                 _cloudCoinsText.text = coins.ToString();
-            }
         }
 
         private void UpdateLevelDisplay(int level, int xp)
         {
             if (_levelText != null)
-            {
                 _levelText.text = $"Level {level}";
-            }
 
             if (_levelProgressBar != null)
             {
-                // XP needed per level is 1000 (configured in backend)
                 float xpPerLevel = 1000f;
                 float progress = xp / xpPerLevel;
                 _levelProgressBar.fillAmount = progress;
@@ -252,35 +303,6 @@ namespace TPSBR.UI
             UpdateLevelDisplay(data.Level, data.XP);
         }
 
-        private void OnPlayButtonClicked()
-        {
-            Debug.Log("[UIFortniteLobbyView] Play button clicked - Starting Quick Play");
-
-            if (SeasonEndController.Instance != null && SeasonEndController.Instance.IsInDowntime)
-            {
-                Debug.LogWarning("[UIFortniteLobbyView] Cannot start game - Season downtime is active!");
-
-                if (_playButtonText != null)
-                {
-                    _playButtonText.text = "SEASON DOWNTIME";
-                }
-
-                return;
-            }
-
-            _availableSessions.Clear();
-            _isSearchingForGame = false;
-            _isConnectingForPlay = true;
-
-            if (_playButtonText != null)
-            {
-                _playButtonText.text = "CONNECTING...";
-            }
-
-            Debug.Log("[UIFortniteLobbyView] Rejoining lobby to refresh session list...");
-            Context.Matchmaking.JoinLobby(true);
-        }
-
         private void StartQuickPlay()
         {
             _availableSessions.Clear();
@@ -288,114 +310,31 @@ namespace TPSBR.UI
             _searchStartTime = Time.realtimeSinceStartup;
 
             if (_playButtonText != null)
-            {
                 _playButtonText.text = "SEARCHING...";
-            }
 
             Debug.Log("[UIFortniteLobbyView] Starting quick play search");
-            Debug.Log($"[UIFortniteLobbyView] Looking for {_gameplayType} games with max {_maxPlayers} players");
         }
 
         private void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
         {
-            Debug.Log($"[UIFortniteLobbyView] ========== SESSION LIST UPDATE ==========");
-            Debug.Log($"[UIFortniteLobbyView] Total sessions received: {sessionList.Count}");
-            Debug.Log($"[UIFortniteLobbyView] Is searching: {_isSearchingForGame}");
-
-            foreach (var session in sessionList)
-            {
-                Debug.Log($"[UIFortniteLobbyView] RAW SESSION:");
-                Debug.Log($"  Name: {session.Name}");
-                Debug.Log($"  IsValid: {session.IsValid}");
-                Debug.Log($"  IsOpen: {session.IsOpen}");
-                Debug.Log($"  IsVisible: {session.IsVisible}");
-                Debug.Log($"  PlayerCount: {session.PlayerCount}/{session.MaxPlayers}");
-                Debug.Log($"  Region: {session.Region}");
-                Debug.Log($"  HasMap: {session.HasMap()}");
-                if (session.HasMap())
-                {
-                    var mapSetup = session.GetMapSetup();
-                    Debug.Log($"  Map: {(mapSetup != null ? mapSetup.DisplayName : "NULL")}");
-                }
-                Debug.Log($"  GameplayType: {session.GetGameplayType()}");
-            }
-
-            if (!_isSearchingForGame)
-            {
-                Debug.Log("[UIFortniteLobbyView] Not searching, ignoring session update");
-                Debug.Log($"[UIFortniteLobbyView] ========================================");
-                return;
-            }
+            if (!_isSearchingForGame) return;
 
             _availableSessions.Clear();
 
-            int filteredOutCount = 0;
-            string filterReasons = "";
-
             foreach (var session in sessionList)
             {
-                bool filtered = false;
-                string reason = "";
-
-                if (session.IsValid == false)
-                {
-                    filtered = true;
-                    reason = "not valid";
-                }
-                else if (session.IsOpen == false)
-                {
-                    filtered = true;
-                    reason = "not open";
-                }
-                else if (session.IsVisible == false)
-                {
-                    filtered = true;
-                    reason = "not visible";
-                }
-                else if (session.PlayerCount >= session.MaxPlayers)
-                {
-                    filtered = true;
-                    reason = "full";
-                }
-                else if (session.HasMap() == false)
-                {
-                    filtered = true;
-                    reason = "no map";
-                }
-                else
+                if (session.IsValid && session.IsOpen && session.IsVisible && session.PlayerCount < session.MaxPlayers && session.HasMap())
                 {
                     var sessionGameplayType = session.GetGameplayType();
-                    if (sessionGameplayType != _gameplayType)
+                    if (sessionGameplayType == _gameplayType)
                     {
-                        filtered = true;
-                        reason = $"wrong type ({sessionGameplayType} vs {_gameplayType})";
+                        _availableSessions.Add(session);
                     }
                 }
-
-                if (filtered)
-                {
-                    filteredOutCount++;
-                    filterReasons += $"\n  - {session.GetDisplayName()}: {reason}";
-                }
-                else
-                {
-                    _availableSessions.Add(session);
-                    Debug.Log($"[UIFortniteLobbyView] ✓ Found valid session: {session.GetDisplayName()} ({session.PlayerCount}/{session.MaxPlayers})");
-                }
             }
-
-            if (filteredOutCount > 0)
-            {
-                Debug.Log($"[UIFortniteLobbyView] Filtered out {filteredOutCount} sessions:{filterReasons}");
-            }
-
-            Debug.Log($"[UIFortniteLobbyView] {_availableSessions.Count} sessions match criteria");
-            Debug.Log($"[UIFortniteLobbyView] ========================================");
 
             if (_availableSessions.Count > 0)
-            {
                 JoinBestSession();
-            }
         }
 
         private void JoinBestSession()
@@ -405,12 +344,10 @@ namespace TPSBR.UI
                 .ThenBy(s => s.MaxPlayers - s.PlayerCount)
                 .First();
 
-            Debug.Log($"[UIFortniteLobbyView] Found session: {bestSession.GetDisplayName()} - Joining...");
+            Debug.Log($"[UIFortniteLobbyView] Found session: {bestSession.Name} - Joining...");
 
             if (_playButtonText != null)
-            {
                 _playButtonText.text = "JOINING...";
-            }
 
             _isSearchingForGame = false;
             Context.Matchmaking.JoinSession(bestSession);
@@ -419,23 +356,16 @@ namespace TPSBR.UI
         private void ShowCreateGameUI()
         {
             Debug.Log("[UIFortniteLobbyView] No sessions found - Opening Create Game UI");
-
-            if (_playButtonText != null)
-            {
-                _playButtonText.text = "PLAY";
-            }
-
+            if (_playButtonText != null) _playButtonText.text = "PLAY";
             Open<UICreateSessionView>();
         }
 
         private void OnLobbyJoined()
         {
             Debug.Log("[UIFortniteLobbyView] Joined lobby successfully");
-
             if (_isConnectingForPlay)
             {
                 _isConnectingForPlay = false;
-                Debug.Log("[UIFortniteLobbyView] Lobby connected! Starting search...");
                 StartQuickPlay();
             }
         }
@@ -443,13 +373,8 @@ namespace TPSBR.UI
         private void OnLobbyJoinFailed(string region)
         {
             Debug.LogWarning($"[UIFortniteLobbyView] Failed to join lobby in region: {region}");
-
             _isConnectingForPlay = false;
-
-            if (_playButtonText != null)
-            {
-                _playButtonText.text = "PLAY";
-            }
+            if (_playButtonText != null) _playButtonText.text = "PLAY";
         }
 
         private void OnShopButtonClicked()
@@ -462,27 +387,20 @@ namespace TPSBR.UI
         {
             Debug.Log("[UIFortniteLobbyView] Quest button clicked - Opening Quests");
             var questView = Open<UIQuestView>();
-            if (questView != null)
-            {
-                questView.BackView = this;
-            }
+            if (questView != null) questView.BackView = this;
         }
 
         private void OnLockerButtonClicked()
         {
             Debug.Log("[UIFortniteLobbyView] Locker button clicked");
             var lockerView = Open<UIAgentSelectionView>();
-            if (lockerView != null)
-            {
-                lockerView.BackView = this;
-            }
+            if (lockerView != null) lockerView.BackView = this;
         }
 
         private void OnBattlePassButtonClicked()
         {
             Debug.Log("[UIFortniteLobbyView] Battle Pass button clicked");
-            if (_battlePassCanvas != null)
-                _battlePassCanvas.SetActive(true);
+            if (_battlePassCanvas != null) _battlePassCanvas.SetActive(true);
         }
 
         private void OnSettingsButtonClicked()
@@ -503,18 +421,11 @@ namespace TPSBR.UI
             Context.RuntimeSettings.Region = regions[nextIndex].Region;
             UpdateRegionDisplay();
 
-            // Cancel any in-progress play or search flow so OnLobbyJoined below
-            // does not accidentally start a quick-play search in the new region.
             _isConnectingForPlay = false;
             _isSearchingForGame = false;
             _availableSessions.Clear();
 
-            if (_playButtonText != null)
-                _playButtonText.text = "PLAY";
-
-            Debug.Log($"[UIFortniteLobbyView] Region changed to: {regions[nextIndex].DisplayName}");
-
-            // Reconnect to the lobby for the new region.
+            if (_playButtonText != null) _playButtonText.text = "PLAY";
             Context.Matchmaking.JoinLobby(true);
         }
 
@@ -529,16 +440,10 @@ namespace TPSBR.UI
 
         private void OnGamemodeButtonClicked()
         {
-            // Cycle through available gamemodes
             _currentGamemodeIndex = (_currentGamemodeIndex + 1) % _availableGamemodes.Length;
             _gameplayType = _availableGamemodes[_currentGamemodeIndex];
-
-            // Manhunt caps at 10 players; restore default for other modes
             _maxPlayers = _gameplayType == EGameplayType.Manhunt ? 10 : 100;
-
             UpdateGamemodeDisplay();
-
-            Debug.Log($"[UIFortniteLobbyView] Gamemode changed to: {GetGamemodeName(_gameplayType)}");
         }
 
         private void UpdateGamemodeDisplay()
@@ -554,13 +459,9 @@ namespace TPSBR.UI
         {
             switch (gameplayType)
             {
-                case EGameplayType.BattleRoyale:
-                    return "BATTLE ROYALE - SOLO";
-                case EGameplayType.Manhunt:
-                    return "LTM - MANHUNT";
-                case EGameplayType.None:
-                default:
-                    return "SELECT GAMEMODE";
+                case EGameplayType.BattleRoyale: return "BATTLE ROYALE - SOLO";
+                case EGameplayType.Manhunt: return "LTM - MANHUNT";
+                default: return "SELECT GAMEMODE";
             }
         }
     }

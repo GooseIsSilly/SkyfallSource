@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using SocketIOClient;
+using TPSBR.Backend;
 
 namespace TPSBR
 {
@@ -12,6 +14,7 @@ namespace TPSBR
         public Action<TeamData> OnPartyUpdated;
         public Action<FriendData> OnFriendStatusChanged;
         public Action<bool> OnAllPlayersReady;
+        public Action<string> OnMatchFound;
 
         private TeamData _currentParty;
         private FriendsList _friendsList;
@@ -19,11 +22,11 @@ namespace TPSBR
         private string _localUserID;
         private string _localNickname;
 
-        private PhotonFriendsManager _photonFriends;
-        private bool _usePhotonFriends = true;
+        private SocketIOUnity _socket;
+        private bool _isConnected;
 
-        private const float FRIEND_STATUS_UPDATE_INTERVAL = 5.0f;
-        private float _friendStatusUpdateTimer;
+        private const string SOCKET_URL = "http://localhost:3551";
+        private const int PROTOCOL_VERSION = 1;
 
         private void Awake()
         {
@@ -38,35 +41,6 @@ namespace TPSBR
 
             _friendsList = new FriendsList();
             _friendsList.Load();
-
-            if (_usePhotonFriends && PhotonFriendsManager.Instance == null)
-            {
-                var photonObj = new GameObject("PhotonFriendsManager");
-                _photonFriends = photonObj.AddComponent<PhotonFriendsManager>();
-                DontDestroyOnLoad(photonObj);
-            }
-            else
-            {
-                _photonFriends = PhotonFriendsManager.Instance;
-            }
-
-            if (_photonFriends != null)
-            {
-                _photonFriends.OnOnlinePlayersUpdated += OnPhotonPlayersUpdated;
-                _photonFriends.OnFriendRequestReceived += OnPhotonFriendRequest;
-                _photonFriends.OnPartyInviteReceived += OnPhotonPartyInvite;
-                _photonFriends.OnFriendAdded += OnPhotonFriendAdded;
-            }
-        }
-
-        private void Update()
-        {
-            _friendStatusUpdateTimer += Time.deltaTime;
-            if (_friendStatusUpdateTimer >= FRIEND_STATUS_UPDATE_INTERVAL)
-            {
-                _friendStatusUpdateTimer = 0f;
-                UpdateFriendStatuses();
-            }
         }
 
         public void Initialize(string userID, string nickname = null)
@@ -75,124 +49,200 @@ namespace TPSBR
             _localNickname = nickname ?? userID;
 
             Debug.Log($"[PartyLobbyManager] Initialized: {_localUserID} ({_localNickname})");
+
+            // Initialize a local party state so the player is considered a leader of their own party immediately
+            _currentParty = new TeamData
+            {
+                TeamID = 1,
+                PartyLeaderUserID = _localNickname
+            };
+            _currentParty.AddMember(_localNickname);
+
+            ConnectToServer();
         }
 
         public void InitializeWithRunner(Fusion.NetworkRunner runner)
         {
-            if (_photonFriends != null && runner != null)
+            // Stub for compatibility with existing scripts
+            Debug.Log("[PartyLobbyManager] InitializeWithRunner called - Socket.IO version doesn't require NetworkRunner for initialization.");
+        }
+
+        private void ConnectToServer()
+        {
+            if (_socket != null)
             {
-                _photonFriends.Initialize(runner, _localUserID, _localNickname);
-                Debug.Log("[PartyLobbyManager] Initialized Photon friends with NetworkRunner");
+                _socket.Disconnect();
             }
+
+            // Ensure UnityThread is initialized for safe cross-thread calls
+            UnityThread.initUnityThread();
+
+            var uri = new Uri(SOCKET_URL);
+            _socket = new SocketIOUnity(uri, new SocketIOOptions
+            {
+                Query = new Dictionary<string, string>
+                {
+                    {"token", "UNITY"}
+                },
+                EIO = EngineIO.V4,
+                Transport = SocketIOClient.Transport.TransportProtocol.WebSocket
+            });
+
+            _socket.OnConnected += (sender, e) =>
+            {
+                UnityThread.executeInUpdate(() => {
+                    Debug.Log("[PartyLobbyManager] Connected to Socket.IO server at " + SOCKET_URL);
+                    _isConnected = true;
+                    
+                    string token = BackendServiceManager.Instance != null ? BackendServiceManager.Instance.GetStoredToken() : "no-token";
+                    
+                    // Login format: userId|username|protocol|token=partyID
+                    string loginMessage = $"{_localUserID}|{_localNickname}|{PROTOCOL_VERSION}|{token}={_localUserID}";
+                    Debug.Log("[PartyLobbyManager] Emitting login request: " + loginMessage);
+                    _socket.Emit("requestLogin", new { message = loginMessage });
+                });
+            };
+
+            _socket.OnDisconnected += (sender, e) =>
+            {
+                Debug.Log("[PartyLobbyManager] Disconnected from Socket.IO server. Reason: " + e);
+                _isConnected = false;
+            };
+
+            _socket.OnError += (sender, e) =>
+            {
+                Debug.LogError("[PartyLobbyManager] Socket.IO Error: " + e);
+            };
+
+            _socket.OnUnityThread("Lsuccess", (response) =>
+            {
+                Debug.Log("[PartyLobbyManager] Login successful on Party Backend!");
+            });
+
+            _socket.OnUnityThread("ServerError", (response) =>
+            {
+                string error = response.GetValue<string>();
+                Debug.LogError("[PartyLobbyManager] Server Error: " + error);
+            });
+
+            _socket.OnUnityThread("requestPlayers", (response) =>
+            {
+                string data = response.GetValue<string>();
+                UpdatePartyFromData(data);
+            });
+
+            _socket.OnUnityThread("inviteToParty", (response) =>
+            {
+                string data = response.GetValue<string>();
+                string[] parts = data.Split('@');
+                if (parts.Length == 2 && parts[0] == _localNickname)
+                {
+                    Debug.Log($"[PartyLobbyManager] Received party invite from {parts[1]}");
+                }
+            });
+
+            _socket.OnUnityThread("travelToLaunchZone", (response) =>
+            {
+                string owner = response.GetValue<string>();
+                Debug.Log($"[PartyLobbyManager] Party traveling to Launch Zone! Owner: {owner}");
+                OnMatchFound?.Invoke(owner);
+            });
+
+            _socket.OnUnityThread("notifyPlayerJoined", (response) =>
+            {
+                string username = response.GetValue<string>();
+                Debug.Log($"[PartyLobbyManager] {username} joined the party");
+            });
+
+            _socket.OnUnityThread("notifyPlayerLeft", (response) =>
+            {
+                string username = response.GetValue<string>();
+                Debug.Log($"[PartyLobbyManager] {username} left the party");
+            });
+
+            _socket.Connect();
         }
 
         public void CreateParty()
         {
-            if (_currentParty != null)
+            if (_socket != null && _isConnected)
             {
-                LeaveParty();
-            }
-
-            _currentParty = new TeamData
-            {
-                TeamID = 1,
-                PartyLeaderUserID = _localUserID
-            };
-            _currentParty.AddMember(_localUserID);
-
-            _readyStates.Clear();
-            _readyStates[_localUserID] = false;
-
-            OnPartyUpdated?.Invoke(_currentParty);
-        }
-
-        public bool InviteFriend(string friendUserID)
-        {
-            if (_currentParty == null)
-            {
-                CreateParty();
-            }
-
-            if (!_currentParty.IsPartyLeader(_localUserID))
-                return false;
-
-            if (_currentParty.IsFull(TeamMode.Squad))
-                return false;
-
-            if (_photonFriends != null && _usePhotonFriends)
-            {
-                var onlineFriend = _photonFriends.GetOnlinePlayers()
-                    .FirstOrDefault(p => p.UserID == friendUserID);
-
-                if (onlineFriend == null)
-                {
-                    Debug.LogWarning($"[PartyLobbyManager] Friend {friendUserID} is not online");
-                    return false;
-                }
-
-                string partyID = _currentParty.TeamID.ToString();
-                _photonFriends.SendPartyInvite(friendUserID, partyID);
-                Debug.Log($"[PartyLobbyManager] Sent Photon party invite to {friendUserID}");
-                return true;
-            }
-            else
-            {
-                var friend = _friendsList.GetFriend(friendUserID);
-                if (friend == null || !friend.IsOnline)
-                    return false;
-
-                Debug.Log($"[PartyLobbyManager] Sending local party invite to {friend.Nickname}");
-                return true;
+                _socket.Emit("leaveParty", new { message = "leave" });
             }
         }
 
-        public void AcceptInvite(string partyLeaderUserID)
+        public bool InviteFriend(string friendNickname)
         {
-            if (_currentParty != null)
-            {
-                LeaveParty();
-            }
+            if (_socket == null || !_isConnected) return false;
 
-            _currentParty = new TeamData
-            {
-                TeamID = 1,
-                PartyLeaderUserID = partyLeaderUserID
-            };
+            _socket.Emit("inviteToParty", new { message = friendNickname });
+            Debug.Log($"[PartyLobbyManager] Invited {friendNickname} to party");
+            return true;
+        }
 
-            _readyStates.Clear();
+        public void AcceptInvite(string targetPartyID)
+        {
+            if (_socket == null || !_isConnected) return;
 
-            Debug.Log($"Accepted invite from {partyLeaderUserID}");
+            _socket.Emit("joinParty", new { message = targetPartyID });
         }
 
         public void LeaveParty()
         {
-            if (_currentParty == null)
-                return;
+            if (_socket == null || !_isConnected) return;
 
-            _currentParty.RemoveMember(_localUserID);
+            _socket.Emit("leaveParty", new { message = "leave" });
+        }
 
-            if (_currentParty.MemberUserIDs.Count == 0 || _currentParty.PartyLeaderUserID == _localUserID)
+        public void StartMatchmaking()
+        {
+            Debug.Log($"[PartyLobbyManager] StartMatchmaking called. Connected: {_isConnected}");
+            if (!IsPartyLeader())
             {
-                _currentParty = null;
+                Debug.LogWarning("[PartyLobbyManager] Only party leader can start matchmaking");
+                return;
             }
 
-            _readyStates.Clear();
-            OnPartyUpdated?.Invoke(_currentParty);
+            if (_socket != null && _isConnected)
+            {
+                _socket.Emit("partyTravelToLaunchZone", new { message = "start" });
+                Debug.Log("[PartyLobbyManager] Emitting travel signal to party backend...");
+            }
+            else
+            {
+                Debug.LogWarning("[PartyLobbyManager] Cannot start matchmaking: Not connected to Socket.IO server");
+            }
+        }
+
+        public bool AddFriend(string userID, string nickname)
+        {
+            return _friendsList.AddFriend(userID, nickname);
+        }
+
+        public bool RemoveFriend(string userID)
+        {
+            return _friendsList.RemoveFriend(userID);
+        }
+
+        public FriendData GetFriend(string userID)
+        {
+            return _friendsList.GetFriend(userID);
+        }
+
+        public List<FriendData> GetFriends()
+        {
+            return _friendsList.Friends;
+        }
+
+        public List<OnlinePlayer> GetOnlinePlayers()
+        {
+            return new List<OnlinePlayer>();
         }
 
         public void SetReady(bool ready)
         {
-            if (_currentParty == null)
-                return;
-
             _readyStates[_localUserID] = ready;
-
-            if (TeamManager.Instance != null)
-            {
-                TeamManager.Instance.SetPlayerReady(_localUserID, ready);
-            }
-
-            CheckAllPlayersReady();
+            OnAllPlayersReady?.Invoke(ready);
         }
 
         public bool IsReady(string userID)
@@ -202,7 +252,7 @@ namespace TPSBR
 
         public bool IsPartyLeader()
         {
-            return _currentParty != null && _currentParty.IsPartyLeader(_localUserID);
+            return _currentParty != null && _currentParty.PartyLeaderUserID == _localNickname;
         }
 
         public TeamData GetCurrentParty()
@@ -210,155 +260,40 @@ namespace TPSBR
             return _currentParty;
         }
 
-        public void StartMatchmaking()
+        private void UpdatePartyFromData(string data)
         {
-            if (!IsPartyLeader())
+            if (string.IsNullOrEmpty(data)) return;
+
+            string[] members = data.Split(',');
+            if (members.Length == 0) return;
+
+            string[] firstParts = members[0].Split('&');
+            if (firstParts.Length < 3) return;
+
+            string ownerUsername = firstParts[2];
+
+            _currentParty = new TeamData
             {
-                Debug.LogWarning("Only party leader can start matchmaking");
-                return;
-            }
+                TeamID = 1,
+                PartyLeaderUserID = ownerUsername
+            };
 
-            if (!AreAllPlayersReady())
+            foreach (var member in members)
             {
-                Debug.LogWarning("Not all players are ready");
-                return;
-            }
-
-            Debug.Log("Starting matchmaking for party...");
-        }
-
-        public bool AddFriend(string userID, string nickname)
-        {
-            bool added = _friendsList.AddFriend(userID, nickname);
-
-            if (added && _photonFriends != null && _usePhotonFriends)
-            {
-                _photonFriends.SendFriendRequest(userID);
-                Debug.Log($"[PartyLobbyManager] Sent Photon friend request to {userID}");
-            }
-
-            return added;
-        }
-
-        public bool RemoveFriend(string userID)
-        {
-            bool removed = _friendsList.RemoveFriend(userID);
-
-            if (removed && _photonFriends != null && _usePhotonFriends)
-            {
-                _photonFriends.RemoveFriend(userID);
-            }
-
-            return removed;
-        }
-
-        public List<FriendData> GetFriends()
-        {
-            if (_photonFriends != null && _usePhotonFriends)
-            {
-                return GetPhotonFriends();
-            }
-            return _friendsList.Friends;
-        }
-
-        private List<FriendData> GetPhotonFriends()
-        {
-            var photonFriends = new List<FriendData>();
-            var onlinePlayers = _photonFriends.GetOnlinePlayers();
-
-            foreach (var localFriend in _friendsList.Friends)
-            {
-                var onlinePlayer = onlinePlayers.FirstOrDefault(p => p.UserID == localFriend.UserID);
-
-                photonFriends.Add(new FriendData
+                string[] parts = member.Split('&');
+                if (parts.Length >= 2)
                 {
-                    UserID = localFriend.UserID,
-                    Nickname = onlinePlayer?.Nickname ?? localFriend.Nickname,
-                    IsOnline = onlinePlayer != null,
-                    InLobby = onlinePlayer != null,
-                    CurrentTeamID = onlinePlayer?.InParty == true ? "InParty" : null
-                });
+                    _currentParty.AddMember(parts[1]); 
+                }
             }
 
-            return photonFriends;
-        }
-
-        public List<OnlinePlayer> GetOnlinePlayers()
-        {
-            if (_photonFriends != null && _usePhotonFriends)
-            {
-                return _photonFriends.GetOnlinePlayers();
-            }
-            return new List<OnlinePlayer>();
-        }
-
-        public FriendData GetFriend(string userID)
-        {
-            return _friendsList.GetFriend(userID);
+            OnPartyUpdated?.Invoke(_currentParty);
+            CheckAllPlayersReady();
         }
 
         private void CheckAllPlayersReady()
         {
-            bool allReady = AreAllPlayersReady();
-            OnAllPlayersReady?.Invoke(allReady);
-        }
-
-        private bool AreAllPlayersReady()
-        {
-            if (_currentParty == null || _currentParty.MemberUserIDs.Count == 0)
-                return false;
-
-            foreach (var userID in _currentParty.MemberUserIDs)
-            {
-                if (!_readyStates.TryGetValue(userID, out bool ready) || !ready)
-                    return false;
-            }
-
-            return true;
-        }
-
-        private void UpdateFriendStatuses()
-        {
-            foreach (var friend in _friendsList.Friends)
-            {
-                OnFriendStatusChanged?.Invoke(friend);
-            }
-        }
-
-        private void OnPhotonPlayersUpdated(List<OnlinePlayer> onlinePlayers)
-        {
-            Debug.Log($"[PartyLobbyManager] Photon players updated: {onlinePlayers.Count} online");
-
-            foreach (var friend in _friendsList.Friends)
-            {
-                var onlinePlayer = onlinePlayers.FirstOrDefault(p => p.UserID == friend.UserID);
-                friend.IsOnline = onlinePlayer != null;
-                friend.InLobby = onlinePlayer != null;
-                OnFriendStatusChanged?.Invoke(friend);
-            }
-        }
-
-        private void OnPhotonFriendRequest(FriendInvite invite)
-        {
-            Debug.Log($"[PartyLobbyManager] Received friend request from {invite.FromNickname} ({invite.FromUserID})");
-        }
-
-        private void OnPhotonPartyInvite(PartyInvite invite)
-        {
-            Debug.Log($"[PartyLobbyManager] Received party invite from {invite.FromNickname} ({invite.FromUserID})");
-        }
-
-        private void OnPhotonFriendAdded(string userID)
-        {
-            Debug.Log($"[PartyLobbyManager] Friend added via Photon: {userID}");
-
-            var onlinePlayer = _photonFriends?.GetOnlinePlayers()
-                .FirstOrDefault(p => p.UserID == userID);
-
-            if (onlinePlayer != null)
-            {
-                _friendsList.AddFriend(userID, onlinePlayer.Nickname);
-            }
+            OnAllPlayersReady?.Invoke(true);
         }
 
         private void OnDestroy()
@@ -368,12 +303,9 @@ namespace TPSBR
                 Instance = null;
             }
 
-            if (_photonFriends != null)
+            if (_socket != null)
             {
-                _photonFriends.OnOnlinePlayersUpdated -= OnPhotonPlayersUpdated;
-                _photonFriends.OnFriendRequestReceived -= OnPhotonFriendRequest;
-                _photonFriends.OnPartyInviteReceived -= OnPhotonPartyInvite;
-                _photonFriends.OnFriendAdded -= OnPhotonFriendAdded;
+                _socket.Disconnect();
             }
         }
     }

@@ -8,9 +8,9 @@ namespace TPSBR
     public static class DedicatedServerSettings
     {
         /// <summary>IP address of the dedicated Fusion game server.</summary>
-        public const string IPAddress = "198.50.250.196";
+        public static string IPAddress = "0.0.0.0";
 
         /// <summary>UDP port the Fusion server is listening on (default Fusion port).</summary>
-        public const ushort Port = 27016;
+        public static ushort Port = 7777;
     }
 }

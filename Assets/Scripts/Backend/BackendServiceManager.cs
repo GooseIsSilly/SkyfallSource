@@ -10,6 +10,8 @@ namespace TPSBR.Backend
 {
     public class BackendServiceManager : MonoBehaviour
     {
+        public string BackendURL => backendURL;
+
         public static BackendServiceManager Instance { get; private set; }
 
         [Header("Backend Configuration")]
@@ -174,6 +176,7 @@ namespace TPSBR.Backend
                             PlayerPrefs.Save();
                             IsLoggedIn = true;
                         }
+
                         OnAccountCreated?.Invoke(username);
                         callback?.Invoke(true, username);
                     }
@@ -212,6 +215,7 @@ namespace TPSBR.Backend
                         PlayerPrefs.SetString(USERNAME_KEY, username);
                         PlayerPrefs.Save();
                         IsLoggedIn = true;
+
                         OnLoginSuccess?.Invoke(username);
                         callback?.Invoke(true, username);
                     }
@@ -259,6 +263,7 @@ namespace TPSBR.Backend
                             PlayerPrefs.Save();
                         }
                         IsLoggedIn = true;
+
                         OnLoginSuccess?.Invoke(resolvedName);
                         callback?.Invoke(true, resolvedName);
                     }
