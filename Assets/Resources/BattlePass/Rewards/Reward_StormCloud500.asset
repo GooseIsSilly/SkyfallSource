@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc76c869a6c354049abf51a31d9aeec9, type: 3}
   m_Name: Reward_StormCloud500
   m_EditorClassIdentifier: 
-  RewardID: bp_coins_500
   DisplayName: 500 Cloud Coins
   Description: 500 Cloud Coins to spend in the shop.
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: 9ef3321a84801ef4d81cec1a519be3dc, type: 3}
   Type: 1
   CloudCoinAmount: 500
   Rarity: 0

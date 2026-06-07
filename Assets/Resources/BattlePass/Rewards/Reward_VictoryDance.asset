@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc76c869a6c354049abf51a31d9aeec9, type: 3}
   m_Name: Reward_VictoryDance
   m_EditorClassIdentifier: 
-  RewardID: bp_emote_victorydance
   DisplayName: Victory Dance
   Description: Show off with an epic victory celebration.
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: 9a9a035b15dbef94fa76fb7c572781c0, type: 3}
   Type: 2
   CloudCoinAmount: 0
   Rarity: 2

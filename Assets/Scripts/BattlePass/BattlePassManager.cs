@@ -19,7 +19,6 @@ namespace TPSBR
 
         // ── Public State ───────────────────────────────────────────────────────
 
-        /// <summary>The active season's data asset.</summary>
         public BattlePassSeasonData SeasonData => _seasonData;
 
         /// <summary>Whether the local player owns the Battle Pass this season.</summary>

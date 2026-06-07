@@ -23,9 +23,6 @@ namespace TPSBR
     public class BattlePassRewardData : ScriptableObject
     {
         [Header("Identity")]
-        /// <summary>Unique string key for this reward.</summary>
-        public string RewardID;
-
         /// <summary>Display name shown in the UI.</summary>
         public string DisplayName;
 
