@@ -1558,6 +1558,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RewardArea
       objectReference: {fileID: 0}
+    - target: {fileID: 7944818492566702448, guid: 93477ba42a3e5854ab25aabdebc283e8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4075,12 +4079,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 619003389}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 176369656}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &619003393
 MonoBehaviour:
@@ -6587,7 +6591,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 508312630545910045, guid: 335c972be6dc56743bca003c03851d51, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2552349230298984445, guid: 335c972be6dc56743bca003c03851d51, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -6619,7 +6623,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3939956303597269796, guid: 335c972be6dc56743bca003c03851d51, type: 3}
       propertyPath: m_PresetInfoIsWorld
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7053316918826091567, guid: 335c972be6dc56743bca003c03851d51, type: 3}
       propertyPath: m_Pivot.x
@@ -13675,6 +13679,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1893971167328665488, guid: 5501285fdd3374d49b20039d2e914d61, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1587751193}
+    - targetCorrespondingSourceObject: {fileID: 1893971167328665488, guid: 5501285fdd3374d49b20039d2e914d61, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 619003392}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 256430978585190744, guid: 5501285fdd3374d49b20039d2e914d61, type: 3}
       insertIndex: -1
@@ -14313,7 +14320,6 @@ SceneRoots:
   - {fileID: 2025429718}
   - {fileID: 889266861}
   - {fileID: 155113864}
-  - {fileID: 619003392}
   - {fileID: 141102249}
   - {fileID: 1532735421}
   - {fileID: 785361602}

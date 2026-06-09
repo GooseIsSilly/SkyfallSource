@@ -23,8 +23,12 @@ namespace TPSBR
 		private GameObject              _pressSpaceUI;
 		[SerializeField]
 		private bool                    _skipStartupInput = false;
+		[SerializeField]
+		private float                   _loaderDelay = 5.0f;
 
-		private bool _isStarting = false;
+		private bool  _isStarting = false;
+		private float _timer = 0f;
+		private bool  _isDelaying = false;
 
 		// MonoBehaviour INTERFACE
 
@@ -38,7 +42,8 @@ namespace TPSBR
 			{
 				if (_skipStartupInput)
 				{
-					LoadMenu();
+					_isDelaying = true;
+					_timer = _loaderDelay;
 				}
 				else
 				{
@@ -50,20 +55,40 @@ namespace TPSBR
 
 		private void Update()
 		{
-			if (_isStarting || _skipStartupInput || Application.isBatchMode || _simulateBatchMode)
+			if (_isStarting || Application.isBatchMode || _simulateBatchMode)
 				return;
 
-			if (Keyboard.current.spaceKey.wasPressedThisFrame)
+			if (_isDelaying)
+			{
+				_timer -= Time.deltaTime;
+				if (_timer <= 0f)
+				{
+					_isStarting = true;
+					_isDelaying = false;
+					LoadMenu();
+				}
+				return;
+			}
+
+			if (_skipStartupInput)
+				return;
+
+			if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
 			{
 				_isStarting = true;
 				if (_pressSpaceUI != null)
 					_pressSpaceUI.SetActive(false);
 				
-				LoadMenu();
+				LoadLoader();
 			}
 		}
 
 		// PRIVATE METHODS
+
+		private void LoadLoader()
+		{
+			SceneManager.LoadScene(Global.Settings.LoaderScene);
+		}
 
 		private void LoadMenu()
 		{

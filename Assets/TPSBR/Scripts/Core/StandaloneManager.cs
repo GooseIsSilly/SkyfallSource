@@ -2,6 +2,9 @@ using Fusion;
 using Fusion.Photon.Realtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using UnityEngine.Networking;
+using TPSBR.Backend;
 
 namespace TPSBR
 {
@@ -81,6 +84,34 @@ namespace TPSBR
 			else
 			{
 				Global.Networking.StartGame(request);
+				// Link this Fusion session with the backend server ID
+				StartCoroutine(RegisterWithBackend(request.SessionName));
+			}
+		}
+
+		private IEnumerator RegisterWithBackend(string sessionName)
+		{
+			if (BackendServiceManager.Instance == null) yield break;
+
+			string serverKey = ApplicationSettings.HasServerKey ? ApplicationSettings.ServerKey : "changeme_server_secret";
+			string serverId  = ApplicationSettings.HasSessionName ? ApplicationSettings.SessionName : sessionName;
+			string url       = $"{BackendServiceManager.Instance.BackendURL}/server/session";
+
+			string json = $"{{\"serverId\":\"{serverId}\",\"serverKey\":\"{serverKey}\",\"sessionName\":\"{sessionName}\"}}";
+
+			using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
+			{
+				byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
+				request.uploadHandler   = new UploadHandlerRaw(bodyRaw);
+				request.downloadHandler = new DownloadHandlerBuffer();
+				request.SetRequestHeader("Content-Type", "application/json");
+
+				yield return request.SendWebRequest();
+
+				if (request.result != UnityWebRequest.Result.Success)
+					Debug.LogError($"[StandaloneManager] Session registration failed: {request.error}");
+				else
+					Debug.Log($"[StandaloneManager] Session registered: {sessionName}");
 			}
 		}
 	}

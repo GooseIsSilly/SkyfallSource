@@ -1,33 +1,61 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\",
+  "WorkspaceRootPath": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Library\\PackageCache\\com.unity.render-pipelines.universal@7652a5c7e246\\Shaders\\Lit.shader||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Settings\\ApplicationSettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\TPSBR\\Scripts\\Settings\\ApplicationSettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\Loader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\TPSBR\\Scripts\\Core\\Loader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\StandaloneManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\TPSBR\\Scripts\\Core\\StandaloneManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\Scripts\\Backend\\DedicatedMatchmaker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\Backend\\DedicatedMatchmaker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Networking\\Networking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\TPSBR\\Scripts\\Networking\\Networking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\Scripts\\Backend\\DedicatedServerManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\Backend\\DedicatedServerManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\SurrounDead Bundle\\Instructions_SurrounDead - Bundle.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\SurrounDead Bundle\\Instructions_SurrounDead - Bundle.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Library\\PackageCache\\com.unity.render-pipelines.universal@7652a5c7e246\\Shaders\\Lit.shader||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Library\\PackageCache\\com.unity.render-pipelines.universal@7652a5c7e246\\Shaders\\Lit.shader||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\Backend.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\Backend.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Backend.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\LoadingScene.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\LoadingScene.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\TPSBR\\Scripts\\Core\\LoadingScene.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\TPSBR\\Scripts\\UI\\MenuViews\\UIMainMenuView.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\UI\\MenuViews\\UIMainMenuView.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\TPSBR\\Scripts\\UI\\MenuViews\\UIMainMenuView.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\Scripts\\Backend\\SimplerLoginManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\Scripts\\Backend\\SimplerLoginManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\Backend\\SimplerLoginManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\Scripts\\Backend\\BackendServiceManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\Scripts\\Backend\\BackendServiceManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\Backend\\BackendServiceManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\LobbyAnimations\\LobbyMapBridge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\LobbyAnimations\\LobbyMapBridge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\LobbyAnimations\\LobbyMapBridge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -43,14 +71,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Lit.shader",
-              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Library\\PackageCache\\com.unity.render-pipelines.universal@7652a5c7e246\\Shaders\\Lit.shader",
-              "RelativeDocumentMoniker": "Library\\PackageCache\\com.unity.render-pipelines.universal@7652a5c7e246\\Shaders\\Lit.shader",
-              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Library\\PackageCache\\com.unity.render-pipelines.universal@7652a5c7e246\\Shaders\\Lit.shader",
-              "RelativeToolTip": "Library\\PackageCache\\com.unity.render-pipelines.universal@7652a5c7e246\\Shaders\\Lit.shader",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-05-31T03:32:03.503Z",
+              "Title": "ApplicationSettings.cs",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Settings\\ApplicationSettings.cs",
+              "RelativeDocumentMoniker": "Assets\\TPSBR\\Scripts\\Settings\\ApplicationSettings.cs",
+              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Settings\\ApplicationSettings.cs",
+              "RelativeToolTip": "Assets\\TPSBR\\Scripts\\Settings\\ApplicationSettings.cs",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAuwFcAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-09T15:34:11.446Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Loader.cs",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\Loader.cs",
+              "RelativeDocumentMoniker": "Assets\\TPSBR\\Scripts\\Core\\Loader.cs",
+              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\Loader.cs",
+              "RelativeToolTip": "Assets\\TPSBR\\Scripts\\Core\\Loader.cs",
+              "ViewState": "AgIAAIIAAAAAAAAAAAAuwI8AAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-09T15:33:23.768Z",
               "EditorCaption": ""
             },
             {
@@ -59,24 +100,96 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Backend.txt",
-              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\Backend.txt",
-              "RelativeDocumentMoniker": "Assets\\Backend.txt",
-              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\Backend.txt",
-              "RelativeToolTip": "Assets\\Backend.txt",
-              "ViewState": "AgIAAFAIAAAAAAAAAAAYwGEIAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2026-05-24T16:00:32.97Z",
+              "DocumentIndex": 2,
+              "Title": "StandaloneManager.cs",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\StandaloneManager.cs",
+              "RelativeDocumentMoniker": "Assets\\TPSBR\\Scripts\\Core\\StandaloneManager.cs",
+              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\StandaloneManager.cs",
+              "RelativeToolTip": "Assets\\TPSBR\\Scripts\\Core\\StandaloneManager.cs",
+              "ViewState": "AgIAAG0AAAAAAAAAAAAuwH8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-08T20:19:32.759Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
+              "Title": "Networking.cs",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Networking\\Networking.cs",
+              "RelativeDocumentMoniker": "Assets\\TPSBR\\Scripts\\Networking\\Networking.cs",
+              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Networking\\Networking.cs",
+              "RelativeToolTip": "Assets\\TPSBR\\Scripts\\Networking\\Networking.cs",
+              "ViewState": "AgIAAJUBAAAAAAAAAAAuwKIBAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-08T15:14:28.636Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DedicatedMatchmaker.cs",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\Scripts\\Backend\\DedicatedMatchmaker.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Backend\\DedicatedMatchmaker.cs",
+              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\Scripts\\Backend\\DedicatedMatchmaker.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Backend\\DedicatedMatchmaker.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAAuwIcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-07T16:25:08.214Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "DedicatedServerManager.cs",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\Scripts\\Backend\\DedicatedServerManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Backend\\DedicatedServerManager.cs",
+              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\Scripts\\Backend\\DedicatedServerManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Backend\\DedicatedServerManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-07T16:24:59.182Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Instructions_SurrounDead - Bundle.txt",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\SurrounDead Bundle\\Instructions_SurrounDead - Bundle.txt",
+              "RelativeDocumentMoniker": "Assets\\SurrounDead Bundle\\Instructions_SurrounDead - Bundle.txt",
+              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\SurrounDead Bundle\\Instructions_SurrounDead - Bundle.txt",
+              "RelativeToolTip": "Assets\\SurrounDead Bundle\\Instructions_SurrounDead - Bundle.txt",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2026-05-31T18:38:41.269Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Lit.shader",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Library\\PackageCache\\com.unity.render-pipelines.universal@7652a5c7e246\\Shaders\\Lit.shader",
+              "RelativeDocumentMoniker": "Library\\PackageCache\\com.unity.render-pipelines.universal@7652a5c7e246\\Shaders\\Lit.shader",
+              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Library\\PackageCache\\com.unity.render-pipelines.universal@7652a5c7e246\\Shaders\\Lit.shader",
+              "RelativeToolTip": "Library\\PackageCache\\com.unity.render-pipelines.universal@7652a5c7e246\\Shaders\\Lit.shader",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-05-31T03:32:03.503Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Backend.txt",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\Backend.txt",
+              "RelativeDocumentMoniker": "Assets\\Backend.txt",
+              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\Backend.txt",
+              "RelativeToolTip": "Assets\\Backend.txt",
+              "ViewState": "AgIAAFAIAAAAAAAAAAAYwGEIAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2026-05-24T16:00:32.97Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "LoadingScene.cs",
-              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\LoadingScene.cs",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\LoadingScene.cs",
               "RelativeDocumentMoniker": "Assets\\TPSBR\\Scripts\\Core\\LoadingScene.cs",
-              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\LoadingScene.cs",
+              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\LoadingScene.cs",
               "RelativeToolTip": "Assets\\TPSBR\\Scripts\\Core\\LoadingScene.cs",
               "ViewState": "AgIAABUAAAAAAAAAAAAAACMAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -84,11 +197,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 10,
               "Title": "UIMainMenuView.cs",
-              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\TPSBR\\Scripts\\UI\\MenuViews\\UIMainMenuView.cs",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\UI\\MenuViews\\UIMainMenuView.cs",
               "RelativeDocumentMoniker": "Assets\\TPSBR\\Scripts\\UI\\MenuViews\\UIMainMenuView.cs",
-              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\TPSBR\\Scripts\\UI\\MenuViews\\UIMainMenuView.cs",
+              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\TPSBR\\Scripts\\UI\\MenuViews\\UIMainMenuView.cs",
               "RelativeToolTip": "Assets\\TPSBR\\Scripts\\UI\\MenuViews\\UIMainMenuView.cs",
               "ViewState": "AgIAAFUAAAAAAAAAAAAAAFcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -96,11 +209,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 12,
               "Title": "BackendServiceManager.cs",
-              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\Scripts\\Backend\\BackendServiceManager.cs",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\Scripts\\Backend\\BackendServiceManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Backend\\BackendServiceManager.cs",
-              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\Scripts\\Backend\\BackendServiceManager.cs",
+              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\Scripts\\Backend\\BackendServiceManager.cs",
               "RelativeToolTip": "Assets\\Scripts\\Backend\\BackendServiceManager.cs",
               "ViewState": "AgIAAFsDAAAAAAAAAAAQwG0DAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -108,11 +221,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 11,
               "Title": "SimplerLoginManager.cs",
-              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\Scripts\\Backend\\SimplerLoginManager.cs",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\Scripts\\Backend\\SimplerLoginManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Backend\\SimplerLoginManager.cs",
-              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\Scripts\\Backend\\SimplerLoginManager.cs",
+              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\Scripts\\Backend\\SimplerLoginManager.cs",
               "RelativeToolTip": "Assets\\Scripts\\Backend\\SimplerLoginManager.cs",
               "ViewState": "AgIAALcAAAAAAAAAAAAAAMYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -120,11 +233,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 13,
               "Title": "LobbyMapBridge.cs",
-              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\LobbyAnimations\\LobbyMapBridge.cs",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\LobbyAnimations\\LobbyMapBridge.cs",
               "RelativeDocumentMoniker": "Assets\\LobbyAnimations\\LobbyMapBridge.cs",
-              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\SkyfallSource\\Assets\\LobbyAnimations\\LobbyMapBridge.cs",
+              "ToolTip": "C:\\Users\\camev\\Documents\\SkyfallSource\\Editor\\SkyfallSource\\Assets\\LobbyAnimations\\LobbyMapBridge.cs",
               "RelativeToolTip": "Assets\\LobbyAnimations\\LobbyMapBridge.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",

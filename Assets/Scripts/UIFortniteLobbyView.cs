@@ -220,6 +220,14 @@ namespace TPSBR.UI
                 return;
             }
 
+            // Dedicated matchmaking redirect
+            var dedicatedMatchmaker = FindObjectOfType<DedicatedMatchmaker>();
+            if (dedicatedMatchmaker != null)
+            {
+                dedicatedMatchmaker.StartMatchmaking();
+                return;
+            }
+
             _availableSessions.Clear();
             _isSearchingForGame = false;
             _isConnectingForPlay = true;

@@ -10,6 +10,7 @@ namespace TPSBR
 	{
 		public NetworkRunner        RunnerPrefab;
 		public string               LoadingScene = "LoadingScene";
+		public string               LoaderScene = "Loader";
 		public string               MenuScene = "Menu";
 		public bool                 SimulateMobileInput;
 

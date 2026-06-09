@@ -8,7 +8,7 @@ namespace TPSBR
     /// <summary>
     /// Handles dedicated server specific logic: command line arguments and backend notification.
     /// </summary>
-    public class DedicatedServerManager : ContextBehaviour
+    public class DedicatedServerManager : SceneService
     {
         public static DedicatedServerManager Instance { get; private set; }
 
@@ -24,7 +24,7 @@ namespace TPSBR
         public string Map => _map;
         public string ServerId => _serverId;
 
-        private void Awake()
+        protected override void OnInitialize()
         {
             if (Instance != null && Instance != this)
             {
@@ -35,6 +35,11 @@ namespace TPSBR
             DontDestroyOnLoad(gameObject);
 
             ParseCommandLineArguments();
+
+            if (Application.isBatchMode && !string.IsNullOrEmpty(_serverId))
+            {
+                NotifyServerReady();
+            }
         }
 
         private void ParseCommandLineArguments()
@@ -69,12 +74,14 @@ namespace TPSBR
             }
         }
 
-        private void Update()
+        protected override void OnTick()
         {
+            base.OnTick();
+
             if (_matchCompleteNotified)
                 return;
 
-            if (Runner != null && Runner.IsServer)
+            if (Context.Runner != null && Context.Runner.IsServer)
             {
                 CheckAlivePlayers();
             }
@@ -103,6 +110,54 @@ namespace TPSBR
                 Debug.Log($"[DedicatedServerManager] Match over! Alive players: {aliveCount}. Notifying backend.");
                 _matchCompleteNotified = true;
                 NotifyMatchComplete();
+            }
+        }
+
+        /// <summary>
+        /// Notifies the backend that the server is online and available for matches.
+        /// </summary>
+        public void NotifyServerReady()
+        {
+            if (string.IsNullOrEmpty(_serverId) || string.IsNullOrEmpty(_serverKey))
+            {
+                Debug.LogWarning("[DedicatedServerManager] Cannot notify server ready: serverId or serverKey is missing.");
+                return;
+            }
+
+            StartCoroutine(NotifyServerReadyCoroutine());
+        }
+
+        private IEnumerator NotifyServerReadyCoroutine()
+        {
+            string baseUrl = "http://198.50.250.196:5000";
+            if (BackendServiceManager.Instance != null)
+            {
+                baseUrl = BackendServiceManager.Instance.BackendURL;
+            }
+
+            string url = $"{baseUrl}/server/ready";
+            
+            WWWForm form = new WWWForm();
+            form.AddField("serverId", _serverId);
+            form.AddField("serverKey", _serverKey);
+            form.AddField("port", _port.ToString());
+            form.AddField("map", _map);
+
+            Debug.Log($"[DedicatedServerManager] Sending Ready Notification to {url} with serverId: {_serverId}");
+
+            using (UnityWebRequest request = UnityWebRequest.Post(url, form))
+            {
+                request.timeout = 10;
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    Debug.Log("[DedicatedServerManager] Backend notified that server is READY.");
+                }
+                else
+                {
+                    Debug.LogError($"[DedicatedServerManager] Failed to notify backend of readiness: {request.error}");
+                }
             }
         }
 
