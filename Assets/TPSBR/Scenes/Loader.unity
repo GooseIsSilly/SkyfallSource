@@ -163,26 +163,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac6982e8e3e1a3845b054d87f7a1c2d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _batchModeScene: Game
+  _batchModeScene: GenArea7
   _simulateBatchMode: 0
   _batchModeConfiguration:
     GameplayType: 1
-    GameMode: 3
+    GameMode: 5
     ServerName: Batch
-    MaxPlayers: 30
-    ExtraPeers: 0
+    MaxPlayers: 100
+    ExtraPeers: 9
     Region: 
     SessionName: Batch
     CustomLobby: 
     IPAddress: 
     Port: 0
-    Multiplay: 0
+    Multiplay: 1
     QueryProtocol: 0
-    Matchmaking: 0
+    Matchmaking: 1
     Backfill: 0
-  _pressSpaceUI: {fileID: 0}
-  _skipStartupInput: 1
-  _loaderDelay: 5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

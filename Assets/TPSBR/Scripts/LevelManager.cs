@@ -82,13 +82,6 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
-        // If running as dedicated server, skip startup UI and go straight to Loader
-        if (Application.isBatchMode)
-        {
-            SceneManager.LoadScene("Loader");
-            return;
-        }
-
         SetupInput();
         SetupAudio();
         CreateGameUI();

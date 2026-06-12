@@ -7,7 +7,10 @@ using TPSBR.Backend;
 
 namespace TPSBR
 {
-    public class DedicatedMatchmaker : SceneService
+    /// <summary>
+    /// Handles requesting a dedicated server from the backend and connecting as a client.
+    /// </summary>
+    public class DedicatedMatchmaker : ContextBehaviour
     {
         [Serializable]
         private class ServerRequestResponse
@@ -20,9 +23,9 @@ namespace TPSBR
         private class ServerStatusResponse
         {
             public string log;
-            public string status;
-            public string sessionName; // Fusion session name — client joins via Photon normally
-            public string map;
+            public string status; // "pending", "ready", etc.
+            public string serverIp;
+            public int serverPort;
         }
 
         public void StartMatchmaking()
@@ -41,19 +44,13 @@ namespace TPSBR
             string token = BackendServiceManager.Instance.GetStoredToken();
             string baseUrl = BackendServiceManager.Instance.BackendURL;
 
-            // 1. Request a server
+            // 1. Request Server
             Debug.Log("[DedicatedMatchmaker] Requesting server...");
-            string requestUrl = $"{baseUrl}/server/request";
-            string jsonBody = "{\"Token\":\"" + token + "\"}";
-
+            string requestUrl = $"{baseUrl}/server/request?token={UnityWebRequest.EscapeURL(token)}";
+            
             string allocationId = "";
-            using (UnityWebRequest request = new UnityWebRequest(requestUrl, "POST"))
+            using (UnityWebRequest request = UnityWebRequest.PostWwwForm(requestUrl, ""))
             {
-                byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonBody);
-                request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-                request.downloadHandler = new DownloadHandlerBuffer();
-                request.SetRequestHeader("Content-Type", "application/json");
-
                 yield return request.SendWebRequest();
 
                 if (request.result != UnityWebRequest.Result.Success)
@@ -73,9 +70,10 @@ namespace TPSBR
                 Debug.Log($"[DedicatedMatchmaker] Allocated! ID: {allocationId}");
             }
 
-            // 2. Poll for session name
+            // 2. Poll Status
             string status = "pending";
-            string sessionName = "";
+            string serverIp = "";
+            int serverPort = 0;
 
             while (status != "ready")
             {
@@ -94,36 +92,35 @@ namespace TPSBR
 
                     var response = JsonUtility.FromJson<ServerStatusResponse>(request.downloadHandler.text);
                     status = response.status;
-
+                    
                     if (status == "ready")
                     {
-                        sessionName = response.sessionName;
+                        serverIp = response.serverIp;
+                        serverPort = response.serverPort;
                     }
                 }
             }
 
-            Debug.Log($"[DedicatedMatchmaker] Server ready. Fusion session: '{sessionName}'. Connecting...");
+            Debug.Log($"[DedicatedMatchmaker] Server ready at {serverIp}:{serverPort}. Connecting...");
 
-            // 3. Connect via Photon using the session name — no direct IP needed
-            ConnectToServer(sessionName);
+            // 3. Connect to Server
+            ConnectToServer(serverIp, (ushort)serverPort);
         }
 
-        private void ConnectToServer(string sessionName)
+        private void ConnectToServer(string ip, ushort port)
         {
             var request = new SessionRequest
             {
                 UserID = Context.PlayerData.UserID,
                 GameMode = GameMode.Client,
                 DisplayName = Context.PlayerData.Nickname,
-                ScenePath = "Assets/TPSBR/Scenes/Game.unity",
-                SessionName = sessionName,
-                CustomLobby = "FusionBR." + Application.version,
-                // No IPAddress or Port — let Fusion find the session via Photon
+                ScenePath = "Assets/TPSBR/Scenes/Game.unity", // Default map
+                IPAddress = ip,
+                Port = port
             };
 
             if (Global.Networking != null)
             {
-                Debug.Log($"[DedicatedMatchmaker] Joining Fusion session: '{sessionName}'");
                 Global.Networking.StartGame(request);
             }
             else

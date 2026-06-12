@@ -17,8 +17,8 @@ MonoBehaviour:
     AppIdChat: 
     AppIdVoice: 
     AppVersion: 
-    UseNameServer: 0
-    FixedRegion: 
+    UseNameServer: 1
+    FixedRegion: us
     Server: 
     Port: 0
     ProxyServer: 

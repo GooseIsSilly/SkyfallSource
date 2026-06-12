@@ -1465,7 +1465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71d3aff7cda22ac41b6bc38f741c4ceb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextSceneName: Loader
+  nextSceneName: Menu
   backgroundColor: {r: 0.21383637, g: 0.21383637, b: 0.21383637, a: 1}
   buttonColor: {r: 0.8490566, g: 0.26432887, b: 0.26432887, a: 1}
   useLogoImage: 1

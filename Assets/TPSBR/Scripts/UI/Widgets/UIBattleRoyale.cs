@@ -60,7 +60,7 @@ namespace TPSBR.UI
 
 			_waitingForPlayersGroup.SetActive(_battleRoyale.HasStarted == false);
 
-			bool showServerGroup = _battleRoyale.HasStarted == false && (_battleRoyale.HasStateAuthority == true || ApplicationSettings.IsModerator == true || _battleRoyale.IsGameLeader());
+			bool showServerGroup = _battleRoyale.HasStarted == false && (_battleRoyale.HasStateAuthority == true || ApplicationSettings.IsModerator == true);
 			_waitingForPlayersServerGroup.SetActive(showServerGroup);
 
 			Context.Input.RequestCursorVisibility(showServerGroup, ECursorStateSource.Menu, false);

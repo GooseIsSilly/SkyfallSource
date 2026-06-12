@@ -53273,6 +53273,8 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 638529173}
   - {fileID: 638529171}
+  - {fileID: 638529176}
+  - {fileID: 638529175}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &638529173
 MonoBehaviour:
@@ -171832,6 +171834,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1994583226}
     m_Modifications:
+    - target: {fileID: 6303293332592324252, guid: eadae76dd3cddf94ca8d437e6bda6cbc, type: 3}
+      propertyPath: Flags
+      value: 2561
+      objectReference: {fileID: 0}
+    - target: {fileID: 6303293332592324252, guid: eadae76dd3cddf94ca8d437e6bda6cbc, type: 3}
+      propertyPath: SortKey
+      value: 3129600135
+      objectReference: {fileID: 0}
+    - target: {fileID: 6303293332592324252, guid: eadae76dd3cddf94ca8d437e6bda6cbc, type: 3}
+      propertyPath: 'NetworkGuid.RawGuidValue.Array.data[0]'
+      value: 4704487276739798995
+      objectReference: {fileID: 0}
+    - target: {fileID: 6303293332592324252, guid: eadae76dd3cddf94ca8d437e6bda6cbc, type: 3}
+      propertyPath: 'NetworkGuid.RawGuidValue.Array.data[1]'
+      value: 1555242232338953884
+      objectReference: {fileID: 0}
+    - target: {fileID: 7534470490806889380, guid: eadae76dd3cddf94ca8d437e6bda6cbc, type: 3}
+      propertyPath: Flags
+      value: 2561
+      objectReference: {fileID: 0}
+    - target: {fileID: 7534470490806889380, guid: eadae76dd3cddf94ca8d437e6bda6cbc, type: 3}
+      propertyPath: SortKey
+      value: 2884037376
+      objectReference: {fileID: 0}
+    - target: {fileID: 7534470490806889380, guid: eadae76dd3cddf94ca8d437e6bda6cbc, type: 3}
+      propertyPath: 'NetworkGuid.RawGuidValue.Array.data[0]'
+      value: -7402932890672840824
+      objectReference: {fileID: 0}
+    - target: {fileID: 7534470490806889380, guid: eadae76dd3cddf94ca8d437e6bda6cbc, type: 3}
+      propertyPath: 'NetworkGuid.RawGuidValue.Array.data[1]'
+      value: -88002312832642411
+      objectReference: {fileID: 0}
     - target: {fileID: 3818213018749999228, guid: 1e12f0de140b2904d8db8207331c392f, type: 3}
       propertyPath: m_RootOrder
       value: 49
@@ -171879,38 +171913,6 @@ PrefabInstance:
     - target: {fileID: 5021107752575951697, guid: 1e12f0de140b2904d8db8207331c392f, type: 3}
       propertyPath: m_Name
       value: House02
-      objectReference: {fileID: 0}
-    - target: {fileID: 6303293332592324252, guid: eadae76dd3cddf94ca8d437e6bda6cbc, type: 3}
-      propertyPath: Flags
-      value: 2561
-      objectReference: {fileID: 0}
-    - target: {fileID: 6303293332592324252, guid: eadae76dd3cddf94ca8d437e6bda6cbc, type: 3}
-      propertyPath: SortKey
-      value: 3129600135
-      objectReference: {fileID: 0}
-    - target: {fileID: 6303293332592324252, guid: eadae76dd3cddf94ca8d437e6bda6cbc, type: 3}
-      propertyPath: 'NetworkGuid.RawGuidValue.Array.data[0]'
-      value: 4704487276739798995
-      objectReference: {fileID: 0}
-    - target: {fileID: 6303293332592324252, guid: eadae76dd3cddf94ca8d437e6bda6cbc, type: 3}
-      propertyPath: 'NetworkGuid.RawGuidValue.Array.data[1]'
-      value: 1555242232338953884
-      objectReference: {fileID: 0}
-    - target: {fileID: 7534470490806889380, guid: eadae76dd3cddf94ca8d437e6bda6cbc, type: 3}
-      propertyPath: Flags
-      value: 2561
-      objectReference: {fileID: 0}
-    - target: {fileID: 7534470490806889380, guid: eadae76dd3cddf94ca8d437e6bda6cbc, type: 3}
-      propertyPath: SortKey
-      value: 2884037376
-      objectReference: {fileID: 0}
-    - target: {fileID: 7534470490806889380, guid: eadae76dd3cddf94ca8d437e6bda6cbc, type: 3}
-      propertyPath: 'NetworkGuid.RawGuidValue.Array.data[0]'
-      value: -7402932890672840824
-      objectReference: {fileID: 0}
-    - target: {fileID: 7534470490806889380, guid: eadae76dd3cddf94ca8d437e6bda6cbc, type: 3}
-      propertyPath: 'NetworkGuid.RawGuidValue.Array.data[1]'
-      value: -88002312832642411
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -205031,24 +205033,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 687343395, guid: f37fee8a72a3e7c4283f04c9f67429aa, type: 3}
-      propertyPath: _defaultConfiguration.Port
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 687343395, guid: f37fee8a72a3e7c4283f04c9f67429aa, type: 3}
       propertyPath: _defaultConfiguration.GameMode
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 687343395, guid: f37fee8a72a3e7c4283f04c9f67429aa, type: 3}
-      propertyPath: _defaultConfiguration.IPAddress
-      value: 
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 687343395, guid: f37fee8a72a3e7c4283f04c9f67429aa, type: 3}
       propertyPath: _defaultConfiguration.MaxPlayers
       value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 687343395, guid: f37fee8a72a3e7c4283f04c9f67429aa, type: 3}
-      propertyPath: _defaultConfiguration.Matchmaking
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 687343395, guid: f37fee8a72a3e7c4283f04c9f67429aa, type: 3}
       propertyPath: _defaultConfiguration.GameplayType

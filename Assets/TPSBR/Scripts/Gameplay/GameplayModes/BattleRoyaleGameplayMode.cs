@@ -56,7 +56,7 @@ namespace TPSBR
 			{
 				StartAirdrop();
 			}
-			else if (ApplicationSettings.IsModerator == true || IsGameLeader())
+			else if (ApplicationSettings.IsModerator == true)
 			{
 				RPC_StartAirdrop();
 			}
@@ -91,30 +91,11 @@ namespace TPSBR
 			{
 				AddWaitTime(time);
 			}
-			else if (ApplicationSettings.IsModerator == true || IsGameLeader())
+			else if (ApplicationSettings.IsModerator == true)
 			{
 				RPC_AddWaitTime(time);
 			}
 		}
-
-        public bool IsGameLeader()
-        {
-            if (Runner == null || Runner.ActivePlayers == null) return false;
-            
-            PlayerRef localPlayer = Runner.LocalPlayer;
-            if (localPlayer == PlayerRef.None) return false;
-
-            PlayerRef lowestPlayer = PlayerRef.None;
-            foreach (var player in Runner.ActivePlayers)
-            {
-                if (lowestPlayer == PlayerRef.None || player.PlayerId < lowestPlayer.PlayerId)
-                {
-                    lowestPlayer = player;
-                }
-            }
-
-            return localPlayer == lowestPlayer;
-        }
 
 		// GameplayMode INTERFACE
 

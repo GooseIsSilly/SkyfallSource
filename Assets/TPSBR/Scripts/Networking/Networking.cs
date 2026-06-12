@@ -253,7 +253,7 @@ namespace TPSBR
             ValidateMultiPeers(_currentSession.GamePeers);
         }
 
-        private IEnumerator ConnectPeerCoroutine(GamePeer peer, float connectionTimeout = 30f, float loadTimeout = 45f)
+        private IEnumerator ConnectPeerCoroutine(GamePeer peer, float connectionTimeout = 10f, float loadTimeout = 45f)
         {
             peer.Loaded = true;
 
@@ -403,44 +403,11 @@ namespace TPSBR
                 startGameArgs.SessionProperties = CreateSessionProperties(peer.Request);
             }
 
-            // Handle Address binding for Dedicated Servers or direct Client connections
-            if (!string.IsNullOrEmpty(peer.Request.IPAddress) && peer.Request.Port > 0)
-            {
-                if (peer.GameMode == GameMode.Client)
-                {
-                    // For client connecting to a dedicated server
-                    startGameArgs.Address = NetAddress.CreateFromIpPort(peer.Request.IPAddress, peer.Request.Port);
-                    // Clear lobby info to avoid cloud lookup for direct IP connection
-                    startGameArgs.SessionName = string.Empty;
-                    startGameArgs.CustomLobbyName = string.Empty;
-                    startGameArgs.EnableClientSessionCreation = false;
-                    startGameArgs.AuthValues = new Fusion.Photon.Realtime.AuthenticationValues(peer.UserID);
-                    Debug.Log($"[Networking] Client connecting to dedicated server: {peer.Request.IPAddress}:{peer.Request.Port}");
-                }
-                else
-                {
-                    // For server/host binding to a specific port
-                    startGameArgs.Address = NetAddress.Any(peer.Request.Port);
-                    Debug.Log($"[Networking] Server binding to port: {peer.Request.Port}");
-                }
-            }
-            else
-            {
-                // Force bind to Any/0 to ensure the game always starts regardless of backend IP settings.
-                // Fusion uses this Address for LOCAL binding. External IPs here cause "Failed to bind" errors.
-                startGameArgs.Address = NetAddress.Any(0);
-            }
-
-            // Ensure SessionName is not empty for Host/Server if we want it in the lobby, 
-            // but for Client connecting via IP we must ensure it's empty to bypass cloud lookup.
-            if (peer.GameMode == GameMode.Client && !string.IsNullOrEmpty(peer.Request.IPAddress))
-            {
-                startGameArgs.SessionName = string.Empty;
-                startGameArgs.CustomLobbyName = string.Empty;
-            }
+            // Force bind to Any/0 to ensure the game always starts regardless of backend IP settings.
+            // Fusion uses this Address for LOCAL binding. External IPs here cause "Failed to bind" errors.
+            startGameArgs.Address = NetAddress.Any(0);
 
             Log($"NetworkRunner.StartGame()");
-            Debug.Log($"[Networking] Address: {startGameArgs.Address} SessionName: '{startGameArgs.SessionName}' Lobby: '{startGameArgs.CustomLobbyName}' IP: '{peer.Request.IPAddress}' Port: '{peer.Request.Port}'");
             var startGameTask = runner.StartGame(startGameArgs);
 
             while (startGameTask.IsCompleted == false)

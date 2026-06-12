@@ -38,8 +38,6 @@ namespace TPSBR
 		public static readonly bool   UseSQP;
 		public static readonly bool   HasQueueName;
 		public static readonly string QueueName;
-		public static readonly bool   HasServerKey;
-		public static readonly string ServerKey;
 		public static readonly bool   IsModerator;
 		public static readonly bool   IsPublicBuild;
 		public static readonly bool   IsBatchServer;
@@ -68,10 +66,6 @@ namespace TPSBR
 			HasServerName     = ApplicationUtility.GetCommandLineArgument("-serverName", out ServerName);
 			HasMaxPlayers     = ApplicationUtility.GetCommandLineArgument("-maxPlayers", out MaxPlayers);
 			HasSessionName    = ApplicationUtility.GetCommandLineArgument("-sessionName", out SessionName);
-			if (HasSessionName == false)
-			{
-				HasSessionName = ApplicationUtility.GetCommandLineArgument("-serverId", out SessionName);
-			}
 			HasCustomLobby    = ApplicationUtility.GetCommandLineArgument("-lobby", out CustomLobby);
 			HasCustomScene    = ApplicationUtility.GetCommandLineArgument("-scene", out CustomScene);
 			HasIPAddress      = ApplicationUtility.GetCommandLineArgument("-ip", out IPAddress);
@@ -90,7 +84,6 @@ namespace TPSBR
 			UseRandomDeviceID = ApplicationUtility.HasCommandLineArgument("-randomDeviceID");
 			HasCustomDeviceID = ApplicationUtility.GetCommandLineArgument("-deviceID", out CustomDeviceID);
 			GenerateInput     = ApplicationUtility.HasCommandLineArgument("-generateInput");
-			HasServerKey      = ApplicationUtility.GetCommandLineArgument("-serverKey", out ServerKey);
 		}
 	}
 }
