@@ -144,7 +144,7 @@ Shader "Skybox/Stylized Fortnite Sky"
                 
                 float3 lightDir = normalize(_SunDirection.xyz);
                 float sunDot = dot(viewDir, lightDir);
-                float sun = smoothstep(_SunSize - _SunSoftness, _SunSize + _SunSoftness, sunDot);
+                float sun = smoothstep(1.0 - _SunSize - _SunSoftness, 1.0 - _SunSize, sunDot);
                 float3 sunColor = sun * _SunColor.rgb * _SunIntensity;
                 
                 float2 cloudUV = viewDir.xz / max(abs(viewDir.y), 0.1) * _CloudScale;

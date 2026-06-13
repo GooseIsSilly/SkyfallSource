@@ -287,6 +287,7 @@
     <Compile Include="Assets\TPSBR\Scripts\Utilities\InputUtility.cs" />
     <Compile Include="Assets\Scripts\ModernShopCard.cs" />
     <Compile Include="Assets\TPSBR\Scripts\Miscellaneous\DeleteInBatchMode.cs" />
+    <Compile Include="Assets\Scripts\FortniteTimeOfDayManager.cs" />
     <Compile Include="Assets\Scripts\TeamSystem\PlayerTeamExtension.cs" />
     <Compile Include="Assets\Photon\FusionAddons\KCC\Utilities\Recorders\StatsWriter.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
@@ -1386,10 +1387,6 @@
       <HintPath>Library\PackageCache\com.unity.analytics@6cc66d58ac08\Unity.Analytics.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Text.Json">
-      <HintPath>Library\PackageCache\com.itisnajim.socketiounity@00e176cdc31b\Runtime\libs\System.Text.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Fusion.Log">
       <HintPath>Assets\Photon\Fusion\Assemblies\Fusion.Log.dll</HintPath>
       <Private>False</Private>
@@ -1414,20 +1411,12 @@
       <HintPath>Assets\Photon\Fusion\Assemblies\Fusion.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces">
-      <HintPath>Library\PackageCache\com.itisnajim.socketiounity@00e176cdc31b\Runtime\libs\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="DOTween">
       <HintPath>Assets\Plugins\Demigiant\DOTween\DOTween.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Photon3Unity3D">
       <HintPath>Assets\Photon\PhotonLibs\netstandard2.0\Photon3Unity3D.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Text.Encodings.Web">
-      <HintPath>Library\PackageCache\com.itisnajim.socketiounity@00e176cdc31b\Runtime\libs\System.Text.Encodings.Web.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
@@ -1962,6 +1951,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.DedicatedServer.MultiplayerRoles">
+      <HintPath>Library\ScriptAssemblies\Unity.DedicatedServer.MultiplayerRoles.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Networking.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Networking.Editor.dll</HintPath>
       <Private>False</Private>
@@ -2064,10 +2057,6 @@
     </Reference>
     <Reference Include="Unity.Multiplayer.PlayMode.Configurations.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Multiplayer.PlayMode.Configurations.Editor.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SocketIOUnityAssembly">
-      <HintPath>Library\ScriptAssemblies\SocketIOUnityAssembly.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Collections.Editor">
@@ -2224,6 +2213,10 @@
     </Reference>
     <Reference Include="UnityEngine.Purchasing.Codeless">
       <HintPath>Library\ScriptAssemblies\UnityEngine.Purchasing.Codeless.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.DedicatedServer.MultiplayerRoles.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.DedicatedServer.MultiplayerRoles.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Searcher.Editor">
@@ -2479,10 +2472,6 @@
     <ProjectReference Include="Fusion.Unity.csproj">
       <Project>{32A07E47-CD26-7E76-AE59-ECCA75F8BC9D}</Project>
       <Name>Fusion.Unity</Name>
-    </ProjectReference>
-    <ProjectReference Include="Bezi.Editor.csproj">
-      <Project>{7D2A4D2D-A5B4-D30E-7C44-A8D35EC71C0D}</Project>
-      <Name>Bezi.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Fusion.Plugin.csproj">
       <Project>{F58A8DE2-F4DF-3F07-2CF8-4A501FD2E712}</Project>

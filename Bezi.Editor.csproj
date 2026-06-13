@@ -592,10 +592,6 @@
       <HintPath>Library\PackageCache\com.unity.analytics@6cc66d58ac08\Unity.Analytics.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Text.Json">
-      <HintPath>Library\PackageCache\com.itisnajim.socketiounity@00e176cdc31b\Runtime\libs\System.Text.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.Plastic.Antlr3.Runtime">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@1e5e48aff19d\Lib\Editor\Unity.Plastic.Antlr3.Runtime.dll</HintPath>
       <Private>False</Private>
@@ -640,10 +636,6 @@
       <HintPath>Assets\Photon\Fusion\Assemblies\Fusion.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces">
-      <HintPath>Library\PackageCache\com.itisnajim.socketiounity@00e176cdc31b\Runtime\libs\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="bezi-websocket-sharp">
       <HintPath>Packages\com.bezi.sidekick\Editor\Plugins\bezi-websocket-sharp.dll</HintPath>
       <Private>False</Private>
@@ -658,10 +650,6 @@
     </Reference>
     <Reference Include="BeziSidekickInternal">
       <HintPath>Packages\com.bezi.sidekick\Editor\Plugins\BeziSidekickInternal.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Text.Encodings.Web">
-      <HintPath>Library\PackageCache\com.itisnajim.socketiounity@00e176cdc31b\Runtime\libs\System.Text.Encodings.Web.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
