@@ -15,4 +15,5 @@ MonoBehaviour:
   characters:
   - {fileID: 11400000, guid: dac5096bcfa175346aa3f5e17bc06363, type: 2}
   - {fileID: 11400000, guid: 0f2bbe7d846b010478b46b08ff56a85b, type: 2}
+  - {fileID: 11400000, guid: eaed46f08fb67484f98b5b3b6ab72d88, type: 2}
   startingCloudCoins: 0

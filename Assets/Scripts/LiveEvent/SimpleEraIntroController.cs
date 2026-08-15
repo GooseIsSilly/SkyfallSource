@@ -70,6 +70,7 @@ namespace TPSBR
         [SerializeField] private float _holdDuration = 2f;
 
         private GameObject _spawnedPlayer;
+        private Renderer[] _spawnedPlayerRenderers;
         private Transform _cameraTarget;
         private Animator _playerAnimator;
         private CharacterController _characterController;
@@ -308,13 +309,17 @@ namespace TPSBR
             if (_spawnedPlayer == null)
                 return;
 
-            KeepPlayerAboveGround();
-
             HideNetworkedPlayers();
             HideRuntimeSpawnedUI();
 
             if (!_hasWokenUp)
             {
+                // Only ground-clamp manually before the CharacterController takes over.
+                // Once the player can walk, CinematicPlayerController owns vertical
+                // positioning via CharacterController.Move() - directly teleporting the
+                // transform here at the same time desyncs the controller's grounded
+                // state and makes it shove the capsule into the terrain next frame.
+                KeepPlayerAboveGround();
                 UpdateWakeUpInput();
                 return;
             }
@@ -513,6 +518,7 @@ namespace TPSBR
             Debug.Log($"[SimpleEraIntroController] Final spawn position: {spawnPosition}");
 
             _spawnedPlayer = Instantiate(_playerPrefab, spawnPosition, _playerSpawnPoint.rotation);
+            _spawnedPlayerRenderers = _spawnedPlayer.GetComponentsInChildren<Renderer>();
 
             _characterController = _spawnedPlayer.GetComponent<CharacterController>();
             if (_characterController == null)
@@ -553,6 +559,13 @@ namespace TPSBR
             {
                 Debug.Log($"[SimpleEraIntroController] Using avatar: {_playerAnimator.avatar.name}");
             }
+
+            // Disable root motion from the start. The laying-down and wake-up clips are
+            // driven purely by the PlayableGraph while the transform position is managed
+            // manually (spawn placement, KeepPlayerAboveGround). Root motion baked into
+            // those clips would otherwise fight the manual placement and phase the mesh
+            // into the ground for a frame every time the clip evaluates.
+            _playerAnimator.applyRootMotion = false;
 
             GameObject cameraTargetObj = new GameObject("CameraTarget");
             cameraTargetObj.transform.SetParent(_spawnedPlayer.transform);
@@ -694,24 +707,6 @@ namespace TPSBR
 
                 _playableGraph.Stop();
 
-                if (_characterController != null)
-                {
-                    Vector3 position = _spawnedPlayer.transform.position;
-                    if (Physics.Raycast(position + Vector3.up * 3f, Vector3.down, out RaycastHit hit, 20f))
-                    {
-                        position.y = hit.point.y;
-                        _spawnedPlayer.transform.position = position;
-                        Debug.Log($"[SimpleEraIntroController] Realigned player to ground at Y={hit.point.y}, final position: {position}");
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"[SimpleEraIntroController] Could not find ground for realignment! Current position: {position}");
-                    }
-
-                    _characterController.enabled = true;
-                    Debug.Log("[SimpleEraIntroController] CharacterController enabled");
-                }
-
                 Rigidbody rb = _spawnedPlayer.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
@@ -724,11 +719,26 @@ namespace TPSBR
                     _playerAnimator.enabled = true;
                     _playerAnimator.runtimeAnimatorController = null;
                     _playerAnimator.Rebind();
-                    _playerAnimator.Update(0f);
 
                     SetupLocomotionAnimator();
 
+                    // Force the idle pose to evaluate immediately so the ground-clamp
+                    // below measures the standing pose rather than the bind pose or the
+                    // final frame of the wake-up clip.
+                    _playerAnimator.Update(0f);
+
                     Debug.Log("[SimpleEraIntroController] Animator rebound for locomotion (runtime controller disabled)");
+                }
+
+                if (_characterController != null)
+                {
+                    // Ground-clamp using the actual idle pose mesh bounds (set up above)
+                    // before enabling the CharacterController, so the capsule starts
+                    // exactly where the character is visually standing.
+                    KeepPlayerAboveGround();
+
+                    _characterController.enabled = true;
+                    Debug.Log("[SimpleEraIntroController] CharacterController enabled");
                 }
 
                 if (_playerController != null)
@@ -789,15 +799,61 @@ namespace TPSBR
             Vector3 position = _spawnedPlayer.transform.position;
             Vector3 rayOrigin = position + Vector3.up * 3f;
 
-            if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 20f))
+            if (!Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, 20f))
+                return;
+
+            float groundY = hit.point.y + GROUND_SKIN_WIDTH;
+
+            // Measure the lowest point of the actual rendered mesh rather than assuming
+            // the transform root is at foot height. Mocap clips (laying down/wake up)
+            // and retargeted animations can place the mesh well below the root transform,
+            // which a fixed root-to-ground offset cannot account for - that mismatch is
+            // what causes the character to visually phase into the terrain.
+            float lowestMeshY = GetLowestRendererPointY();
+            if (lowestMeshY == float.MaxValue)
             {
-                float targetY = hit.point.y + GROUND_SKIN_WIDTH;
-                if (position.y < targetY)
+                // No renderers found yet, fall back to clamping the root transform directly.
+                if (position.y < groundY)
                 {
-                    position.y = targetY;
+                    position.y = groundY;
                     _spawnedPlayer.transform.position = position;
                 }
+                return;
             }
+
+            float correction = groundY - lowestMeshY;
+            if (correction > 0.001f)
+            {
+                position.y += correction;
+                _spawnedPlayer.transform.position = position;
+            }
+        }
+
+        /// <summary>
+        /// Returns the lowest world-space Y value across every Renderer on the spawned
+        /// player, or float.MaxValue if no renderers are found yet. Used to ground-clamp
+        /// the character based on its actual current pose instead of a fixed root offset.
+        /// </summary>
+        private float GetLowestRendererPointY()
+        {
+            if (_spawnedPlayerRenderers == null || _spawnedPlayerRenderers.Length == 0)
+                return float.MaxValue;
+
+            float lowestY = float.MaxValue;
+            for (int i = 0; i < _spawnedPlayerRenderers.Length; i++)
+            {
+                Renderer playerRenderer = _spawnedPlayerRenderers[i];
+                if (playerRenderer == null)
+                    continue;
+
+                float rendererLowestY = playerRenderer.bounds.min.y;
+                if (rendererLowestY < lowestY)
+                {
+                    lowestY = rendererLowestY;
+                }
+            }
+
+            return lowestY;
         }
 
         private void CheckDistanceToNPC()
@@ -1615,6 +1671,11 @@ namespace TPSBR
                     locomotionBlender = _spawnedPlayer.AddComponent<LocomotionBlender>();
                 }
                 locomotionBlender.Initialize(mixer);
+
+                // CinematicPlayerController cached its LocomotionBlender reference during
+                // Awake(), before this component existed, so it must be assigned explicitly
+                // or movement will never update the idle/walk blend weights.
+                _playerController.SetLocomotionBlender(locomotionBlender);
                 Debug.Log("[SimpleEraIntroController] LocomotionBlender initialized");
             }
 

@@ -34,7 +34,15 @@ namespace TPSBR
 		public float  Sensitivity     { get { return _options.GetFloat(KEY_SENSITIVITY); }     set { _options.Set(KEY_SENSITIVITY, value, false); } }
 		public float  AimSensitivity  { get { return _options.GetFloat(KEY_AIM_SENSITIVITY); } set { _options.Set(KEY_AIM_SENSITIVITY, value, false); } }
 
-		public string Region          { get { return _options.GetString(KEY_REGION); }         set { _options.Set(KEY_REGION, value, true); } }
+		public string Region
+		{
+			get
+			{
+				string region = _options.GetString(KEY_REGION);
+				return string.IsNullOrEmpty(region) ? "us" : region;
+			}
+			set { _options.Set(KEY_REGION, string.IsNullOrEmpty(value) ? "us" : value, true); }
+		}
 
 
 		// PRIVATE MEMBERS

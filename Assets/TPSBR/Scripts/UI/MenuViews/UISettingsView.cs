@@ -21,8 +21,12 @@ namespace TPSBR.UI
 
 		[SerializeField]
 		private TMP_Dropdown _graphicsQuality;
+
 		[SerializeField]
 		private TMP_Dropdown _resolution;
+
+		[SerializeField]
+		private TMP_Dropdown _regionDropdown;
 		[SerializeField]
 		private UIToggle _vSync;
 		[SerializeField]
@@ -58,6 +62,7 @@ namespace TPSBR.UI
 
 			_graphicsQuality.onValueChanged.AddListener(OnGraphicsChanged);
 			_resolution.onValueChanged.AddListener(OnGraphicsChanged);
+			_regionDropdown.onValueChanged.AddListener(OnRegionChanged);
 			_targetFPS.onValueChanged.AddListener(OnTargetFPSChanged);
 			_limitFPS.onValueChanged.AddListener(OnLimitFPSChanged);
 			_vSync.onValueChanged.AddListener(OnLimitFPSChanged);
@@ -78,6 +83,7 @@ namespace TPSBR.UI
 
 			_graphicsQuality.onValueChanged.RemoveListener(OnGraphicsChanged);
 			_resolution.onValueChanged.RemoveListener(OnGraphicsChanged);
+			_regionDropdown.onValueChanged.RemoveListener(OnRegionChanged);
 			_targetFPS.onValueChanged.RemoveListener(OnTargetFPSChanged);
 			_limitFPS.onValueChanged.RemoveListener(OnLimitFPSChanged);
 			_vSync.onValueChanged.RemoveListener(OnLimitFPSChanged);
@@ -92,6 +98,7 @@ namespace TPSBR.UI
 			base.OnOpen();
 
 			PrepareResolutionDropdown();
+			PrepareRegionDropdown();
 
 			LoadValues();
 		}
@@ -130,6 +137,7 @@ namespace TPSBR.UI
 			_windowed.SetIsOnWithoutNotify(runtimeSettings.Windowed);
 			_graphicsQuality.SetValueWithoutNotify(runtimeSettings.GraphicsQuality);
 			_resolution.SetValueWithoutNotify(_validResolutions.FindIndex(t => t.Index == runtimeSettings.Resolution));
+			_regionDropdown.SetValueWithoutNotify(GetRegionIndex(runtimeSettings.Region));
 			_targetFPS.SetOptionsValueInt(runtimeSettings.Options.GetValue(RuntimeSettings.KEY_TARGET_FPS));
 			_limitFPS.SetIsOnWithoutNotify(runtimeSettings.LimitFPS);
 			_vSync.SetIsOnWithoutNotify(runtimeSettings.VSync);
@@ -213,6 +221,40 @@ namespace TPSBR.UI
 		private void OnWindowedChanged(bool value)
 		{
 			Context.RuntimeSettings.Windowed = value;
+		}
+
+		private void PrepareRegionDropdown()
+		{
+			if (_regionDropdown == null)
+				return;
+
+			_regionDropdown.ClearOptions();
+			var regions = Context.Settings.Network.Regions;
+			var options = new List<string>();
+			foreach (var region in regions)
+				options.Add(region.DisplayName.ToUpperInvariant());
+
+			_regionDropdown.AddOptions(options);
+			_regionDropdown.SetValueWithoutNotify(GetRegionIndex(Context.RuntimeSettings.Region));
+		}
+
+		private int GetRegionIndex(string regionCode)
+		{
+			var regions = Context.Settings.Network.Regions;
+			for (int i = 0; i < regions.Length; i++)
+			{
+				if (regions[i].Region == regionCode)
+					return i;
+			}
+
+			return 0;
+		}
+
+		private void OnRegionChanged(int value)
+		{
+			var regions = Context.Settings.Network.Regions;
+			if (value >= 0 && value < regions.Length)
+				Context.RuntimeSettings.Region = regions[value].Region;
 		}
 
 		private void PrepareResolutionDropdown()

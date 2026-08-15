@@ -31,7 +31,10 @@ namespace TPSBR.UI
         [SerializeField] private Image _levelProgressBar;
         [SerializeField] private TextMeshProUGUI _cloudCoinsText;
 
-        [Header("Quick Play Settings")]
+        [Header("Quest Summary")]
+        [SerializeField] private GameObject _questSummaryPanel;
+        [SerializeField] private TextMeshProUGUI _questSummaryText;
+
         [SerializeField] private float _searchTimeout = 10f;
         [SerializeField] private EGameplayType _gameplayType = EGameplayType.BattleRoyale;
         [SerializeField] private int _maxPlayers = 100;
@@ -142,8 +145,15 @@ namespace TPSBR.UI
                 PlayerDataManager.Instance.OnDataLoaded += OnPlayerDataLoaded;
             }
 
-            Context.Matchmaking.JoinLobby(false);
+            if (QuestManager.Instance != null)
+            {
+                QuestManager.Instance.OnQuestsUpdated += RefreshQuestSummary;
+                QuestManager.Instance.OnQuestProgressUpdated += OnQuestProgressUpdated;
+            }
+
+
             UpdateRegionDisplay();
+            RefreshQuestSummary();
         }
 
         protected override void OnClose()
@@ -165,12 +175,21 @@ namespace TPSBR.UI
                 PlayerDataManager.Instance.OnDataLoaded -= OnPlayerDataLoaded;
             }
 
+            if (QuestManager.Instance != null)
+            {
+                QuestManager.Instance.OnQuestsUpdated -= RefreshQuestSummary;
+                QuestManager.Instance.OnQuestProgressUpdated -= OnQuestProgressUpdated;
+            }
+
             base.OnClose();
         }
 
         protected override void OnTick()
         {
             base.OnTick();
+
+            if (_questSummaryText != null && QuestManager.Instance != null && _questSummaryText.text == "DAILY MISSIONS\nLoading quests...")
+                RefreshQuestSummary();
 
             if (_isSearchingForGame)
             {
@@ -232,6 +251,41 @@ namespace TPSBR.UI
             {
                 Context.Matchmaking.JoinLobby(true);
             }
+        }
+
+        private void OnQuestProgressUpdated(QuestDefinition quest, int currentProgress)
+        {
+            RefreshQuestSummary();
+        }
+
+        private void RefreshQuestSummary()
+        {
+            if (_questSummaryText == null || QuestManager.Instance == null)
+                return;
+
+            var quests = QuestManager.Instance.GetActiveQuests();
+            var dailyQuests = quests.Where(quest => quest.Type == QuestType.Daily || quest.Type == QuestType.Combat).Take(3).ToList();
+            var weeklyQuests = quests.Where(quest => quest.Type == QuestType.Weekly || quest.Type == QuestType.Special).Take(2).ToList();
+            var lines = new List<string> { "DAILY MISSIONS" };
+
+            foreach (var quest in dailyQuests)
+            {
+                var progress = QuestManager.Instance.GetQuestProgress(quest.QuestID);
+                lines.Add($"{quest.QuestDescription}    {progress.CurrentProgress}/{quest.RequiredAmount}    {quest.CoinReward}");
+            }
+
+            lines.Add(string.Empty);
+            lines.Add("WEEKLY MISSIONS");
+
+            foreach (var quest in weeklyQuests)
+            {
+                var progress = QuestManager.Instance.GetQuestProgress(quest.QuestID);
+                lines.Add($"{quest.QuestDescription}    {progress.CurrentProgress}/{quest.RequiredAmount}    {quest.CoinReward}");
+            }
+
+            _questSummaryText.text = string.Join("\n", lines);
+            if (_questSummaryPanel != null)
+                _questSummaryPanel.SetActive(lines.Count > 2);
         }
 
         private void UpdatePlayerInfo()
@@ -355,6 +409,8 @@ namespace TPSBR.UI
 
         private void ShowCreateGameUI()
         {
+            _isSearchingForGame = false;
+            _isConnectingForPlay = false;
             Debug.Log("[UIFortniteLobbyView] No sessions found - Opening Create Game UI");
             if (_playButtonText != null) _playButtonText.text = "PLAY";
             Open<UICreateSessionView>();

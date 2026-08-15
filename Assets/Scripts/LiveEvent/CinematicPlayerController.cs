@@ -137,5 +137,16 @@ namespace TPSBR
         {
             _isEnabled = enabled;
         }
+
+        /// <summary>
+        /// Assigns the LocomotionBlender used to drive idle/walk mixer weights.
+        /// Must be called explicitly because the LocomotionBlender component is
+        /// added to this GameObject after this controller's Awake() has already run,
+        /// so GetComponent&lt;LocomotionBlender&gt;() in Awake() would find nothing.
+        /// </summary>
+        public void SetLocomotionBlender(LocomotionBlender locomotionBlender)
+        {
+            _locomotionBlender = locomotionBlender;
+        }
     }
 }

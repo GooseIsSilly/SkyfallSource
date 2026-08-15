@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c6c0b01db2d345409a48ce3c0bbf647, type: 3}
   m_Name: LiveEvent
   m_EditorClassIdentifier: 
-  EventStartTimeEST: 2026-05-02 16:41:24
+  EventStartTimeEST: 2026-08-14 16:09:00
   CountdownDuration: 604800
   EventName: SOS...
-  EventAnimation: {fileID: 7400000, guid: fdf6cf98192e28c46b658a625a1017c5, type: 2}
+  EventAnimation: {fileID: 7400000, guid: f2cac18be1ae7ce47bef428f146f11b9, type: 2}
   EventAudio: {fileID: 8300000, guid: 45b783e73be4935448df31be216cb3fd, type: 3}
   ShowCountdownUI: 1
   CountdownVisibilityThreshold: 604800
