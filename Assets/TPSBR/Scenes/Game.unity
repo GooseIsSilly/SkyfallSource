@@ -21335,7 +21335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6fe47571b004ab45b05086710194821, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skyboxMaterial: {fileID: 2100000, guid: af07a91756115eb459dc88c921631575, type: 2}
+  skyboxMaterial: {fileID: 2100000, guid: 0599db08a6734724a9d19c706737042c, type: 2}
   sunLight: {fileID: 2131186481}
   currentTime: 12.5
   timeMultiplier: 0.01
