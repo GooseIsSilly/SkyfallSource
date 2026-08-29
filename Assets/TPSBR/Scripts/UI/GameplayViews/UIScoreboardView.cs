@@ -61,7 +61,11 @@ namespace TPSBR.UI
 		{
 			base.OnTick();
 
-			if (Keyboard.current.tabKey.isPressed == true && IsTopView(true) == true)
+			// Keyboard.current can be null (no keyboard device / not focused / certain platforms).
+			// An unguarded access here throws a NullReferenceException every tick this view is open,
+			// which aborts the shared UI tick loop and permanently skips every view ticked after this
+			// one (e.g. sniper scope / weapon HUD) -- the same class of "UI freezes" bug as UIDeathView.
+			if (Keyboard.current != null && Keyboard.current.tabKey.isPressed == true && IsTopView(true) == true)
 			{
 				Show();
 			}

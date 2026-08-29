@@ -3,6 +3,26 @@
   "WorkspaceRootPath": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Prefabs\\Gameplay\\ItemBoxProximitySound.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\TPSBR\\Prefabs\\Gameplay\\ItemBoxProximitySound.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Gameplay\\Interactions\\ItemBox.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\TPSBR\\Scripts\\Gameplay\\Interactions\\ItemBox.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\NetworkGame.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\TPSBR\\Scripts\\Core\\NetworkGame.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\NetworkObjectPool.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\TPSBR\\Scripts\\Core\\NetworkObjectPool.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Networking\\Networking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\TPSBR\\Scripts\\Networking\\Networking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\Cinematics\\CinematicTimelineController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Cinematics\\CinematicTimelineController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -55,6 +75,71 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "ItemBox.cs",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Gameplay\\Interactions\\ItemBox.cs",
+              "RelativeDocumentMoniker": "Assets\\TPSBR\\Scripts\\Gameplay\\Interactions\\ItemBox.cs",
+              "ToolTip": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Gameplay\\Interactions\\ItemBox.cs",
+              "RelativeToolTip": "Assets\\TPSBR\\Scripts\\Gameplay\\Interactions\\ItemBox.cs",
+              "ViewState": "AgIAAEsBAAAAAAAAAAAowGkBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-29T05:26:17.99Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ItemBoxProximitySound.cs",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Prefabs\\Gameplay\\ItemBoxProximitySound.cs",
+              "RelativeDocumentMoniker": "Assets\\TPSBR\\Prefabs\\Gameplay\\ItemBoxProximitySound.cs",
+              "ToolTip": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Prefabs\\Gameplay\\ItemBoxProximitySound.cs",
+              "RelativeToolTip": "Assets\\TPSBR\\Prefabs\\Gameplay\\ItemBoxProximitySound.cs",
+              "ViewState": "AgIAAGwAAAAAAAAAAAAowIoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-29T05:24:44.539Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "NetworkObjectPool.cs",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\NetworkObjectPool.cs",
+              "RelativeDocumentMoniker": "Assets\\TPSBR\\Scripts\\Core\\NetworkObjectPool.cs",
+              "ToolTip": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\NetworkObjectPool.cs",
+              "RelativeToolTip": "Assets\\TPSBR\\Scripts\\Core\\NetworkObjectPool.cs",
+              "ViewState": "AgIAADoAAAAAAAAAAAAwwGYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-29T03:39:20.007Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NetworkGame.cs",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\NetworkGame.cs",
+              "RelativeDocumentMoniker": "Assets\\TPSBR\\Scripts\\Core\\NetworkGame.cs",
+              "ToolTip": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\NetworkGame.cs",
+              "RelativeToolTip": "Assets\\TPSBR\\Scripts\\Core\\NetworkGame.cs",
+              "ViewState": "AgIAAEYCAAAAAAAAAAAwwGYCAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-29T03:39:00.266Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Networking.cs",
+              "DocumentMoniker": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Networking\\Networking.cs",
+              "RelativeDocumentMoniker": "Assets\\TPSBR\\Scripts\\Networking\\Networking.cs",
+              "ToolTip": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Networking\\Networking.cs",
+              "RelativeToolTip": "Assets\\TPSBR\\Scripts\\Networking\\Networking.cs",
+              "ViewState": "AgIAAGUBAAAAAAAAAAAiwHUBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-29T03:31:47.832Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "Timelinecameramarker.cs",
               "DocumentMoniker": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\Cinematics\\Timelinecameramarker.cs",
               "RelativeDocumentMoniker": "Assets\\Cinematics\\Timelinecameramarker.cs",
@@ -66,7 +151,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 5,
               "Title": "CinematicTimelineController.cs",
               "DocumentMoniker": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\Cinematics\\CinematicTimelineController.cs",
               "RelativeDocumentMoniker": "Assets\\Cinematics\\CinematicTimelineController.cs",
@@ -79,7 +164,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 7,
               "Title": "Instructions_SurrounDead - Bundle.txt",
               "DocumentMoniker": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\SurrounDead Bundle\\Instructions_SurrounDead - Bundle.txt",
               "RelativeDocumentMoniker": "Assets\\SurrounDead Bundle\\Instructions_SurrounDead - Bundle.txt",
@@ -91,7 +176,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "Lit.shader",
               "DocumentMoniker": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Library\\PackageCache\\com.unity.render-pipelines.universal@7652a5c7e246\\Shaders\\Lit.shader",
               "RelativeDocumentMoniker": "Library\\PackageCache\\com.unity.render-pipelines.universal@7652a5c7e246\\Shaders\\Lit.shader",
@@ -103,7 +188,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 9,
               "Title": "Backend.txt",
               "DocumentMoniker": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\Backend.txt",
               "RelativeDocumentMoniker": "Assets\\Backend.txt",
@@ -115,7 +200,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 10,
               "Title": "LoadingScene.cs",
               "DocumentMoniker": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Scripts\\Core\\LoadingScene.cs",
               "RelativeDocumentMoniker": "Assets\\TPSBR\\Scripts\\Core\\LoadingScene.cs",
@@ -127,7 +212,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 11,
               "Title": "UIMainMenuView.cs",
               "DocumentMoniker": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\TPSBR\\Scripts\\UI\\MenuViews\\UIMainMenuView.cs",
               "RelativeDocumentMoniker": "Assets\\TPSBR\\Scripts\\UI\\MenuViews\\UIMainMenuView.cs",
@@ -139,7 +224,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 13,
               "Title": "BackendServiceManager.cs",
               "DocumentMoniker": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\Scripts\\Backend\\BackendServiceManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Backend\\BackendServiceManager.cs",
@@ -151,7 +236,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 12,
               "Title": "SimplerLoginManager.cs",
               "DocumentMoniker": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\Scripts\\Backend\\SimplerLoginManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Backend\\SimplerLoginManager.cs",
@@ -163,7 +248,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 14,
               "Title": "LobbyMapBridge.cs",
               "DocumentMoniker": "C:\\Users\\camev\\Documents\\GitHub\\skyfallbackend\\SkyfallSource\\Assets\\LobbyAnimations\\LobbyMapBridge.cs",
               "RelativeDocumentMoniker": "Assets\\LobbyAnimations\\LobbyMapBridge.cs",

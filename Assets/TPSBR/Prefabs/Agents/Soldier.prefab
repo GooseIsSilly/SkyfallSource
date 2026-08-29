@@ -1049,7 +1049,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5990956033835523603, guid: c17b47fcacdfc8d4b80809005a2b2555, type: 3}
       propertyPath: NetworkedBehaviours.Array.size
-      value: 14
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 5990956033835523603, guid: c17b47fcacdfc8d4b80809005a2b2555, type: 3}
       propertyPath: 'NetworkedBehaviours.Array.data[1]'
@@ -1090,7 +1090,7 @@ PrefabInstance:
     - target: {fileID: 5990956033835523603, guid: c17b47fcacdfc8d4b80809005a2b2555, type: 3}
       propertyPath: 'NetworkedBehaviours.Array.data[12]'
       value: 
-      objectReference: {fileID: 8556573964944981876}
+      objectReference: {fileID: 780026196086425471}
     - target: {fileID: 5990956033835523603, guid: c17b47fcacdfc8d4b80809005a2b2555, type: 3}
       propertyPath: 'NetworkedBehaviours.Array.data[13]'
       value: 
@@ -1312,9 +1312,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7625200539080901463, guid: c17b47fcacdfc8d4b80809005a2b2555, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8556573964944981876}
-    - targetCorrespondingSourceObject: {fileID: 7625200539080901463, guid: c17b47fcacdfc8d4b80809005a2b2555, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 780026196086425471}
   m_SourcePrefab: {fileID: 100100000, guid: c17b47fcacdfc8d4b80809005a2b2555, type: 3}
 --- !u!114 &593472071329726145 stripped
@@ -1366,19 +1363,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7625200539080901463, guid: c17b47fcacdfc8d4b80809005a2b2555, type: 3}
   m_PrefabInstance: {fileID: 5962503691769372297}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8556573964944981876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4282139267378355678}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c34314064bff644db7b742b716f080c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _downedAnimationClip: {fileID: 0}
 --- !u!114 &780026196086425471
 MonoBehaviour:
   m_ObjectHideFlags: 0

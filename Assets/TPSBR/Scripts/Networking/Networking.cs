@@ -343,35 +343,26 @@ namespace TPSBR
                 // callback receives a valid SceneContext (not null).
                 startGameArgs.HostMigrationResume = (migrationRunner) =>
                 {
-                    // GameplayScene is guaranteed ready when this callback fires.
-                    // Do NOT spin-wait here — this is a synchronous callback on the main
-                    // thread; blocking it prevents Fusion (and Unity) from making progress,
-                    // causing a deadlock that kills the migration entirely.
                     var gameplayScene = peer.SceneManager.GameplayScene;
-                    if (gameplayScene != null)
+                    if (gameplayScene == null)
                     {
-                        gameplayScene.PrepareContext();
-                        var ctx = gameplayScene.Context;
-                        ctx.IsVisible = peer.ID == 0;
-                        ctx.HasInput = peer.ID == 0;
-                        ctx.Runner = migrationRunner;
-                        ctx.PeerUserID = peer.UserID;
-                        pool.Context = ctx;
-                    }
-                    else
-                    {
-                        Debug.LogError("[Host Migration] GameplayScene not available inside HostMigrationResume; IContextBehaviour.Context will be null on snapshot objects.");
+                        Debug.LogError("[Host Migration] GameplayScene not available inside HostMigrationResume; aborting resume.");
+                        return;
                     }
 
-                    // Restore [Networked] state on scene objects (NetworkGame, ShrinkingArea, etc.)
-                    // that are already present in the scene and don't go through the pool.
+                    gameplayScene.PrepareContext();
+                    var ctx = gameplayScene.Context;
+                    ctx.IsVisible = peer.ID == 0;
+                    ctx.HasInput = peer.ID == 0;
+                    ctx.Runner = migrationRunner;
+                    ctx.PeerUserID = peer.UserID;
+                    pool.Context = ctx;
+
                     foreach (var sceneObj in migrationRunner.GetResumeSnapshotNetworkSceneObjects())
                     {
                         sceneObj.Item1.CopyStateFrom(sceneObj.Item2);
                     }
 
-                    // Re-spawn dynamic network objects from the snapshot (GameplayMode, Players, level pieces).
-                    // pool.Context is already set above so IContextBehaviour.Context is correctly assigned.
                     foreach (var resumeNO in migrationRunner.GetResumeSnapshotNetworkObjects())
                     {
                         migrationRunner.Spawn(resumeNO, resumeNO.transform.position, resumeNO.transform.rotation,

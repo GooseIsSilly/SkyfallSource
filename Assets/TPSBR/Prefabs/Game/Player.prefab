@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 9017324200335540095}
   - component: {fileID: 9017324200335540094}
   - component: {fileID: 7841667202884751935}
-  - component: {fileID: 4012673245520162930}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -54,7 +53,6 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 9017324200335540094}
   - {fileID: 7841667202884751935}
-  - {fileID: 4012673245520162930}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &9017324200335540094
 MonoBehaviour:
@@ -86,16 +84,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _platformSpaceTransitionDuration: 0.75
   _worldSpaceTransitionDuration: 0.5
---- !u!114 &4012673245520162930
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9017324200335540092}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c34314064bff644db7b742b716f080c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _downedAnimationClip: {fileID: -203655887218126122, guid: 28f3411ee922d7d49b175d1a2695c6e9, type: 3}

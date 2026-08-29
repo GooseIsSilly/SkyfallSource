@@ -235,11 +235,20 @@ namespace TPSBR
 			{
 				_activeAgent   = ActiveAgent;
 				_observePlayer = Object.InputAuthority;
+			}
 
-				if (_activeAgent != null)
-				{
-					InterestView = _activeAgent.InterestView;
-				}
+			// Keep the interest view following whichever Agent is currently observed - our own Agent
+			// while alive, or the spectated player's Agent once dead. Previously InterestView was only
+			// refreshed from our own Agent above, so after death it stayed pinned to the (now despawned)
+			// Agent's last known position: the server kept syncing data around our corpse regardless of
+			// which spectator target we switched to, which is why the spectate camera looked stuck near
+			// our death location and switching targets appeared to do nothing.
+			Player observedPlayer = Context.NetworkGame.GetPlayer(_observePlayer);
+			Agent  observedAgent  = observedPlayer != null ? observedPlayer.ActiveAgent : null;
+
+			if (observedAgent != null)
+			{
+				InterestView = observedAgent.InterestView;
 			}
 
 			if (_syncToken != SyncToken)

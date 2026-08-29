@@ -1394,8 +1394,8 @@ MonoBehaviour:
   - {fileID: 495557902}
   - {fileID: 1631322392}
   loadingPanel: {fileID: 0}
-  autoLoginOnStart: 1
-  setNicknameFromBackend: 1
+  autoLoginOnStart: 0
+  setNicknameFromBackend: 0
 --- !u!1 &155113862
 GameObject:
   m_ObjectHideFlags: 0
@@ -2831,8 +2831,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.7735849, g: 0.7735849, b: 0.7735849, a: 1}
-    m_PressedColor: {r: 0.70440245, g: 0.70440245, b: 0.70440245, a: 1}
+    m_HighlightedColor: {r: 0.5320754, g: 0.5320754, b: 0.5320754, a: 1}
+    m_PressedColor: {r: 0.3283019, g: 0.3283019, b: 0.3283019, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: eb2e01363731c5b48b083cdeb9d28f0f
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 393128
+  packageName: Simple stylized water
+  packageVersion: 1.1
+  assetPath: Assets/Houidisoft technology/Simple water/Shaders/SimpleWaterURP.shader
+  uploadId: 982824

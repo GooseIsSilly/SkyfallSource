@@ -5,6 +5,13 @@ using UnityEngine.Rendering;
 /// Manages a stylized Time of Day system specifically for the FortniteSimpleSky shader.
 /// Handles sun rotation, skybox color gradients, and ambient lighting synchronization.
 /// </summary>
+/// <remarks>
+/// The time of day is derived from <see cref="Fusion.NetworkRunner.SimulationTime"/>, which is
+/// the same shared network clock on every client in a session, instead of a per-client random
+/// start value advanced by local <see cref="Time.deltaTime"/>. This keeps day/night in sync for
+/// all players; previously each client picked its own random start time and drifted independently,
+/// so one player could see night while another saw morning.
+/// </remarks>
 public class FortniteTimeOfDayManager : MonoBehaviour
 {
     [Header("Skybox Material")]
@@ -18,6 +25,13 @@ public class FortniteTimeOfDayManager : MonoBehaviour
     public float currentTime = 12f;
     public float timeMultiplier = 0.1f;
     public bool pauseTime = false;
+
+    [Header("Network Sync")]
+    [Tooltip("Hour of day (0-24) that corresponds to network simulation time 0, so every client starts from the same point on the cycle.")]
+    [Range(0f, 24f)]
+    public float startTimeOfDay = 12f;
+
+    private Fusion.NetworkRunner _runner;
 
     [Header("Sky Colors")]
     public Gradient topColorGradient = GetDefaultTopGradient();
@@ -186,8 +200,9 @@ public class FortniteTimeOfDayManager : MonoBehaviour
 
     private void Start()
     {
-        // Randomize start time
-        currentTime = Random.Range(0f, 24f);
+        // Start at the configured hour; the actual synced value is recomputed every frame in
+        // Update() from the shared network clock once a NetworkRunner is available.
+        currentTime = startTimeOfDay;
 
         if (skyboxMaterial == null)
             skyboxMaterial = RenderSettings.skybox;
@@ -203,11 +218,53 @@ public class FortniteTimeOfDayManager : MonoBehaviour
     {
         if (!pauseTime)
         {
-            currentTime += Time.deltaTime * timeMultiplier;
-            if (currentTime >= 24f) currentTime = 0f;
+            if (TryGetSyncedNetworkTime(out double simulationTime))
+            {
+                // Every client's NetworkRunner shares the same simulation clock, so deriving
+                // currentTime from it (instead of accumulating local Time.deltaTime from a random
+                // per-client start) guarantees all players see the same time of day.
+                double hoursElapsed = simulationTime * timeMultiplier;
+                currentTime = (float)(((hoursElapsed + startTimeOfDay) % 24.0 + 24.0) % 24.0);
+            }
+            else
+            {
+                // No active network session (e.g. offline testing) - fall back to local advancement.
+                currentTime += Time.deltaTime * timeMultiplier;
+                if (currentTime >= 24f) currentTime = 0f;
+            }
         }
 
         ApplyTimeOfDay();
+    }
+
+    /// <summary>Finds the running NetworkRunner (caching it) and returns its shared simulation time.</summary>
+    private bool TryGetSyncedNetworkTime(out double simulationTime)
+    {
+        if (_runner == null || _runner.IsRunning == false)
+        {
+            _runner = null;
+
+            if (Fusion.NetworkRunner.Instances != null)
+            {
+                foreach (Fusion.NetworkRunner runner in Fusion.NetworkRunner.Instances)
+                {
+                    if (runner != null && runner.IsRunning == true)
+                    {
+                        _runner = runner;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (_runner != null && _runner.IsRunning == true)
+        {
+            simulationTime = _runner.SimulationTime;
+            return true;
+        }
+
+        simulationTime = 0.0;
+        return false;
     }
 
     private void ApplyTimeOfDay()
