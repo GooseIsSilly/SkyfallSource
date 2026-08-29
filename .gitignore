@@ -12,3 +12,7 @@ Logs/shadercompiler-UnityShaderCompiler.exe2.log
 >>>>>>> 4f85f9ef81a92750ec15f926b02eb903ec03ced0
 /Temp
 /Builds
+/.agents
+/.claude
+/.cursor
+/.gemini
