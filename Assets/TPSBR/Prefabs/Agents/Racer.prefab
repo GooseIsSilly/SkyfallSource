@@ -16,6 +16,18 @@ PrefabInstance:
       propertyPath: _animator
       value: 
       objectReference: {fileID: 7750417726982305907}
+    - target: {fileID: 6522195430194241608, guid: c17b47fcacdfc8d4b80809005a2b2555, type: 3}
+      propertyPath: _leftHand
+      value: 
+      objectReference: {fileID: 6828842735583550839}
+    - target: {fileID: 6522195430194241608, guid: c17b47fcacdfc8d4b80809005a2b2555, type: 3}
+      propertyPath: _leftLowerArm
+      value: 
+      objectReference: {fileID: 3155347374664682966}
+    - target: {fileID: 6522195430194241608, guid: c17b47fcacdfc8d4b80809005a2b2555, type: 3}
+      propertyPath: _leftUpperArm
+      value: 
+      objectReference: {fileID: 2682442624364627090}
     - target: {fileID: 7625200539080901463, guid: c17b47fcacdfc8d4b80809005a2b2555, type: 3}
       propertyPath: m_Name
       value: Racer
@@ -142,9 +154,24 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d9a2373645faba41b5623993323396c, type: 3}
+--- !u!4 &2682442624364627090 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6927550901008350864, guid: 5d9a2373645faba41b5623993323396c, type: 3}
+  m_PrefabInstance: {fileID: 4243963640478893538}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3155347374664682966 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1238381914527795252, guid: 5d9a2373645faba41b5623993323396c, type: 3}
+  m_PrefabInstance: {fileID: 4243963640478893538}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4426808702092599817 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5d9a2373645faba41b5623993323396c, type: 3}
+  m_PrefabInstance: {fileID: 4243963640478893538}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6828842735583550839 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7215182474112784533, guid: 5d9a2373645faba41b5623993323396c, type: 3}
   m_PrefabInstance: {fileID: 4243963640478893538}
   m_PrefabAsset: {fileID: 0}
 --- !u!95 &7750417726982305907 stripped

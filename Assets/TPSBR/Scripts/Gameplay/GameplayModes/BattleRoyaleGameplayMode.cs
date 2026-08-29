@@ -162,7 +162,7 @@ namespace TPSBR
 
 		protected override void CheckWinCondition()
 		{
-			var alivePlayers    = 0;
+			var alivePlayers = 0;
 			var lastAlivePlayer = PlayerRef.None;
 
 			foreach (var player in Context.NetworkGame.ActivePlayers)
@@ -173,7 +173,7 @@ namespace TPSBR
 				var statistics = player.Statistics;
 				if (statistics.ExtraLives > 0 || statistics.IsAlive == true || statistics.RespawnTimer.IsRunning == true)
 				{
-					alivePlayers   += 1;
+					alivePlayers += 1;
 					lastAlivePlayer = player.Object.InputAuthority;
 				}
 			}
@@ -191,48 +191,8 @@ namespace TPSBR
 				Log.Info($"Player {lastAlivePlayer} won the match!");
 				return;
 			}
-
-			// Team win condition: if all alive players belong to the same team, that team wins.
-			if (TeamManager.Instance != null)
-			{
-				byte winningTeam = 0;
-				bool allSameTeam = true;
-
-				foreach (var player in Context.NetworkGame.ActivePlayers)
-				{
-					if (player == null)
-						continue;
-
-					var statistics = player.Statistics;
-					if (statistics.ExtraLives <= 0 && statistics.IsAlive == false && statistics.RespawnTimer.IsRunning == false)
-						continue;
-
-					byte teamID = TeamManager.Instance.GetPlayerTeamID(player.UserID);
-					if (teamID == 0)
-					{
-						// Player has no team — can't declare a team victory yet.
-						allSameTeam = false;
-						break;
-					}
-
-					if (winningTeam == 0)
-					{
-						winningTeam = teamID;
-					}
-					else if (winningTeam != teamID)
-					{
-						allSameTeam = false;
-						break;
-					}
-				}
-
-				if (allSameTeam && winningTeam != 0)
-				{
-					Log.Info($"Team {winningTeam} won the match!");
-					FinishGameplay();
-				}
-			}
 		}
+
 
 		protected override void TrySpawnAgent(Player player)
 		{

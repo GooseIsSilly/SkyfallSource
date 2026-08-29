@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: cd033e32e2f920d489fa969aa512e922
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Lilita One
+  fontNames:
+  - Lilita One
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 166152
+  packageName: Battle Royale Universal UI Game Asset Pack
+  packageVersion: 1.0
+  assetPath: Assets/flawlessattila/Universal UI Asset Pack/FontForUI.ttf
+  uploadId: 362708

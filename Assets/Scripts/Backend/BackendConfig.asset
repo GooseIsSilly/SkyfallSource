@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bdb26adc672404eb7315fa81c3989c, type: 3}
   m_Name: BackendConfig
   m_EditorClassIdentifier: 
-  developmentURL: https://4aaaf146-b006-4b2a-b23d-a7670442fa10-00-twj7e5qw5x8w.worf.replit.dev
+  developmentURL: http://87.86.80.101:5000
   stagingURL: 
   productionURL: 
   apiTimeout: 10

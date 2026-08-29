@@ -84,9 +84,7 @@ namespace TPSBR
 			if (IsAlive == true && _healthRegenPerSecond > 0f && _regenTickTimer.ExpiredOrNotRunning(Runner) == true)
 			{
 				var player = Context?.NetworkGame?.GetPlayer(_agent.Object.InputAuthority);
-				var reviveSystem = player != null ? player.GetComponent<ReviveSystem>() : null;
 				
-				if (reviveSystem != null && reviveSystem.IsDown)
 				{
 					return;
 				}
@@ -153,23 +151,6 @@ namespace TPSBR
 			if (IsAlive == false)
 			{
 				var player = Context?.NetworkGame?.GetPlayer(_agent.Object.InputAuthority);
-				var reviveSystem = player != null ? player.GetComponent<ReviveSystem>() : null;
-				
-				UnityEngine.Debug.Log($"[Health] Player death check - Player: {player?.Nickname}, Has ReviveSystem: {reviveSystem != null}, IsDown: {reviveSystem?.IsDown}");
-				
-				if (reviveSystem != null && !reviveSystem.IsDown)
-				{
-					SetHealth(1f);
-					hitData.IsFatal = false;
-					
-					UnityEngine.Debug.Log($"[Health] Player {player.Nickname} entering downed state from {hitData.HitType}");
-					reviveSystem.EnterDownedState();
-					
-					var statistics = player.Statistics;
-					statistics.IsAlive = true;
-					player.UpdateStatistics(statistics);
-				}
-				else
 				{
 					if (player != null)
 					{

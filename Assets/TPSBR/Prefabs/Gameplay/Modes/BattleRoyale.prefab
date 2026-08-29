@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 7530579074752114226}
   - component: {fileID: 7530579074752114224}
   - component: {fileID: 6461819204825746839}
-  - component: {fileID: 7731271928684039470}
-  - component: {fileID: 1410779368292521494}
   m_Layer: 0
   m_Name: BattleRoyale
   m_TagString: Untagged
@@ -53,8 +51,6 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 6461819204825746839}
-  - {fileID: 7731271928684039470}
-  - {fileID: 1410779368292521494}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &6461819204825746839
 MonoBehaviour:
@@ -96,36 +92,3 @@ MonoBehaviour:
   _airplaneAgentPrefab: {fileID: 337249011232384914, guid: af8e52ecf47dccc448a889075bde48ee, type: 3}
   _waitingForPlayersTime: 120
   _forcedJumpDelay: 1
---- !u!114 &7731271928684039470
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7530579074752114225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e649d5fdc14f894aab61fff8f195773, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  _checkInterval: 0.2
---- !u!114 &1410779368292521494
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7530579074752114225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67475d5e160561c4dbafa381d9c5dc31, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _enableTeamSystem: 0
-  _teamMode: 2
-  _autoAssignTeams: 0
-  _enableReviveSystem: 0
-  _enableDebugLogs: 0

@@ -132,11 +132,6 @@ namespace TPSBR.UI
             Context.Matchmaking.LobbyJoined += OnLobbyJoined;
             Context.Matchmaking.LobbyJoinFailed += OnLobbyJoinFailed;
 
-            if (PartyLobbyManager.Instance != null)
-            {
-                PartyLobbyManager.Instance.OnMatchFound += OnMatchFound;
-                PartyLobbyManager.Instance.OnPartyUpdated += OnPartyUpdated;
-            }
 
             if (PlayerDataManager.Instance != null)
             {
@@ -162,11 +157,7 @@ namespace TPSBR.UI
             Context.Matchmaking.LobbyJoined -= OnLobbyJoined;
             Context.Matchmaking.LobbyJoinFailed -= OnLobbyJoinFailed;
 
-            if (PartyLobbyManager.Instance != null)
-            {
-                PartyLobbyManager.Instance.OnMatchFound -= OnMatchFound;
-                PartyLobbyManager.Instance.OnPartyUpdated -= OnPartyUpdated;
-            }
+
 
             if (PlayerDataManager.Instance != null)
             {
@@ -217,16 +208,6 @@ namespace TPSBR.UI
             }
         }
 
-        private void OnPartyUpdated(TeamData party)
-        {
-            if (party != null && !PartyLobbyManager.Instance.IsPartyLeader())
-            {
-                if (_playButtonText != null && !_isSearchingForGame)
-                {
-                    _playButtonText.text = "NOT READY";
-                }
-            }
-        }
 
         private void OnPlayButtonClicked()
         {

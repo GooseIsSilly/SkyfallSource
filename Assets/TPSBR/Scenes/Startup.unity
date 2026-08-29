@@ -1488,8 +1488,8 @@ MonoBehaviour:
   backgroundMusic: {fileID: 8300000, guid: ad582590568747d4885f729a109a80f3, type: 3}
   musicVolume: 0.5
   loopMusic: 1
-  customFont: {fileID: 0}
-  buttonBackground: {fileID: 0}
+  customFont: {fileID: 11400000, guid: 692ecc0331301334d860d8c931872706, type: 2}
+  buttonBackground: {fileID: 21300000, guid: be69ad8ba8b4d894ba267d974e3b86a2, type: 3}
 --- !u!4 &2144125254
 Transform:
   m_ObjectHideFlags: 0
