@@ -122258,7 +122258,7 @@ MonoBehaviour:
   moveSpeed: 20
   sprintMultiplier: 10
   slowMultiplier: 0.3
-  movementSmoothing: 0.25
+  movementSmoothing: 0.403
   lookSensitivity: 2
   rotationSmoothing: 0.5
   invertY: 0
@@ -122266,7 +122266,7 @@ MonoBehaviour:
   rollSpeed: 45
   enableFOVControl: 1
   minFOV: 20
-  maxFOV: 80
+  maxFOV: 60
   fovChangeSpeed: 10
   lockPlayerInputKey: 26
   autoLockOnActivate: 0

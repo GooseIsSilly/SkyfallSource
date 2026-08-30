@@ -1469,11 +1469,11 @@ MonoBehaviour:
   backgroundColor: {r: 0.21383637, g: 0.21383637, b: 0.21383637, a: 1}
   buttonColor: {r: 0.8490566, g: 0.26432887, b: 0.26432887, a: 1}
   useLogoImage: 1
-  logoImage: {fileID: 21300000, guid: 03ab00a8526b56e4d8b6032b86af1b67, type: 3}
+  logoImage: {fileID: 21300000, guid: be6336a1d3e8c7c438c15cf50f49a8f9, type: 3}
   preserveLogoAspect: 1
   gameTitle: SKYFALL
   use3DCharacters: 0
-  characterImage: {fileID: 21300000, guid: ca41076ae83778b4091c413aa5247de4, type: 3}
+  characterImage: {fileID: 21300000, guid: 1051d75380406b540acce31d2cbaaddf, type: 3}
   secondCharacterImage: {fileID: 21300000, guid: be1ccbb033aaf944f82aacab89d50a20, type: 3}
   showSecondCharacter: 0
   preserveAspect: 1
