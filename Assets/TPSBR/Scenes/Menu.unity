@@ -1259,7 +1259,7 @@ MonoBehaviour:
   - {fileID: 1631322392}
   loadingPanel: {fileID: 0}
   autoLoginOnStart: 1
-  setNicknameFromBackend: 0
+  setNicknameFromBackend: 1
 --- !u!1 &155113862
 GameObject:
   m_ObjectHideFlags: 0
