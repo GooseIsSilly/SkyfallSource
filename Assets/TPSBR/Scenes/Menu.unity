@@ -9493,7 +9493,7 @@ MonoBehaviour:
     m_Top: 10
     m_Bottom: 10
   m_ChildAlignment: 4
-  m_Spacing: 20
+  m_Spacing: 50
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -12615,6 +12615,10 @@ PrefabInstance:
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
       objectReference: {fileID: 0}
+    - target: {fileID: 1103134698773510204, guid: 740c8cc52e2130140a5bd3397f7fa2eb, type: 3}
+      propertyPath: _regionDropdown
+      value: 
+      objectReference: {fileID: 7906377157466387483}
     - target: {fileID: 1103372255702777191, guid: 740c8cc52e2130140a5bd3397f7fa2eb, type: 3}
       propertyPath: m_SortingOrder
       value: 5
@@ -12936,6 +12940,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 740c8cc52e2130140a5bd3397f7fa2eb, type: 3}
+--- !u!114 &7906377157466387483 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1644746669892583761, guid: 740c8cc52e2130140a5bd3397f7fa2eb, type: 3}
+  m_PrefabInstance: {fileID: 7906377157466387482}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b743370ac3e4ec2a1668f5455a8ef8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8411865473055110738 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7337340411887819541, guid: 47a0d2686b74dd74192b3fbcd3d49b02, type: 3}
